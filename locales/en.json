@@ -1,0 +1,22 @@
+{
+  "Metadata": {
+    "title": "Choneas's Blog",
+    "description": "Coding, Recording and life shares."
+  },
+  "Navbar": {
+    "articles": "Articles",
+    "projects": "Projects",
+    "about": "About"
+  },
+  "Home": {
+    "hello-iam": "👋 Nice to meet you, I am",
+    "choneas": "Choneas",
+    "name-desc": "or ( The Master Fuhua's ) Little Phoenix",
+    "description": "Full stack programmer, C++ algorithm, web dev, and",
+    "description-line2": "a Cosplayer!"
+  },
+  "Article": {
+    "title": "Contents",
+    "description": "Hope you like it."
+  }
+}

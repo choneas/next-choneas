@@ -1,0 +1,22 @@
+{
+  "Metadata": {
+    "title": "Choneas 的个人博客",
+    "description": "代码、随笔、思考、分享以及生活"
+  },
+  "Navbar": {
+    "articles": "文章",
+    "projects": "项目",
+    "about": "关于"
+  },
+  "Home": {
+    "hello-iam": "👋 很高兴认识你，我是",
+    "choneas": "Choneas",
+    "name-desc": "又或是 符华大人的小赤鸢 🪶",
+    "description": "全栈程序鸢，C++ 算法，Web 开发，应用程序开发，以及",
+    "description-line2": "一位 Cosplayer 😉"
+  },
+  "Article": {
+    "title": "目录",
+    "description": "我不知道它们是否能够称得上是文章，但我很乐意将这些分享出去，希望你能够喜欢或对你有所帮助。"
+  }
+}
