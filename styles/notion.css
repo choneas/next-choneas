@@ -1,0 +1,25 @@
+:root {
+    --notion-max-width: 720px
+}
+
+.notion {
+    font-family: var(--font-serif);
+}
+
+.notion-page {
+    width: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+}
+
+.notion-collection-page-properties {
+    display: none
+}
+
+.notion-text {
+    font-size: large;
+}
+
+.notion-inline-code {
+    font-family: var(--font-code);
+}

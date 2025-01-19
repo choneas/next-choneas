@@ -17,15 +17,15 @@ export default async function Home() {
     return (
         <div className="container mt-10 md:mt-16 mx-auto px-4 md:px-12">
             <p className="text-lg">{t("hello-iam")}</p>
-            <h1 className="font-bold text-danger-700">{t('choneas')}</h1>
+            <h1 className="font-bold text-primary">{t('choneas')}</h1>
             <p className="text-content4-foreground">{t('name-desc')}</p>
             <p
-                className="text-lg text-opacity-50 my-4"
+                className="text-lg text-opacity-50 my-4 text-secondary-900"
             >
                 {t('description')}
             </p>
             <p
-                className="text-lg text-opacity-50 my-0"
+                className="text-lg text-opacity-50 my-0 text-secondary-900"
             >
                 {t('description-line2')}
             </p>

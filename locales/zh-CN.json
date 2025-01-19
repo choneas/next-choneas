@@ -1,7 +1,8 @@
 {
   "Metadata": {
     "title": "Choneas 的个人博客",
-    "description": "代码、随笔、思考、分享以及生活"
+    "description": "代码、随笔、思考、分享以及生活",
+    "suffix": " - Choneas 的个人博客"
   },
   "Navbar": {
     "articles": "文章",
@@ -17,6 +18,29 @@
   },
   "Article": {
     "title": "目录",
-    "description": "我不知道它们是否能够称得上是文章，但我很乐意将这些分享出去，希望你能够喜欢或对你有所帮助。"
+    "description": "您可以在这里找到所有的文章或筛选它们。它们是记录我成长的一部分。希望对您有所帮助。"
+  },
+  "Article-Header": {
+    "created_at": "发表于 ",
+    "updated_at": "更新于 "
+  },
+  "Tag": {
+    "Life": "生活",
+    "ACGN": "二次元",
+    "Daily Notes":"随手记",
+    "C++": "C++",
+    "React": "React",
+    "DevOps": "开发运维",
+    "Backend": "后端",
+    "Frontend": "前端",
+    "Algorithm": "算法",
+    "Cosplay": "角色扮演(cosplay)",
+    "Makeup": "妆面",
+    "Illustration": "插画",
+    "Xiao": "魈",
+    "Fuhua": "符华",
+    "Honkai: Star Rail": "崩坏：星穹铁道",
+    "Genshin Impact": "原神",
+    "Honkai Impact 3rd": "崩坏 3rd"
   }
 }

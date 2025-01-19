@@ -1,7 +1,8 @@
 {
   "Metadata": {
     "title": "Choneas's Blog",
-    "description": "Coding, Recording and life shares."
+    "description": "Coding, Recording and life shares.",
+    "suffix": " - Choneas's Blog"
   },
   "Navbar": {
     "articles": "Articles",
@@ -17,6 +18,29 @@
   },
   "Article": {
     "title": "Contents",
-    "description": "Hope you like it."
+    "description": "You can find all the posts here or sift through them. They are part of documenting my growth. I hope they are helpful to you."
+  },
+  "Article-Header": {
+    "created_at": "Posted at",
+    "updated_at": "Edited at"
+  },
+  "Tag": {
+    "ACGN": "ACGN",
+    "Algorithm": "Algorithm",
+    "Backend": "Backend",
+    "C++": "C++",
+    "Cosplay": "Cosplay",
+    "Daily Notes": "Daily Notes",
+    "DevOps": "DevOps",
+    "Frontend": "Frontend",
+    "Fuhua": "Fuhua",
+    "Genshin Impact": "Genshin Impact",
+    "Honkai Impact 3rd": "Honkai Impact 3rd",
+    "Honkai: Star Rail": "Honkai: Star Rail",
+    "Illustration": "Illustration",
+    "Life": "Life",
+    "Makeup": "Makeup",
+    "React": "React",
+    "Xiao": "Xiao"
   }
 }
