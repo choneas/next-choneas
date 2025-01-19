@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
@@ -47,6 +48,7 @@ export default async function RootLayout({
                     </Providers>
                 </NextIntlClientProvider>
             </body>
+            <GoogleAnalytics gaId="G-HFVX5Q824Z" />
         </html>
     );
 }
