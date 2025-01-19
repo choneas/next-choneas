@@ -13,4 +13,6 @@ const Icon = memo(({ name, ...props }: IconProps) => {
   return <LucideIcon {...props} />;
 });
 
+Icon.displayName = 'Icon';
+
 export { Icon };

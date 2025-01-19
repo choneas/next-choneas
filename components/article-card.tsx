@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardHeader, CardBody, CardFooter, Image, Link, Chip, Avatar } from "@heroui/react";
+import { Card, CardHeader, CardBody, CardFooter, Image, Chip, Avatar } from "@heroui/react";
 import NextLink from "next/link"
 import { useLocale } from 'next-intl';
 import { uuidToId } from "notion-utils";

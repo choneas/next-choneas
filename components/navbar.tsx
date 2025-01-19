@@ -7,12 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useArticleMetadata } from "@/stores/article";
 import { Avatar } from "@/components/avatar";
-
 import { NavItems } from "@/data/navbar";
-
-function getRandomBool(): boolean {
-    return Math.random() < 0.4;
-}
 
 export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -104,8 +99,6 @@ const NavbarBrand = () => {
     const headTextScale = useTransform(scrollY, [0, 100], [1, 0.8])
     const contentTextOpacity = useTransform(scrollY, [0, 100], [0, 1])
 
-    const isFunnyName = getRandomBool();
-
     return (
         <Link disableAnimation href="/" color="foreground" className={pathname === '/' ? 'hidden' : 'block'}>
             <HeroNavbarBrand className="flex gap-4 font-bold">
@@ -122,7 +115,7 @@ const NavbarBrand = () => {
                                         scale: headTextScale
                                     }}
                                 >
-                                    {isFunnyName ? 'Choneas' : '符华大人的小赤鸢'}
+                                    Choneas
                                 </motion.div>
                                 <motion.div
                                     className="absolute"

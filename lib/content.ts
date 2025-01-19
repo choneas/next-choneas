@@ -63,13 +63,6 @@ async function getAllArticles(): Promise<ArticleMetadata[]> {
     return articles;
 }
 
-// 添加 Notion 属性类型定义
-interface NotionProperties {
-    [key: string]: any;
-    'Xwwz': string[][]; // ID property
-    '}YdW': string[][]; // Slug property
-}
-
 // 修改 NotionBlock 接口
 interface NotionBlock {
     value: {
@@ -78,7 +71,7 @@ interface NotionBlock {
         properties: {
             'XwwZ'?: [[string]];  // ID property
             '}YdW'?: [[string]];  // Slug property
-            [key: string]: any;
+            [key: string]: [[string]] | undefined;
         };
     };
 }
@@ -166,7 +159,7 @@ async function generateArticleMetadata(
                 break;
             case 'person':
                 if (schema.name === 'Author') {
-                    const authorUuids = value[1]?.map((user: any[]) => user[1]) || [];
+                    const authorUuids = value[1]?.map((user: [string, string]) => user[1]) || [];
                     metadata.author = authorUuids
                         .map((uuid: string) => authors.find(author => author.uuid === uuid))
                         .filter((author: Author | undefined): author is Author => author !== undefined);
