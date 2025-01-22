@@ -20,9 +20,13 @@
     "title": "Contents",
     "description": "You can find all the posts here or sift through them. They are part of documenting my growth. I hope they are helpful to you."
   },
+  "Project": {
+    "title": "Projects - Choneas's Blog",
+    "description": "Choneas"
+  },
   "Article-Header": {
-    "created_at": "Posted at",
-    "updated_at": "Edited at"
+    "created_at": "Posted at ",
+    "updated_at": "Edited at "
   },
   "Tag": {
     "ACGN": "ACGN",
@@ -42,5 +46,12 @@
     "Makeup": "Makeup",
     "React": "React",
     "Xiao": "Xiao"
+  },
+  "Article-Filter": {
+    "label-categories": "Select categories",
+    "placeholder-search": "Search...",
+    "label-search": "Search title or description",
+    "not-found": "No result.",
+    "placeholder-categories": "Category"
   }
 }

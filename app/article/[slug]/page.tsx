@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import NotionPage from "@/components/notion-page";
 import { getTranslations } from 'next-intl/server';
 import { ArticleHeader } from "@/components/article-header";
-import { getArticleBySlug } from "@/lib/content";
+import { getArticle } from "@/lib/content";
 
 export async function generateMetadata(
     {params}: {params: Promise<{slug: string}>}
 ): Promise<Metadata> {
     const slug = (await params).slug;
     const t = await getTranslations('Metadata')
-    const { metadata } = await getArticleBySlug(slug);
+    const { metadata } = await getArticle(slug);
 
     return {
         title: metadata.title + t('suffix'),
@@ -27,7 +27,7 @@ export default async function Article({
     params: Promise<{ slug: string }>,
 }) {
     const slug = (await params).slug;
-    const { metadata, recordMap } = await getArticleBySlug(slug);
+    const { metadata, recordMap } = await getArticle(slug);
 
     return (
         <>

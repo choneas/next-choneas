@@ -20,6 +20,13 @@
     "title": "目录",
     "description": "您可以在这里找到所有的文章或筛选它们。它们是记录我成长的一部分。希望对您有所帮助。"
   },
+  "Article-Filter": {
+    "placeholder-categories": "类别",
+    "label-categories": "选择一个或多个类别",
+    "placeholder-search": "搜索...",
+    "label-search": "搜索文章标题或摘要",
+    "not-found": "没有找到相关内容"
+  },
   "Article-Header": {
     "created_at": "发表于 ",
     "updated_at": "更新于 "
@@ -27,7 +34,7 @@
   "Tag": {
     "Life": "生活",
     "ACGN": "二次元",
-    "Daily Notes":"随手记",
+    "Daily Notes": "随手记",
     "C++": "C++",
     "React": "React",
     "DevOps": "开发运维",
@@ -42,5 +49,9 @@
     "Honkai: Star Rail": "崩坏：星穹铁道",
     "Genshin Impact": "原神",
     "Honkai Impact 3rd": "崩坏 3rd"
+  },
+  "Project": {
+    "title": "项目 - Choneas 的博客",
+    "description": "Choneas 目前的项目。cuckoo-oj：现代基于 Next.js 的 OJ 系统；"
   }
 }

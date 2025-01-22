@@ -20,12 +20,12 @@ export default async function Home() {
             <h1 className="font-bold text-primary">{t('choneas')}</h1>
             <p className="text-content4-foreground">{t('name-desc')}</p>
             <p
-                className="text-lg text-opacity-50 my-4 text-secondary-900"
+                className="text-lg my-4 text-secondary"
             >
                 {t('description')}
             </p>
             <p
-                className="text-lg text-opacity-50 my-0 text-secondary-900"
+                className="text-lg my-0 text-secondary"
             >
                 {t('description-line2')}
             </p>

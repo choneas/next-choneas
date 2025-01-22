@@ -76,7 +76,7 @@ interface NotionBlock {
     };
 }
 
-async function getArticleBySlug(slugOrId: string) {
+async function getArticle(slugOrId: string) {
     const rootPage = await getRootPage();
     let targetId: string | undefined;
 
@@ -185,6 +185,6 @@ async function generateArticleMetadata(
 }
 
 export {
-    getAllArticles,
-    getArticleBySlug
+    getArticle,
+    getAllArticles
 }

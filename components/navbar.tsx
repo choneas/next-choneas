@@ -3,8 +3,9 @@
 import { Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem } from "@heroui/react";
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { IoMdArrowBack } from "react-icons/io";
 import { useArticleMetadata } from "@/stores/article";
 import { Avatar } from "@/components/avatar";
 import { NavItems } from "@/data/navbar";
@@ -89,6 +90,7 @@ const NavbarItems = () => {
 }
 
 const NavbarBrand = () => {
+    const router = useRouter();
     const pathname = usePathname();
     const { scrollY } = useScroll();
     const { ArticleMetadata } = useArticleMetadata();
@@ -100,38 +102,43 @@ const NavbarBrand = () => {
     const contentTextOpacity = useTransform(scrollY, [0, 100], [0, 1])
 
     return (
-        <Link disableAnimation href="/" color="foreground" className={pathname === '/' ? 'hidden' : 'block'}>
-            <HeroNavbarBrand className="flex gap-4 font-bold">
-                <Avatar isChoneas />
-                {
-                    pathname.includes("article/") ?
-                        <>
-                            <div className="flex pt-2 pb-4 justify-start overflow-hidden h-6">
-                                <motion.div
-                                    className="absolute origin-left"
-                                    style={{ 
-                                        y: headTextY, 
-                                        opacity: headTextOpacity,
-                                        scale: headTextScale
-                                    }}
-                                >
-                                    Choneas
-                                </motion.div>
-                                <motion.div
-                                    className="absolute"
-                                    style={{ 
-                                        y: contentTextY, 
-                                        opacity: contentTextOpacity 
-                                    }}
-                                >
-                                    {ArticleMetadata?.title}
-                                </motion.div>
-                            </div>
-                        </>
-                        :
-                        <p>Choneas</p>
-                }
-            </HeroNavbarBrand>
-        </Link>
+        <>
+            <Link disableAnimation onPress={router.back} color="foreground" className={pathname.includes('article/') ? 'block' : 'hidden' + ' hover:cursor-pointer'}>
+                    <IoMdArrowBack size={24} />
+            </Link>
+            <Link disableAnimation href="/" color="foreground">
+                <HeroNavbarBrand className="flex gap-4 font-bold">
+                    <Avatar isChoneas />
+                    {
+                        pathname.includes("article/") ?
+                            <>
+                                <div className="flex pt-2 pb-4 justify-start overflow-hidden h-6">
+                                    <motion.div
+                                        className="absolute origin-left"
+                                        style={{
+                                            y: headTextY,
+                                            opacity: headTextOpacity,
+                                            scale: headTextScale
+                                        }}
+                                    >
+                                        Choneas
+                                    </motion.div>
+                                    <motion.div
+                                        className="absolute"
+                                        style={{
+                                            y: contentTextY,
+                                            opacity: contentTextOpacity
+                                        }}
+                                    >
+                                        {ArticleMetadata?.title}
+                                    </motion.div>
+                                </div>
+                            </>
+                            :
+                            <p>Choneas</p>
+                    }
+                </HeroNavbarBrand>
+            </Link>
+        </>
     )
 }
