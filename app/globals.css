@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    @apply selection:bg-primary selection:text-primary-foreground
+}
+
 h1 {
     @apply text-4xl lg:text-5xl font-extrabold tracking-tight
 }

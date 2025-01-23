@@ -61,7 +61,7 @@ export function ArticleListWithFilter({
 
     return (
         <>
-            <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-4 gap-2">
+            <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-5 gap-2">
                 <Input
                     size="lg"
                     color={searchValue.length > 0 ? "primary" : "default"}
@@ -76,7 +76,7 @@ export function ArticleListWithFilter({
                     size="lg"
                     color={Array.from(selectedCategories).length > 0 ? "primary" : "default"}
                     selectionMode="multiple"
-                    className="md:col-span-1"
+                    className="md:col-span-2"
                     selectedKeys={selectedCategories}
                     onSelectionChange={setSelectedCategories}
                     label={t('label-categories')}
