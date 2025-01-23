@@ -1,7 +1,28 @@
-export default function Project(){
+import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
+import { Projects } from "@/data/project"
+import { ProjectCard } from "@/components/project-card"
+
+export async function generateMetadata(): Promise<Metadata> {
+    const t = await getTranslations('Project')
+    return {
+        title: t('title') + " | Choneas's blog",
+    }
+}
+
+export default async function Project(){
+    const t = await getTranslations("Project")
+
     return (
         <>
-            <h1>Whoa, this page is coding....</h1>
+            <h1>{t('title')}</h1>
+            <p className="pt-4 text-lg">{t('description')}</p>
+
+            <div className="flex flex-row gap-4">
+                {Projects.map((project, index) => (
+                    <ProjectCard key={index} project={project} />
+                ))}
+            </div>
         </>
     )
 }

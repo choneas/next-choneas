@@ -20,6 +20,22 @@
     "title": "目录",
     "description": "您可以在这里找到所有的文章或筛选它们。它们是记录我成长的一部分。希望对您有所帮助。"
   },
+  "Project": {
+    "title": "项目",
+    "description": "我正在不断的学习，汲取更多的开发经验，还有更好的代码规范。",
+    "error": {
+      "fetch-failed": "获取项目信息失败",
+      "not-found": "项目不存在或已被删除"
+    }
+  },
+  "About": {
+    "title": "关于",
+    "description": "👋 你好，我是 Choneas。喜欢写代码、设计用户界面等计算机相关知识。同时也对插画、动画制作、摄影感兴趣。目前是一名在校学生。",
+    "tech-stack": "技术栈",
+    "social-links": "发现我",
+    "dream-job": "梦想",
+    "dream-description": "全栈工程师、英语老师😉。不需要太多思考，更简单的生活，更少的烦恼，更多的自由。"
+  },
   "Article-Filter": {
     "placeholder-categories": "类别",
     "label-categories": "选择一个或多个类别",
@@ -49,9 +65,5 @@
     "Honkai: Star Rail": "崩坏：星穹铁道",
     "Genshin Impact": "原神",
     "Honkai Impact 3rd": "崩坏 3rd"
-  },
-  "Project": {
-    "title": "项目 - Choneas 的博客",
-    "description": "Choneas 目前的项目。cuckoo-oj：现代基于 Next.js 的 OJ 系统；"
   }
 }

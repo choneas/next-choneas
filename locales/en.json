@@ -21,8 +21,12 @@
     "description": "You can find all the posts here or sift through them. They are part of documenting my growth. I hope they are helpful to you."
   },
   "Project": {
-    "title": "Projects - Choneas's Blog",
-    "description": "Choneas"
+    "title": "Projects",
+    "description": "The pursuit of knowledge and professional development is a continuous endeavour, encompassing the acquisition of new development experience and the refinement of coding specifications.",
+    "error": {
+      "fetch-failed": "Fetch project info failed.",
+      "not-found": "Project deleted or invaild."
+    }
   },
   "Article-Header": {
     "created_at": "Posted at ",
@@ -53,5 +57,13 @@
     "label-search": "Search title or description",
     "not-found": "No result.",
     "placeholder-categories": "Category"
+  },
+  "About": {
+    "title": "Abouot",
+    "description": "👋 Greetings. My name is Choneas. I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
+    "dream-description": "Full stack engineer and English teacher. This position does not require a great deal of cognitive effort; the principle of parsimony is applicable.",
+    "dream-job": "Dream Job",
+    "social-links": "Find Me",
+    "tech-stack": "Tech Stack"
   }
 }

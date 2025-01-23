@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import NotionPage from "@/components/notion-page";
 import { getTranslations } from 'next-intl/server';
 import { ArticleHeader } from "@/components/article-header";
-import { getArticle } from "@/lib/content";
+import { Comment } from '@/components/comment';
+import { getArticle, ArticleNotFoundError } from "@/lib/content";
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata(
     {params}: {params: Promise<{slug: string}>}
@@ -27,13 +29,22 @@ export default async function Article({
     params: Promise<{ slug: string }>,
 }) {
     const slug = (await params).slug;
-    const { metadata, recordMap } = await getArticle(slug);
+    try {
+        const { metadata, recordMap } = await getArticle(slug);
 
-    return (
-        <>
-            <ArticleHeader article={metadata} />
+        return (
+            <>
+                <ArticleHeader article={metadata} />
 
-            <NotionPage recordMap={recordMap}/>
-        </>
-    )
+                <NotionPage recordMap={recordMap}/>
+
+                <Comment slug={metadata.slug} className='mt-8'/>
+            </>
+        );
+    } catch (error) {
+        if (error instanceof ArticleNotFoundError) {
+            notFound();
+        }
+        throw error;
+    }
 }

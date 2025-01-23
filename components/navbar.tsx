@@ -3,9 +3,8 @@
 import { Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem } from "@heroui/react";
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { IoMdArrowBack } from "react-icons/io";
 import { useArticleMetadata } from "@/stores/article";
 import { Avatar } from "@/components/avatar";
 import { NavItems } from "@/data/navbar";
@@ -74,7 +73,7 @@ const NavbarItems = () => {
                     return (
                         <NavbarItem key={index} className="hidden sm:block">
                             <Link
-                                color="foreground"
+                                color={pathname.includes(item.href) && pathname != "/" ? "primary" : "secondary"}
                                 href={item.href}
                                 className={`flex justify-start gap-2 ${pathname.includes(item.href) && pathname != "/" ? "font-bold" : ""}`}
                             >
@@ -90,7 +89,6 @@ const NavbarItems = () => {
 }
 
 const NavbarBrand = () => {
-    const router = useRouter();
     const pathname = usePathname();
     const { scrollY } = useScroll();
     const { ArticleMetadata } = useArticleMetadata();
@@ -103,9 +101,6 @@ const NavbarBrand = () => {
 
     return (
         <>
-            <Link disableAnimation onPress={router.back} color="foreground" className={pathname.includes('article/') ? 'block' : 'hidden' + ' hover:cursor-pointer'}>
-                    <IoMdArrowBack size={24} />
-            </Link>
             <Link disableAnimation href="/" color="foreground">
                 <HeroNavbarBrand className="flex gap-4 font-bold">
                     <Avatar isChoneas />
@@ -114,7 +109,7 @@ const NavbarBrand = () => {
                             <>
                                 <div className="flex pt-2 pb-4 justify-start overflow-hidden h-6">
                                     <motion.div
-                                        className="absolute origin-left"
+                                        className="absolute origin-left text-primary"
                                         style={{
                                             y: headTextY,
                                             opacity: headTextOpacity,
@@ -124,7 +119,7 @@ const NavbarBrand = () => {
                                         Choneas
                                     </motion.div>
                                     <motion.div
-                                        className="absolute"
+                                        className="absolute truncate hover:text-clip text-secondary"
                                         style={{
                                             y: contentTextY,
                                             opacity: contentTextOpacity
@@ -135,7 +130,7 @@ const NavbarBrand = () => {
                                 </div>
                             </>
                             :
-                            <p>Choneas</p>
+                            <p className="text-primary">Choneas</p>
                     }
                 </HeroNavbarBrand>
             </Link>

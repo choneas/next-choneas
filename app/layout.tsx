@@ -48,7 +48,7 @@ export default async function RootLayout({
                     </Providers>
                 </NextIntlClientProvider>
             </body>
-            <GoogleAnalytics gaId="G-HFVX5Q824Z" />
+            <GoogleAnalytics gaId={process.env.GA_ID!}/>
         </html>
     );
 }

@@ -64,6 +64,7 @@ export function ArticleListWithFilter({
             <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-4 gap-2">
                 <Input
                     size="lg"
+                    color={searchValue.length > 0 ? "primary" : "default"}
                     className="md:col-span-3"
                     value={searchValue}
                     onValueChange={setSearchValue}
@@ -73,6 +74,7 @@ export function ArticleListWithFilter({
                 />
                 <Select
                     size="lg"
+                    color={Array.from(selectedCategories).length > 0 ? "primary" : "default"}
                     selectionMode="multiple"
                     className="md:col-span-1"
                     selectedKeys={selectedCategories}

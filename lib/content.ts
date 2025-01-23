@@ -76,6 +76,13 @@ interface NotionBlock {
     };
 }
 
+class ArticleNotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ArticleNotFoundError";
+    }
+}
+
 async function getArticle(slugOrId: string) {
     const rootPage = await getRootPage();
     let targetId: string | undefined;
@@ -110,7 +117,7 @@ async function getArticle(slugOrId: string) {
     }
 
     if (!targetId) {
-        throw new Error('Article not found');
+        throw new ArticleNotFoundError('Article not found');
     }
 
     const recordMap = await notion.getPage(targetId);
@@ -186,5 +193,6 @@ async function generateArticleMetadata(
 
 export {
     getArticle,
-    getAllArticles
+    getAllArticles,
+    ArticleNotFoundError
 }

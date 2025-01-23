@@ -20,7 +20,7 @@ export function ArticleHeader({ article }: { article: ArticleMetadata }) {
     return (
         <>
             {article.cover ? (
-                <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2)]">
+                <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2+0.5rem)] overflow-hidden">
                     <div className="relative md:h-[40vh] h-[80vh]">
                         <Image
                             fill
