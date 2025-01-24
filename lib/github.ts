@@ -1,10 +1,10 @@
-export async function fetchGithubRepoInfo(repo: string) {
+async function fetchGithubRepoInfo(repo: string) {
     try {
         const response = await fetch(`https://api.github.com/repos/${repo}`, {
             headers: {
                 'Accept': 'application/vnd.github.v3+json',
             },
-            next: { revalidate: 3600 } // 缓存1小时
+            next: { revalidate: 3600 } // Cache for 1 hour
         });
         
         if (!response.ok) return null;
@@ -14,3 +14,5 @@ export async function fetchGithubRepoInfo(repo: string) {
         return null;
     }
 }
+
+export { fetchGithubRepoInfo };

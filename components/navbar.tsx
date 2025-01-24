@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useArticleMetadata } from "@/stores/article";
 import { Avatar } from "@/components/avatar";
-import { NavItems } from "@/data/navbar";
+import { navItems } from "@/data/navbar";
 
 export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +45,7 @@ const NavbarMenu = () => {
     return (
         <HeroNavbarMenu>
             {
-                NavItems.map((item, index) => (
+                navItems.map((item, index) => (
                     <NavbarMenuItem key={index}>
                         <Link
                             color="foreground"
@@ -69,7 +69,7 @@ const NavbarItems = () => {
     return (
         <NavbarContent justify="center">
             {
-                NavItems.map((item, index) => {
+                navItems.map((item, index) => {
                     return (
                         <NavbarItem key={index} className="hidden sm:block">
                             <Link

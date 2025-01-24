@@ -11,7 +11,7 @@ interface NavItem {
     href: string
 }
 
-const NavItems: NavItem[] = [
+const navItems: NavItem[] = [
     {
         name: "articles",
         icon: <FaPenNib />,
@@ -29,4 +29,4 @@ const NavItems: NavItem[] = [
     },
 ]
 
-export { NavItems }
+export { navItems }

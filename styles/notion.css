@@ -22,7 +22,7 @@
 }
 
 .notion-text {
-    font-size: large;
+    @apply text-lg
 }
 
 .notion-inline-code {

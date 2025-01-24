@@ -1,8 +1,8 @@
 "use server"
 
 import { NotionAPI } from "notion-client";
-import { type ExtendedRecordMap } from "notion-types";
-import { idToUuid, defaultMapImageUrl } from "notion-utils";
+import type { ExtendedRecordMap, PageBlock } from "notion-types";
+import { idToUuid, defaultMapImageUrl, getPageTableOfContents } from "notion-utils";
 import { getTranslations } from "next-intl/server";
 import { authors } from "@/data/authors";
 import type { ArticleMetadata, PropertySchema } from "@/types/content";
@@ -187,6 +187,12 @@ async function generateArticleMetadata(
         metadata.cover_preview = defaultMapImageUrl(page.format.social_media_image_preview_url, page);
         metadata.cover_position = page.format.page_cover_position;
     }
+
+    // 获取目录
+    metadata.toc = getPageTableOfContents(
+        recordMap.block[resolvedPageId].value as PageBlock, 
+        recordMap
+    );
 
     return metadata;
 }

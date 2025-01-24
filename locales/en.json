@@ -13,8 +13,8 @@
     "hello-iam": "👋 Nice to meet you, I am",
     "choneas": "Choneas",
     "name-desc": "or ( The Master Fuhua's ) Little Phoenix",
-    "description": "Full stack programmer, C++ algorithm, web dev, and",
-    "description-line2": "a Cosplayer!"
+    "description": "Full stack programmer, C++ algorithm, Web developer, and",
+    "description-line2": "a cosplayer. (本站点支持中文)"
   },
   "Article": {
     "title": "Contents",
@@ -27,6 +27,9 @@
       "fetch-failed": "Fetch project info failed.",
       "not-found": "Project deleted or invaild."
     }
+  },
+  "Table-Of-Contents": {
+    "toc": "Table of Contents"
   },
   "Article-Header": {
     "created_at": "Posted at ",
@@ -60,10 +63,12 @@
   },
   "About": {
     "title": "About",
-    "description": "👋 Greetings. My name is Choneas. I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
+    "description": "👋 Greetings. My name is Choneas (One may also address me by my pseudonym, Li Sushang) . I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
     "dream-description": "Full stack engineer and English teacher. This position does not require a great deal of cognitive effort; the principle of parsimony is applicable.",
     "dream-job": "Dream Job",
     "social-links": "Find Me",
-    "tech-stack": "Tech Stack"
+    "tech-stack": "Tech Stack",
+    "color-scheme": "Color Scheme",
+    "color-scheme-description": "The color scheme of this website is inspired by the character Fuhua from the game Honkai Impact 3rd. The color scheme is based on the character's appearance and personality."
   }
 }

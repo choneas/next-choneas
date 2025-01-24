@@ -44,12 +44,21 @@ export function ArticleListWithFilter({
 
         // 搜索筛选
         if (searchValue) {
-            const searchLower = searchValue.toLowerCase()
-            const titleMatch = article.title.toLowerCase().includes(searchLower)
-            const descriptionMatch = article.description?.toLowerCase().includes(searchLower)
-            if (!titleMatch && !descriptionMatch) {
-                return false
-            }
+            const searchTerms = searchValue.toLowerCase().split(/\s+/).filter(term => term.length > 0)
+            const titleLower = article.title.toLowerCase()
+            const descriptionLower = article.description?.toLowerCase() || ''
+            
+            // 添加目录内容搜索
+            const tocContent = article.toc
+                ?.map(item => item.text.toLowerCase())
+                .join(' ') || ''
+
+            // 检查所有搜索词是否都能在标题、描述或目录中找到
+            return searchTerms.every(term => 
+                titleLower.includes(term) || 
+                descriptionLower.includes(term) ||
+                tocContent.includes(term)
+            )
         }
 
         return true

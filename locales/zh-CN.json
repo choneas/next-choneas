@@ -13,8 +13,8 @@
     "hello-iam": "👋 很高兴认识你，我是",
     "choneas": "Choneas",
     "name-desc": "又或是 符华大人的小赤鸢 🪶",
-    "description": "全栈程序鸢，C++ 算法，Web 开发，应用程序开发，以及",
-    "description-line2": "一位 Cosplayer 😉"
+    "description": "全栈程序鸢，C++ 算法，Web 开发，以及",
+    "description-line2": "一位 cosplayer 😉 (This site supports English.)"
   },
   "Article": {
     "title": "目录",
@@ -22,7 +22,7 @@
   },
   "Project": {
     "title": "项目",
-    "description": "我正在不断的学习，汲取更多的开发经验，还有更好的代码规范。",
+    "description": "我正在不断的学习，汲取更多的开发经验，编写更好的、更棒的项目。",
     "error": {
       "fetch-failed": "获取项目信息失败",
       "not-found": "项目不存在或已被删除"
@@ -30,11 +30,16 @@
   },
   "About": {
     "title": "关于",
-    "description": "👋 你好，我是 Choneas。喜欢写代码、设计用户界面等计算机相关知识。同时也对插画、动画制作、摄影感兴趣。目前是一名在校学生。",
+    "description": "👋 你好，我是 Choneas (One may also address me by my pseudonym, Li Sushang)。喜欢写代码、设计用户界面等计算机相关知识。同时也对插画、动画制作、摄影感兴趣。目前是一名在校学生。",
     "tech-stack": "技术栈",
     "social-links": "发现我",
     "dream-job": "梦想",
-    "dream-description": "全栈工程师、英语老师😉。不需要太多思考，更简单的生活，更少的烦恼，更多的自由。"
+    "dream-description": "全栈工程师、英语老师😉。不需要太多思考，更简单的生活，更少的烦恼，更多的自由。",
+    "color-scheme": "主题颜色的来历",
+    "color-scheme-description": "本网站的配色方案灵感来源于《崩坏3》中的角色符华。该配色方案以角色的外观为基础进行设计。本站点与 miHoYo 或其关联公司无关。"
+  },
+  "Table-Of-Contents": {
+    "toc": "目录"
   },
   "Article-Filter": {
     "placeholder-categories": "类别",

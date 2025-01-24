@@ -8,7 +8,7 @@ import { FaReact, FaFigma, FaNodeJs, FaPython } from "react-icons/fa6";
 import { SiNextdotjs, SiTypescript, SiMongodb, SiTailwindcss, SiShadcnui, SiNextui } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
 
-export const SocialLinks: SocialLink[] = [
+export const socialLinks: SocialLink[] = [
     {
         platform: "Bilibili",
         name: "符华大人的小赤鸢",
@@ -37,7 +37,7 @@ export const SocialLinks: SocialLink[] = [
     },
 ]
 
-export const TechStacks: TechStack[] = [
+export const techStacks: TechStack[] = [
     {
         name: "React",
         icon: <FaReact />,

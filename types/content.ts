@@ -1,4 +1,5 @@
-import type { Author } from './author'
+import type { TableOfContentsEntry } from 'notion-utils'
+import type { Author } from '@/types/author'
 
 export interface ArticleMetadata {
     id?: string
@@ -8,6 +9,7 @@ export interface ArticleMetadata {
     author?: Author[]
     category?: string[]
     description?: string
+    toc?: TableOfContentsEntry[]
     cover?: string
     cover_preview?: string
     cover_position?: number

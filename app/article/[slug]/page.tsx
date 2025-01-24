@@ -5,6 +5,7 @@ import { ArticleHeader } from "@/components/article-header";
 import { Comment } from '@/components/comment';
 import { getArticle, ArticleNotFoundError } from "@/lib/content";
 import { notFound } from 'next/navigation';
+import { TableOfContents } from '@/components/table-of-contents';
 
 export async function generateMetadata(
     {params}: {params: Promise<{slug: string}>}
@@ -35,6 +36,8 @@ export default async function Article({
         return (
             <>
                 <ArticleHeader article={metadata} />
+
+                <TableOfContents toc={metadata.toc!} />
 
                 <NotionPage recordMap={recordMap}/>
 
