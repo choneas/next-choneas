@@ -20,7 +20,7 @@ export function ArticleHeader({ article }: { article: ArticleMetadata }) {
     return (
         <>
             {article.cover ? (
-                <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2+0.5rem)] overflow-hidden">
+                <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2+0.5rem)] overflow-hidden mb-6">
                     <div className="relative md:h-[40vh] h-[80vh]">
                         <Image
                             fill
@@ -29,7 +29,7 @@ export function ArticleHeader({ article }: { article: ArticleMetadata }) {
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                            <div className="h-full container mx-auto px-8 sm:px-24 md:px-48 flex flex-col justify-end pb-8">
+                            <div className="h-full container mx-auto flex flex-col justify-end pb-8">
                                 <div className="flex flex-wrap gap-2">
                                     {article.category?.map((category) => (
                                         <Chip
@@ -55,7 +55,7 @@ export function ArticleHeader({ article }: { article: ArticleMetadata }) {
                     </div>
                 </div>
             ) : (
-                <div className="container mx-auto px-8 sm:px-24 md:px-48">
+                <div className="container mx-auto mb-6">
                     <div className="flex flex-wrap gap-2">
                         {article.category?.map((category) => (
                             <Chip
