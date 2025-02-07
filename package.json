@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "turbo build check-types",
     "start": "next start",
     "lint": "next lint"
   },
@@ -25,6 +25,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-notion-x": "^7.2.6",
+    "turbo": "^2.4.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
