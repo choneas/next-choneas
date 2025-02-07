@@ -6,16 +6,16 @@ import { Chip } from "@heroui/react"
 import { useTranslations, useLocale } from "next-intl"
 import { formatDate } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
-import { useArticleMetadata } from "@/stores/article"
+import { usePostMetadata } from "@/stores/article"
 
 export function ArticleHeader({ article }: { article: PostMetadata }) {
     const t = useTranslations("Article-Header")
     const locale = useLocale()
-    const { setArticleMetadata } = useArticleMetadata()
+    const { setPostMetadata } = usePostMetadata()
 
     useEffect(() => {
-        setArticleMetadata?.(article)
-    }, [article, setArticleMetadata])
+        setPostMetadata?.(article)
+    }, [article, setPostMetadata])
 
     return (
         <>

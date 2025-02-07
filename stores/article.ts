@@ -1,14 +1,16 @@
 import { create } from 'zustand';
-import type { ArticleMetadata } from '@/types/content';
+import type { PostMetadata } from '@/types/content';
 
-interface ArticleMetadataStore {
-    ArticleMetadata?: ArticleMetadata
-    setArticleMetadata?: (article: ArticleMetadata) => void
+interface PostMetadataStore {
+    PostMetadata?: PostMetadata
+    setPostMetadata?: (article: PostMetadata) => void
 }
 
-export const useArticleMetadata = create<ArticleMetadataStore>((set) => ({
-    ArticleMetadata: {
-        title: ''
+export const usePostMetadata = create<PostMetadataStore>((set) => ({
+    PostMetadata: {
+        title: '',
+        created_date: new Date,
+        last_edit_date: new Date
     },
-    setArticleMetadata: (article: ArticleMetadata) => set({ ArticleMetadata: article })
+    setPostMetadata: (article: PostMetadata) => set({ PostMetadata: article })
 }));

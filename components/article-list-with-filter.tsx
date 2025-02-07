@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { Select, SelectItem, Selection, Input } from "@heroui/react"
 import { IoSearch } from "react-icons/io5"
-import type { ArticleMetadata } from "@/types/content"
+import type { PostMetadata } from "@/types/content"
 import { ArticleCard } from "./article-card"
 
-function parseCategories(articles: ArticleMetadata[]): string[] {
+function parseCategories(articles: PostMetadata[]): string[] {
     const categorySet = new Set<string>();
     articles.forEach(article => {
         article.category?.forEach(category => {
@@ -21,7 +21,7 @@ export function ArticleListWithFilter({
     articles,
     sortOrder = 'desc'
 }: {
-    articles: ArticleMetadata[]
+    articles: PostMetadata[]
     sortOrder?: 'asc' | 'desc'
 }) {
     const t = useTranslations("Article-Filter")
@@ -100,7 +100,7 @@ export function ArticleListWithFilter({
 
             <div className="grid grid-cols-1 gap-8 mt-4">
                 {filteredArticles.length > 0 ?
-                    filteredArticles.map((article: ArticleMetadata) => (
+                    filteredArticles.map((article: PostMetadata) => (
                         <ArticleCard
                             key={article.id}
                             linkParam="slug"
