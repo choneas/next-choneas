@@ -22,7 +22,7 @@ export function TweetModal(
             placement="top"
             size="lg"
             classNames={{
-                header: "font-normal",
+                header: "font-normal -mb-8",
                 closeButton: "absolute top-4 right-4 size-8"
             }}
         >

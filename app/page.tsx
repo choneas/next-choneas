@@ -27,7 +27,7 @@ export default async function Home() {
                 {t('description-line2')}
             </p>
 
-            <TweetList />
+            <TweetList sortOrder="desc"/>
         </div>
     );
 }

@@ -70,7 +70,7 @@ export function TweetCard({
                 </CardHeader>
 
                 <CardBody>
-                    <h3>{tweet.title}</h3>
+                    <h3 className={isLoading ? 'pb-3' : ''}>{tweet.title}</h3>
                     {isLoading ? (
                         <TweetContentSkeleton images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
                     ) : recordMap && (
