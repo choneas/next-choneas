@@ -1,15 +1,15 @@
 import { Avatar as NextAvatar, AvatarProps as NextAvatarProps } from "@heroui/react";
 
 interface AvatarProps extends NextAvatarProps {
-    isChoneas?: boolean;
+    isMe?: boolean;
 }
 
-export function Avatar({ isChoneas, ...props }: AvatarProps) {
+export function Avatar({ isMe, ...props }: AvatarProps) {
     return (
         <NextAvatar 
             {...props} 
-            name={isChoneas? "Choneas" : props.name}
-            src={isChoneas ? "/avatars/choneas.png" : props.src}
+            name={isMe? "Choneas" : props.name}
+            src={isMe ? "/avatars/choneas.png" : props.src}
         />
     )
 }

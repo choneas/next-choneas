@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { TweetList }  from "@/components/tweet-list";
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("Metadata");
@@ -15,20 +16,18 @@ export default async function Home() {
     const t = await getTranslations("Home");
 
     return (
-        <div className="container mt-10 md:mt-16 mx-auto px-4 md:px-12">
+        <div className="container my-10 md:my-16 mx-auto px-4 md:px-12 max-w-6xl">
             <p className="text-lg">{t("hello-iam")}</p>
-            <h1 className="font-bold text-primary">{t('choneas')}</h1>
+            <h1 className="font-bold text-primary" translate="no">{t('choneas')}</h1>
             <p className="text-content4-foreground">{t('name-desc')}</p>
             <p
-                className="text-lg my-4 text-secondary"
+                className="text-lg py-4 pb-16 text-secondary"
             >
                 {t('description')}
-            </p>
-            <p
-                className="text-lg my-0 text-secondary"
-            >
                 {t('description-line2')}
             </p>
+
+            <TweetList />
         </div>
     );
 }

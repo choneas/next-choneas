@@ -30,21 +30,21 @@ export function ProjectCard({ project }: { project: Project }) {
                 })
                 .catch(() => setError(true));
         }
-    }, [project.repo]);
+    }, [project.repo, project.isGithubRepo]);
 
     return (
         <Card 
             isExternal 
             as={Link} 
             href={finalLink || '#'}
-            className="w-full hover:shadow-lg transition-shadow"
+            className="w-full transition-shadow bg-primary-60"
         >
             <CardHeader className="flex flex-col items-start gap-1 pb-2 px-4 pt-4">
                 <h3 className="text-xl font-semibold">
-                    {project.isGithubRepo ? project.repo : project.name}
+                    {project.name}
                 </h3>
                 {project.link && (
-                    <span className="text-sm text-gray-500 flex items-center gap-1">
+                    <span className="text-sm text-content2-foreground flex items-center gap-1">
                         {project.link}
                         <span className="i-heroicons-arrow-top-right-20-solid" />
                     </span>

@@ -5,10 +5,10 @@ import Image from "next/image"
 import { Chip } from "@heroui/react"
 import { useTranslations, useLocale } from "next-intl"
 import { formatDate } from "@/lib/format"
-import type { ArticleMetadata } from "@/types/content"
+import type { PostMetadata } from "@/types/content"
 import { useArticleMetadata } from "@/stores/article"
 
-export function ArticleHeader({ article }: { article: ArticleMetadata }) {
+export function ArticleHeader({ article }: { article: PostMetadata }) {
     const t = useTranslations("Article-Header")
     const locale = useLocale()
     const { setArticleMetadata } = useArticleMetadata()
@@ -45,7 +45,7 @@ export function ArticleHeader({ article }: { article: ArticleMetadata }) {
                                     ))}
                                 </div>
                                 <h1 className="text-4xl font-bold text-white mt-2">
-                                    {article.title}
+                                    {article.icon} {article.title}
                                 </h1>
                                 <p className="text-gray-300 text-sm mt-4">
                                     {t('created_at') + (article.created_date ? formatDate(article.created_date, locale) : '') + ' · ' + t('updated_at') + (article.last_edit_date ? formatDate(article.last_edit_date, locale) : '')}

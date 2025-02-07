@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
-import { getAllArticles } from '@/lib/content'
+import { getAllPosts } from '@/lib/content'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const articles = (await getAllArticles()).map(article => ({
+    const { articles } = await getAllPosts();
+    const articleUrls = articles.map(article => ({
         url: `https://choneas.com/article/${article.slug}`,
         lastModified: article.last_edit_date
     }))
@@ -12,6 +13,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date().toISOString().split("T")[0],
         changeFrequency: route === '/article' ? 'weekly' : 'monthly' as 'weekly' | 'monthly',
     }))
-
-    return [...routes, ...articles]
+    return [...routes, ...articleUrls]
 }

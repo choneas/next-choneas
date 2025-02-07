@@ -6,7 +6,6 @@ export default function NotFound() {
         <div className="flex flex-col justify-center items-center space-y-6 mt-16">
             <h1>4 🫥 4</h1>
             <p>What are you looking for?</p>
-            <p className="px-4 text-center text-content4-foreground">If it seems like not right, check your connection to Notion. ( notion.so )</p>
 
             <Image
                 unoptimized

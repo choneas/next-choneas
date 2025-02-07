@@ -1,30 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-    --notion-max-width: 720px
-}
-
-.notion {
-    font-family: var(--font-serif);
-    @apply selection:bg-primary selection:text-primary-foreground
-}
-
-.notion-page {
-    width: 100%;
-    padding-left: 0%;
-    padding-right: 0%;
-}
-
-.notion-collection-page-properties {
-    display: none
-}
-
-.notion-text {
-    @apply text-lg
-}
-
-.notion-inline-code {
-    font-family: var(--font-code);
-}

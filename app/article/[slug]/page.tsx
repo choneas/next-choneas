@@ -3,7 +3,7 @@ import NotionPage from "@/components/notion-page";
 import { getTranslations } from 'next-intl/server';
 import { ArticleHeader } from "@/components/article-header";
 import { Comment } from '@/components/comment';
-import { getArticle, ArticleNotFoundError } from "@/lib/content";
+import { getPost, ArticleNotFoundError } from "@/lib/content";
 import { notFound } from 'next/navigation';
 import { TableOfContents } from '@/components/table-of-contents';
 
@@ -12,7 +12,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     const slug = (await params).slug;
     const t = await getTranslations('Metadata')
-    const { metadata } = await getArticle(slug);
+    const { metadata } = await getPost(slug);
 
     return {
         title: metadata.title + t('suffix'),
@@ -31,7 +31,7 @@ export default async function Article({
 }) {
     const slug = (await params).slug;
     try {
-        const { metadata, recordMap } = await getArticle(slug);
+        const { metadata, recordMap } = await getPost(slug);
 
         return (
             <>
@@ -41,7 +41,7 @@ export default async function Article({
 
                 <NotionPage recordMap={recordMap}/>
 
-                <Comment slug={metadata.slug} className='mt-8'/>
+                <Comment type='article' metadata={metadata} className='mt-8'/>
             </>
         );
     } catch (error) {

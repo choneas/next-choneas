@@ -2,15 +2,12 @@
 import * as React from 'react'
 import { Image, Link } from '@heroui/react'
 import { type ExtendedRecordMap } from 'notion-types'
-import { uuidToId } from 'notion-utils'
 import { NotionRenderer } from 'react-notion-x'
 import { useTheme } from 'next-themes'
 import 'react-notion-x/src/styles.css'
 import dynamic from 'next/dynamic'
 
-import '@/styles/notion.css'
-
-export default function NotionPage({ recordMap }: { recordMap: ExtendedRecordMap }) {
+export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: "tweet-preview" }) {
     const { resolvedTheme } = useTheme();
 
     const Code = dynamic(() =>
@@ -47,7 +44,6 @@ export default function NotionPage({ recordMap }: { recordMap: ExtendedRecordMap
         <>
             <NotionRenderer
                 recordMap={recordMap}
-                mapPageUrl={(pageId) => `/article/${uuidToId(pageId)}`}
                 darkMode={resolvedTheme === 'dark'}
                 fullPage={false}
                 components={{
@@ -60,6 +56,30 @@ export default function NotionPage({ recordMap }: { recordMap: ExtendedRecordMap
                     nextLink: Link
                 }}
             />
+            <style jsx global>{`
+                .notion {
+                    font-family: var(--font-serif);
+                    --notion-max-width: 720px;
+                }
+                .notion-page {
+                    width: 100%;
+                    padding-left: 0%;
+                    padding-right: 0%;
+                }
+                .notion-collection-page-properties {
+                    display: none;
+                }
+                .notion-text {
+                    font-size: 1.125rem;
+                    line-height: 1.75rem;
+                }
+                .notion-inline-code {
+                    font-family: var(--font-code);
+                }
+                .notion-asset-wrapper-image {
+                    display: ${type === "tweet-preview" ? "none" : "block"};
+                }
+            `}</style>
         </>
     )
 }

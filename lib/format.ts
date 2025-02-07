@@ -13,20 +13,20 @@ function isSameWeek(date1: dayjs.Dayjs, date2: dayjs.Dayjs): boolean {
     return monday1.isSame(monday2, 'day');
 }
 
-export function formatDate(date: Date, locale: string, showTime: boolean = false): string {
+export function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): string {
     const d = dayjs(date);
     const now = dayjs();
     dayjs.locale(locale);
 
-    if (d.isToday()) {
+    if (d.isToday() && alias) {
         return locale === 'zh-CN' ? '今天' : 'Today';
     }
 
-    if (d.isSame(now.subtract(1, 'day'), 'day')) {
+    if (d.isSame(now.subtract(1, 'day'), 'day') && alias) {
         return locale === 'zh-CN' ? '昨天' : 'Yesterday';
     }
 
-    if (isSameWeek(d, now)) {
+    if (isSameWeek(d, now) && alias) {
         const weekday = locale === 'zh-CN' 
             ? `星期${['日', '一', '二', '三', '四', '五', '六'][d.day()]}`
             : d.format('dddd');
@@ -35,8 +35,8 @@ export function formatDate(date: Date, locale: string, showTime: boolean = false
 
     const isSameYear = d.year() === now.year();
     const format = locale === 'zh-CN'
-        ? (isSameYear ? 'M月D日' : 'YYYY年M月D日')
-        : (isSameYear ? 'MMM D' : 'MMM D, YYYY');
+        ? (isSameYear && alias ? 'M月D日' : 'YYYY年M月D日')
+        : (isSameYear && alias ? 'MMM D' : 'MMM D, YYYY');
 
     let result = d.format(format);
     if (showTime) {

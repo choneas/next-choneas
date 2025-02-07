@@ -2,68 +2,147 @@
 
 import { NotionAPI } from "notion-client";
 import type { ExtendedRecordMap, PageBlock } from "notion-types";
-import { idToUuid, defaultMapImageUrl, getPageTableOfContents } from "notion-utils";
+import { idToUuid, defaultMapImageUrl, getPageTableOfContents, getPageProperty } from "notion-utils";
 import { getTranslations } from "next-intl/server";
-import { authors } from "@/data/authors";
-import type { ArticleMetadata, PropertySchema } from "@/types/content";
-import type { Author } from "@/types/author";
+import type { PostMetadata } from "@/types/content";
 
-const notion = new NotionAPI({
-    // authToken: process.env.NOTION_AUTH_TOKEN,
-    // activeUser: process.env.NOTION_ACTIVE_USER,
-});
+const notion = new NotionAPI();
 
+// 改进缓存机制
+const CACHE_DURATION = process.env.NODE_ENV === 'development' ? 1000 : 5 * 60 * 1000; // 1s for dev, 5min for prod
 let cachedRootPage: ExtendedRecordMap | null = null;
 let cachedRootPageTimestamp: number | null = null;
-let cachedPropertySchemas: PropertySchema[] | null = null;
 
 async function getRootPage() {
-    if (!cachedRootPage || (cachedRootPageTimestamp && Date.now() - cachedRootPageTimestamp > 3600000)) {
-        cachedRootPage = await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
-        cachedRootPageTimestamp = Date.now();
-    }
-    return cachedRootPage;
-}
-
-async function getResolvedPropertyNames(): Promise<PropertySchema[]> {
-    if (cachedPropertySchemas) return cachedPropertySchemas;
-    
-    const rootPage = await getRootPage();
-    const collection = rootPage.collection[idToUuid(process.env.NOTION_ROOT_COLLECTION_ID!)];
-    const schema = collection.value.schema;
-    
-    cachedPropertySchemas = Object.entries(schema).map(([prop, value]) => ({
-        prop,
-        name: value.name,
-        type: value.type,
-        options: value.options
-    }));
-    
-    return cachedPropertySchemas;
-}
-
-async function getAllArticles(): Promise<ArticleMetadata[]> {
-    const rootPage = await getRootPage();
-    const processedIds = new Set<string>();
-    const articles: ArticleMetadata[] = [];
-    
-    // 遍历所有blocks，找出文章页面
-    for (const [id, block] of Object.entries(rootPage.block)) {
-        if (block?.value?.type === 'page' && 
-            block?.value?.parent_table === 'collection') {
-            // 如果这个ID已经处理过，跳过
-            if (processedIds.has(id)) continue;
-            
-            const metadata = await generateArticleMetadata(rootPage, id);
-            processedIds.add(id);
-            articles.push(metadata);
+    try {
+        if (!cachedRootPage || (cachedRootPageTimestamp && Date.now() - cachedRootPageTimestamp > CACHE_DURATION)) {
+            cachedRootPage = await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
+            cachedRootPageTimestamp = Date.now();
         }
+        return cachedRootPage;
+    } catch (error) {
+        console.error('Failed to fetch root page:', error);
+        throw error;
     }
-    
-    return articles;
 }
 
-// 修改 NotionBlock 接口
+function getTweetImageUrls(
+    recordMap: ExtendedRecordMap,
+    blockId: string
+): string[] {
+    try {
+        const block = recordMap.block[blockId]?.value;
+        if (!block?.content) return [];
+
+        const images: string[] = [];
+        
+        for (const childId of block.content) {
+            const child = recordMap.block[childId]?.value;
+            if (child?.type === 'image') {
+                const source = recordMap.signed_urls?.[child.id] || 
+                             child.properties?.source?.[0]?.[0];
+                             
+                if (source && !source.includes('file.notion.so')) {
+                    const imageUrl = defaultMapImageUrl(source, child);
+                    if (imageUrl) images.push(imageUrl);
+                }
+            }
+        }
+
+        return images.slice(0, 3);
+    } catch (error) {
+        console.error('Error getting tweet images:', error);
+        return [];
+    }
+}
+
+async function generatePostMetadata(
+    recordMap: ExtendedRecordMap,
+    pageId: string
+): Promise<PostMetadata> {
+    const t = await getTranslations("Tag");
+    const resolvedPageId = pageId.length === 32 ? idToUuid(pageId) : pageId;
+    const block = recordMap.block[resolvedPageId].value;
+
+    try {
+        const metadata: PostMetadata = {
+            notionid: pageId,
+            title: getPageProperty('title', block, recordMap) || '',
+            created_date: new Date(block.created_time),
+            last_edit_date: new Date(block.last_edited_time)
+        };
+
+        // 获取基本属性
+        metadata.id = getPageProperty('ID', block, recordMap);
+        metadata.slug = getPageProperty('Slug', block, recordMap);
+        metadata.description = getPageProperty('Description', block, recordMap);
+        metadata.type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
+        
+        // 处理分类
+        const categories = getPageProperty<string[]>('Category', block, recordMap) || [];
+        metadata.category = categories.filter(Boolean).map(tag => t(tag));
+
+        // 处理图标
+        if (block.format?.page_icon) {
+            metadata.icon = block.format.page_icon;
+        }
+
+        // 处理封面
+        if (block.format?.page_cover) {
+            metadata.cover = defaultMapImageUrl(block.format.page_cover, block);
+            if (block.format.social_media_image_preview_url) {
+                metadata.cover_preview = defaultMapImageUrl(block.format.social_media_image_preview_url, block);
+            }
+            metadata.cover_position = block.format.page_cover_position;
+        }
+
+        // 处理推文图片
+        if (metadata.type === 'Tweet') {
+            metadata.photos = getTweetImageUrls(recordMap, pageId);
+        }
+
+        // 获取目录
+        metadata.toc = getPageTableOfContents(block as PageBlock, recordMap);
+
+        return metadata;
+    } catch (error) {
+        console.error('Error generating post metadata:', error);
+        throw error;
+    }
+}
+
+async function getAllPosts() {
+  const rootPage = await getRootPage();
+  const processedIds = new Set<string>();
+  const articles: PostMetadata[] = [];
+  const tweets: PostMetadata[] = [];
+  
+  for (const [id, block] of Object.entries(rootPage.block)) {
+    if (block?.value?.type === 'page' && 
+        block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
+      if (processedIds.has(id)) continue;
+      
+      const metadata = await generatePostMetadata(rootPage, id);
+      processedIds.add(id);
+      
+      if (metadata.type === 'Tweet') {
+        tweets.push(metadata);
+      } else {
+        articles.push(metadata);
+      }
+    }
+  }
+  
+  return { articles, tweets };
+}
+
+class ArticleNotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ArticleNotFoundError";
+    }
+}
+
 interface NotionBlock {
     value: {
         type: string;
@@ -76,14 +155,7 @@ interface NotionBlock {
     };
 }
 
-class ArticleNotFoundError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "ArticleNotFoundError";
-    }
-}
-
-async function getArticle(slugOrId: string) {
+async function getPost(slugOrId: string, allowTweet?: boolean) {
     const rootPage = await getRootPage();
     let targetId: string | undefined;
 
@@ -116,89 +188,24 @@ async function getArticle(slugOrId: string) {
         }
     }
 
+    
     if (!targetId) {
         throw new ArticleNotFoundError('Article not found');
     }
 
     const recordMap = await notion.getPage(targetId);
-    const metadata = await generateArticleMetadata(recordMap, targetId);
+    const metadata = await generatePostMetadata(recordMap, targetId);
+
+
+    if (!allowTweet && metadata.type === 'Tweet') {
+        throw new ArticleNotFoundError('Article not found');
+    }
+
     return { recordMap, metadata };
 }
 
-async function generateArticleMetadata(
-    recordMap: ExtendedRecordMap,
-    pageId: string
-): Promise<ArticleMetadata> {
-    const t = await getTranslations("Tag");
-    const resolvedPageId = pageId.length === 32 ? idToUuid(pageId) : pageId;
-    const page = recordMap.block[resolvedPageId].value;
-    const properties = page.properties;
-    const propertySchemas = await getResolvedPropertyNames();
-
-    const metadata: ArticleMetadata = {
-        notionid: pageId,  // 这是32位的 UUID
-        title: '', // 稍后设置
-        created_date: new Date(page.created_time),
-        last_edit_date: new Date(page.last_edited_time)
-    };
-
-    // ID 属性的特殊处理
-    if (properties['XwwZ']?.[0]?.[0]) {
-        metadata.id = properties['XwwZ'][0][0];  // 设置数字 ID
-    }
-
-    // 遍历属性模式映射数据
-    propertySchemas.forEach(schema => {
-        const value = properties[schema.prop]?.[0];
-        if (!value) return;
-
-        switch (schema.type) {
-            case 'title':
-                metadata.title = value[0] || '';
-                break;
-            case 'text':
-                if (schema.name === 'Description') metadata.description = value[0];
-                if (schema.name === 'Slug') metadata.slug = value[0];
-                if (schema.name === 'ID') metadata.id = value[0];
-                break;
-            case 'multi_select':
-                if (schema.name === 'Category') metadata.category = value[0].split(',').map((tag: string) => t(tag));
-                break;
-            case 'person':
-                if (schema.name === 'Author') {
-                    const authorUuids = value[1]?.map((user: [string, string]) => user[1]) || [];
-                    metadata.author = authorUuids
-                        .map((uuid: string) => authors.find(author => author.uuid === uuid))
-                        .filter((author: Author | undefined): author is Author => author !== undefined);
-                }
-                break;
-            case 'checkbox':
-                if (schema.name === 'Draft') metadata.draft = value[0] === 'Yes';
-                break;
-            case 'id':
-                if (schema.name === 'ID') metadata.id = value[0];
-                break;
-        }
-    });
-
-    // 处理封面相关信息
-    if (page.format && page.format.page_cover) {
-        metadata.cover = defaultMapImageUrl(page.format.page_cover, page);
-        metadata.cover_preview = defaultMapImageUrl(page.format.social_media_image_preview_url, page);
-        metadata.cover_position = page.format.page_cover_position;
-    }
-
-    // 获取目录
-    metadata.toc = getPageTableOfContents(
-        recordMap.block[resolvedPageId].value as PageBlock, 
-        recordMap
-    );
-
-    return metadata;
-}
-
 export {
-    getArticle,
-    getAllArticles,
+    getPost,
+    getAllPosts,
     ArticleNotFoundError
 }

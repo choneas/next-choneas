@@ -27,6 +27,7 @@ export default {
         colors: {
           background: "#FFF8F6",
           foreground: "#231918",
+          content1: "#FFF6F9",
           primary: {
             50: "#faf5f2",
             100: "#f3e8e1",
@@ -93,6 +94,7 @@ export default {
         colors: {
           background: "#1A1110",
           foreground: "#F1DFDB",
+          content1: "#1A1610",
           primary: {
             50: "#fef4f2",
             100: "#ffe5e1",

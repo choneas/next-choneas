@@ -47,16 +47,6 @@ export default async function About() {
                     ))}
                 </div>
             </div>
-
-            <div className="space-y-4">
-                <h2>{t('dream-job')}</h2>
-                <p className="text-lg">{t("dream-description")}</p>
-            </div>
-
-            <div className="space-y-4">
-                <h2>{t('color-scheme')}</h2>
-                <p className="text-lg">{t("color-scheme-description")}</p>
-            </div>
         </div>
     )
 }

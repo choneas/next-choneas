@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, CardFooter, Image, Chip, Avatar } from "@he
 import NextLink from "next/link"
 import { useLocale } from 'next-intl';
 import { uuidToId } from "notion-utils";
-import type { ArticleMetadata } from "@/types/content";
+import type { PostMetadata } from "@/types/content";
 import { formatDate } from "@/lib/format";
 
 export function ArticleCard({
@@ -11,7 +11,7 @@ export function ArticleCard({
     linkParam = 'slug',
     showTime = false
 }: {
-    article: ArticleMetadata;
+    article: PostMetadata;
     linkParam?: 'slug' | 'id' | 'notionid';
     showTime?: boolean;
 }) {
@@ -33,7 +33,7 @@ export function ArticleCard({
                             size="sm"
                         />
                     )}
-                    <span>{article.author[0].name}</span>
+                    <span translate="no">{article.author[0].name}</span>
                     <span>·</span>
                 </>
             )}

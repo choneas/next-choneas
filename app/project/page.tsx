@@ -19,7 +19,7 @@ export default async function Project(){
             <h1>{t('title')}</h1>
             <p className="pt-4 text-lg">{t('description')}</p>
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col gap-4">
                 {projects.map((project, index) => (
                     <ProjectCard key={index} project={project} />
                 ))}

@@ -7,7 +7,8 @@
   "Navbar": {
     "articles": "Articles",
     "projects": "Projects",
-    "about": "About"
+    "about": "About",
+    "tweets": "Tweets"
   },
   "Home": {
     "hello-iam": "👋 Nice to meet you, I am",
@@ -30,6 +31,11 @@
   },
   "Table-Of-Contents": {
     "toc": "Table of Contents"
+  },
+  "Tweet": {
+    "view-all": "View all",
+    "details": "Tweet Details",
+    "comment-placeholder": "Leave a comment..."
   },
   "Article-Header": {
     "created_at": "Posted at ",
@@ -64,11 +70,7 @@
   "About": {
     "title": "About",
     "description": "👋 Greetings. My name is Choneas (One may also address me by my pseudonym, Li Sushang) . I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
-    "dream-description": "Full stack engineer and English teacher. This position does not require a great deal of cognitive effort; the principle of parsimony is applicable.",
-    "dream-job": "Dream Job",
     "social-links": "Find Me",
-    "tech-stack": "Tech Stack",
-    "color-scheme": "Color Scheme",
-    "color-scheme-description": "The color scheme of this website is inspired by the character Fuhua from the game Honkai Impact 3rd. The color scheme is based on the character's appearance and personality."
+    "tech-stack": "Tech Stack"
   }
 }

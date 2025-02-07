@@ -8,6 +8,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: '/private/'
     },
     sitemap: 'https://choneas.com/sitemap.xml',
-    host: 'https://choneas.com'
   }
 }

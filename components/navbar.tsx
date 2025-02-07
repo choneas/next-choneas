@@ -89,6 +89,7 @@ const NavbarItems = () => {
 }
 
 const NavbarBrand = () => {
+    const t = useTranslations("Navbar");
     const pathname = usePathname();
     const { scrollY } = useScroll();
     const { ArticleMetadata } = useArticleMetadata();
@@ -103,13 +104,14 @@ const NavbarBrand = () => {
         <>
             <Link disableAnimation href="/" color="foreground">
                 <HeroNavbarBrand className="flex gap-4 font-bold">
-                    <Avatar isChoneas />
+                    <Avatar isMe />
                     {
-                        pathname.includes("article/") ?
+                        pathname.includes("article/") || pathname === '/' ?
                             <>
                                 <div className="flex pt-2 pb-4 justify-start overflow-hidden h-6">
                                     <motion.div
                                         className="absolute origin-left text-primary"
+                                        translate="no"
                                         style={{
                                             y: headTextY,
                                             opacity: headTextOpacity,
@@ -125,12 +127,13 @@ const NavbarBrand = () => {
                                             opacity: contentTextOpacity
                                         }}
                                     >
-                                        {ArticleMetadata?.title}
+                                        {pathname.includes("article/") && ArticleMetadata?.title}
+                                        {pathname === '/' && t('tweets')}
                                     </motion.div>
                                 </div>
                             </>
                             :
-                            <p className="text-primary">Choneas</p>
+                            <p className="text-primary" translate="no">Choneas</p>
                     }
                 </HeroNavbarBrand>
             </Link>

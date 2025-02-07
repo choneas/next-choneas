@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-    @apply selection:bg-primary selection:text-primary-foreground
+    @apply selection:bg-primary selection:text-primary-foreground !important
 }
 
 h1 {

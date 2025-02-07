@@ -12,14 +12,12 @@ const notoSerif = Noto_Serif_SC({
     weight: ["400", "700"],
     subsets: ["latin"],
     display: "swap",
-    adjustFontFallback: false,
 });
 
 const sourceCode = Source_Code_Pro({
     variable: "--font-code",
     display: "swap",
     subsets: ["latin"],
-    adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
