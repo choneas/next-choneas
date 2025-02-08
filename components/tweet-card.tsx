@@ -75,14 +75,14 @@ export function TweetCard({
                         <TweetContentSkeleton images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
                     ) : recordMap && (
                         <>
-                            <div ref={contentRef} className="relative max-h-[178] overflow-hidden">
+                            <div ref={contentRef} className="relative max-h-[178px] overflow-hidden">
                                 <NotionPage recordMap={recordMap} type="tweet-preview" />
                             </div>
                             
                             {!isExpanded && (
                                 <div className="relative -mt-8 z-10">
                                     <div className="h-12 bg-gradient-to-t from-content1 from-20% to-transparent flex items-center justify-center">
-                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-sm">{t('view-all')}</Button>
+                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-xs">{t('view-all')}</Button>
                                     </div>
                                 </div>
                             )}
