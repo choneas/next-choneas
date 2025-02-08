@@ -8,8 +8,7 @@ import type { PostMetadata } from "@/types/content";
 
 const notion = new NotionAPI();
 
-// 改进缓存机制
-const CACHE_DURATION = process.env.NODE_ENV === 'development' ? 1000 : 5 * 60 * 1000; // 1s for dev, 5min for prod
+const CACHE_DURATION = process.env.NODE_ENV === 'development' ? 1000 : 5 * 60 * 1000;
 let cachedRootPage: ExtendedRecordMap | null = null;
 let cachedRootPageTimestamp: number | null = null;
 

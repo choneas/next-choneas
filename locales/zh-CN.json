@@ -52,7 +52,8 @@
   },
   "Article-Header": {
     "created_at": "发表于 ",
-    "updated_at": "更新于 "
+    "updated_at": "更新于 ",
+    "tweet-details": "动态详情"
   },
   "Tag": {
     "Life": "生活",

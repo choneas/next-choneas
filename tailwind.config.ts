@@ -27,7 +27,7 @@ export default {
         colors: {
           background: "#FFF8F6",
           foreground: "#231918",
-          content1: "#FFF6F9",
+          content1: "#FFF8F6",
           primary: {
             50: "#faf5f2",
             100: "#f3e8e1",

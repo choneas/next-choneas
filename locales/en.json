@@ -39,7 +39,8 @@
   },
   "Article-Header": {
     "created_at": "Posted at ",
-    "updated_at": "Edited at "
+    "updated_at": "Edited at ",
+    "tweet-details": "Tweet Details"
   },
   "Tag": {
     "ACGN": "ACGN",

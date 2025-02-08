@@ -7,7 +7,7 @@ import { useTheme } from 'next-themes'
 import 'react-notion-x/src/styles.css'
 import dynamic from 'next/dynamic'
 
-export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: "tweet-preview" }) {
+export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: "tweet-preview" | "tweet-details" }) {
     const { resolvedTheme } = useTheme();
 
     const Code = dynamic(() =>
@@ -52,7 +52,7 @@ export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRec
                     Equation,
                     Modal,
                     Pdf,
-                    nextImage: Image,
+                    Image: Image,
                     nextLink: Link
                 }}
             />
@@ -77,7 +77,7 @@ export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRec
                     font-family: var(--font-code);
                 }
                 .notion-asset-wrapper-image {
-                    display: ${type === "tweet-preview" ? "none" : "block"};
+                    display: ${type === "tweet-preview" ? "none" : "unset"};
                 }
             `}</style>
         </>

@@ -57,7 +57,7 @@ export function TweetCard({
     return (
         <>
             <Card classNames={{
-                base: "shadow-none p-3 border broder-secondary",
+                base: "shadow-none p-3 border",
                 header: "z-20 flex inline-flex gap-2 content-center",
                 body: "z-20 bg-content1 -my-3 px-3 pb-2",
                 footer: "z-20 bg-content1 px-3 py-2"
@@ -81,8 +81,8 @@ export function TweetCard({
                             
                             {!isExpanded && (
                                 <div className="relative -mt-8 z-10">
-                                    <div className="h-12 bg-gradient-to-t from-content1 to-transparent flex items-center justify-center">
-                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary">{t('view-all')}</Button>
+                                    <div className="h-12 bg-gradient-to-t from-content1 from-20% to-transparent flex items-center justify-center">
+                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-sm">{t('view-all')}</Button>
                                     </div>
                                 </div>
                             )}
@@ -147,7 +147,7 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
     );
 }
 
-function TweetContentSkeleton(
+export function TweetContentSkeleton(
     { images }: { images?: number[] }
 ) {
     return (

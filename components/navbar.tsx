@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { usePostMetadata } from "@/stores/article";
+import { usePostMetadata } from "@/stores/post";
 import { Avatar } from "@/components/avatar";
 import { navItems } from "@/data/navbar";
 
@@ -92,7 +92,7 @@ const NavbarBrand = () => {
     const t = useTranslations("Navbar");
     const pathname = usePathname();
     const { scrollY } = useScroll();
-    const { PostMetadata } = usePostMetadata();
+    const { postMetadata } = usePostMetadata();
 
     const headTextY = useTransform(scrollY, [0, 100], [-6, -15])
     const contentTextY = useTransform(scrollY, [0, 100], [30, 0])
@@ -127,7 +127,7 @@ const NavbarBrand = () => {
                                             opacity: contentTextOpacity
                                         }}
                                     >
-                                        {pathname.includes("article/") && PostMetadata?.title}
+                                        {pathname.includes("article/") && postMetadata?.title}
                                         {pathname === '/' && t('tweets')}
                                     </motion.div>
                                 </div>

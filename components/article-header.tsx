@@ -6,7 +6,7 @@ import { Chip } from "@heroui/react"
 import { useTranslations, useLocale } from "next-intl"
 import { formatDate } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
-import { usePostMetadata } from "@/stores/article"
+import { usePostMetadata } from "@/stores/post"
 
 export function ArticleHeader({ article }: { article: PostMetadata }) {
     const t = useTranslations("Article-Header")
@@ -44,8 +44,15 @@ export function ArticleHeader({ article }: { article: PostMetadata }) {
                                         </Chip>
                                     ))}
                                 </div>
-                                <h1 className="text-4xl font-bold text-white mt-2">
-                                    {article.icon} {article.title}
+                                <h1 className="text-5xl font-bold my-2">
+                                    {article.icon}
+                                </h1>
+                                <h1 className="text-4xl font-bold my-4">
+                                    {article.title.length !== 0 ?
+                                        article.title
+                                        :
+                                        t('tweet-details')
+                                    }
                                 </h1>
                                 <p className="text-gray-300 text-sm mt-4">
                                     {t('created_at') + (article.created_date ? formatDate(article.created_date, locale) : '') + ' · ' + t('updated_at') + (article.last_edit_date ? formatDate(article.last_edit_date, locale) : '')}
@@ -67,7 +74,16 @@ export function ArticleHeader({ article }: { article: PostMetadata }) {
                             </Chip>
                         ))}
                     </div>
-                    <h1 className="text-4xl font-bold my-4">{article.title}</h1>
+                    <h1 className="text-5xl font-bold my-2">
+                        {article.icon}
+                    </h1>
+                    <h1 className="text-4xl font-bold my-4">
+                        {article.title.length !== 0 ?
+                            article.title
+                            :
+                            t('tweet-details')
+                        }
+                    </h1>
                     <p className="text-content2-foreground">
                         {t('created_at') + (article.created_date ? formatDate(article.created_date, locale) : '') + ' · ' + t('updated_at') + (article.last_edit_date ? formatDate(article.last_edit_date, locale) : '')}
                     </p>
