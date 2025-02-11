@@ -62,8 +62,8 @@ export function TweetCard({
             <Card classNames={{
                 base: "shadow-none p-3 border",
                 header: "z-20 flex inline-flex gap-2 content-center",
-                body: "z-20 bg-content1 -my-3 px-3 pb-2",
-                footer: "z-20 bg-content1 px-3 py-2"
+                body: `z-20 bg-content1 -my-3 px-3 pb-2 ${!isLoading && "animate-fadeIn opacity-0"}`,
+                footer: `z-20 bg-content1 px-3 py-2 ${!isLoading && "animate-fadeIn opacity-0"}`
             }}>
                 <CardHeader>
                     <Avatar isMe size="sm" />
@@ -74,8 +74,8 @@ export function TweetCard({
 
                 <CardBody>
                     <h3 className={isLoading ? 'pb-3' : ''}>{tweet.title}</h3>
-                    {isLoading && !tweet.description ? (
-                        <TweetContentSkeleton images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
+                    {isLoading ? (
+                        <TweetContentSkeleton hasDescription={tweet.description ? true : false} images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
                     ) : recordMap && (
                         <>
                             {!tweet.description ? (
@@ -109,7 +109,7 @@ export function TweetCard({
                                 {t('view-all')}
                             </Button>
 
-                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className="w-full justify-start lg:col-span-5" startContent={<LuMessageSquare size={18}/>}>
+                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className="w-full justify-start lg:col-span-5" startContent={<LuMessageSquare size={18} />}>
                                 {t('comment-placeholder')}
                             </Button>
                         </div>
@@ -164,23 +164,28 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
 }
 
 export function TweetContentSkeleton(
-    { images }: { images?: number[] }
+    { images, hasDescription }: { images?: number[]; hasDescription?: boolean }
 ) {
     return (
         <>
-            <Skeleton className="rounded-lg max-w-[24rem]">
-                <div className="h-6" />
-            </Skeleton>
-            <Skeleton className="rounded-lg max-w-[32rem] mt-2">
-                <div className="h-6" />
-            </Skeleton>
+            <Skeleton className="rounded-lg max-w-[24rem] h-6" />
+            <Skeleton className="rounded-lg max-w-[32rem] mt-2 h-6" />
 
             {images &&
                 <div className={`grid grid-cols-${images} gap-2 mt-4`}>
                     {images.map((_, i) =>
-                        <Skeleton key={i} className="rounded-lg"><div className="h-32" /></Skeleton>
+                        <Skeleton key={i} className="rounded-lg h-32" />
                     )}
                 </div>
+            }
+
+            {hasDescription ?
+                <div className="grid lg:grid-cols-6 mt-4 gap-2">
+                    <Skeleton className="rounded-lg h-10" />
+                    <Skeleton className="rounded-lg lg:col-span-5 h-10"/>
+                </div>
+                :
+                <Skeleton className="rounded-lg w-full mt-2 h-10"/>
             }
         </>
     )
