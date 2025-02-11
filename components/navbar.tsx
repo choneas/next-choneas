@@ -2,7 +2,7 @@
 
 import {
     Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem,
-    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button
+    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -20,8 +20,8 @@ export function Navbar() {
 
     return (
         <NextNavbar onMenuOpenChange={setIsMenuOpen} classNames={{
-            "base": "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
-            "menu": "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
+            base: "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
+            menu: "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80 gap-4",
         }}>
             <NavbarContent justify="start">
                 <NavbarMenuToggle
@@ -151,6 +151,7 @@ function NavbarDropdown() {
     const router = useRouter()
     const [selectedLang, setSelectedLang] = useState<string>("Accept-Language")
     const [selectedTheme, setSelectedTheme] = useState<string>("system")
+    const [loadingLang, setLoadingLang] = useState<string | null>(null)
 
     useEffect(() => {
         const prefLang = document.cookie.match(/NEXT_PREF_LOCALE=([^;]+)/)?.[1]
@@ -164,13 +165,16 @@ function NavbarDropdown() {
 
         if (langKeys.includes(keyStr)) {
             setSelectedLang(keyStr)
+            setLoadingLang(keyStr)
             if (keyStr === "Accept-Language") {
                 document.cookie = `NEXT_PREF_LOCALE=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
-                router.refresh()
             } else {
                 document.cookie = `NEXT_PREF_LOCALE=${keyStr}; path=/`
-                router.refresh()
             }
+            router.refresh()
+            setTimeout(() => {
+                setLoadingLang(null)
+            }, 3200)
         } else if (themeKeys.includes(keyStr)) {
             setSelectedTheme(keyStr)
             // TODO: Handle theme change
@@ -182,7 +186,10 @@ function NavbarDropdown() {
     }
 
     return (
-        <Dropdown placement="bottom-end">
+        <Dropdown
+            placement="bottom-end"
+            backdrop="opaque"
+        >
             <DropdownTrigger>
                 <Button isIconOnly radius="full" variant="light" color="secondary">
                     <FiMoreHorizontal />
@@ -204,6 +211,7 @@ function NavbarDropdown() {
                         key="zh-CN"
                         color={isSelected("zh-CN") ? "primary" : "default"}
                         variant={isSelected("zh-CN") ? "flat" : undefined}
+                        startContent={loadingLang === "zh-CN" && <Spinner size="sm" color="primary" />}
                     >
                         zh-CN
                     </DropdownItem>
@@ -212,6 +220,7 @@ function NavbarDropdown() {
                         key="en"
                         color={isSelected("en") ? "primary" : "default"}
                         variant={isSelected("en") ? "flat" : undefined}
+                        startContent={loadingLang === "en" && <Spinner size="sm" color="primary" />}
                     >
                         en
                     </DropdownItem>
@@ -220,6 +229,7 @@ function NavbarDropdown() {
                         key="Accept-Language"
                         color={isSelected("Accept-Language") ? "primary" : "default"}
                         variant={isSelected("Accept-Language") ? "flat" : undefined}
+                        startContent={loadingLang === "Accept-Language" && <Spinner size="sm" color="primary" />}
                     >
                         Accept-Language
                     </DropdownItem>

@@ -16,7 +16,7 @@ export default async function Home() {
     const t = await getTranslations("Home");
 
     return (
-        <div className="container my-10 md:my-16 mx-auto px-4 md:px-12 max-w-6xl">
+        <div className="container my-10 md:my-16 mx-auto px-8 md:px-12 max-w-6xl">
             <p className="text-lg">{t("hello-iam")}</p>
             <h1 className="font-bold text-primary" translate="no">{t('choneas')}</h1>
             <p className="text-content4-foreground">{t('name-desc')}</p>
