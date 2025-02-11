@@ -35,7 +35,6 @@ export default async function RootLayout({
 
     return (
         <html suppressHydrationWarning lang={locale}>
-
             <body
                 className={`${notoSerif.variable} ${sourceCode.variable} font-serif text-foreground bg-background antialiased`}
             >

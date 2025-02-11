@@ -14,8 +14,8 @@
     "hello-iam": "👋 Nice to meet you, I am",
     "choneas": "Choneas",
     "name-desc": "or ( The Master Fuhua's ) Little Phoenix",
-    "description": "Full stack programmer, C++ algorithm, Web developer, and",
-    "description-line2": "a cosplayer. (本站点支持中文)"
+    "description": "Full stack programmer, C++ algorithm developer, UI/UX designer, and ",
+    "description-line2": "ACGN."
   },
   "Article": {
     "title": "Contents",
@@ -28,6 +28,20 @@
       "fetch-failed": "Fetch project info failed.",
       "not-found": "Project deleted or invaild."
     }
+  },
+  "About": {
+    "title": "About",
+    "description": "👋 Greetings. My name is Choneas (One may also address me by my pseudonym, Li Sushang) . I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
+    "social-links": "Find Me",
+    "tech-stack": "Tech Stack"
+  },
+  "Navbar-Dropdown": {
+    "prefer-language": "Prefer Language",
+    "prefer-color-scheme": "Prefer Color Scheme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Follow System",
+    "view-on": "View on"
   },
   "Table-Of-Contents": {
     "toc": "Table of Contents"
@@ -67,11 +81,5 @@
     "label-search": "Search title or description",
     "not-found": "No result.",
     "placeholder-categories": "Category"
-  },
-  "About": {
-    "title": "About",
-    "description": "👋 Greetings. My name is Choneas (One may also address me by my pseudonym, Li Sushang) . I possess a strong interest in the fields of computer science, including programming, user interface design, and related disciplines. Additionally, I have a keen interest in illustration, animation production, and photography. At present, I am enrolled in academic studies.",
-    "social-links": "Find Me",
-    "tech-stack": "Tech Stack"
   }
 }

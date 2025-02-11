@@ -3,6 +3,8 @@
 import { Card, CardHeader, CardBody, CardFooter, Skeleton, Button, Image, useDisclosure } from "@heroui/react"
 import { useState, useEffect, useRef } from "react"
 import { useLocale, useTranslations } from "next-intl"
+import { LuMessageCircle, LuMessageSquare } from "react-icons/lu"
+import { MdOpenInBrowser } from "react-icons/md"
 import NotionPage from "@/components/notion-page"
 import { TweetModal } from "@/components/tweet-modal"
 import { Avatar } from "@/components/avatar"
@@ -22,11 +24,11 @@ export function TweetCard({
     const [isLoading, setIsLoading] = useState(true)
     const [isExpanded, setIsExpanded] = useState(true)
     const [recordMap, setRecordMap] = useState<ExtendedRecordMap | null>(null)
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
     const validTweet = Boolean(tweet?.id);
     useEffect(() => {
-        if (!validTweet) return;
+        if (!validTweet) return
         const fetchPost = async () => {
             try {
                 const { recordMap: data } = await getPost(tweet.id as string, true)
@@ -41,7 +43,8 @@ export function TweetCard({
     }, [tweet.id, validTweet])
 
     useEffect(() => {
-        if (!validTweet) return;
+        if (!validTweet) return
+        if (tweet.description) setIsExpanded(false)
         if (contentRef.current) {
             const height = contentRef.current.offsetHeight;
             if (height > 160) {
@@ -50,7 +53,7 @@ export function TweetCard({
                 setIsExpanded(true)
             }
         }
-    }, [validTweet, recordMap])
+    }, [tweet.description, validTweet, recordMap])
 
     if (!validTweet) return null;
 
@@ -71,17 +74,24 @@ export function TweetCard({
 
                 <CardBody>
                     <h3 className={isLoading ? 'pb-3' : ''}>{tweet.title}</h3>
-                    {isLoading ? (
+                    {isLoading && !tweet.description ? (
                         <TweetContentSkeleton images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
                     ) : recordMap && (
                         <>
-                            <div ref={contentRef} className="relative max-h-[178px] overflow-hidden">
-                                <NotionPage recordMap={recordMap} type="tweet-preview" />
-                            </div>
-                            
-                            {!isExpanded && (
+                            {!tweet.description ? (
+                                <div ref={contentRef} className="relative max-h-[178px] overflow-hidden">
+                                    <NotionPage recordMap={recordMap} type="tweet-preview" />
+                                </div>
+                            ) :
+                                <div className="inline-flex items-cener space-x-2 pl-4">
+                                    <LuMessageCircle size={20} className="w-auto h-auto" />
+                                    <p className="text-content3-foreground">{tweet.description}</p>
+                                </div>
+                            }
+
+                            {!isExpanded && !tweet.description && (
                                 <div className="relative -mt-8 z-10">
-                                    <div className="h-12 bg-gradient-to-t from-content1 from-20% to-transparent flex items-center justify-center">
+                                    <div className={`h-12 flex items-center justify-center`}>
                                         <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-xs">{t('view-all')}</Button>
                                     </div>
                                 </div>
@@ -94,13 +104,19 @@ export function TweetCard({
 
                 <CardFooter>
                     {!isLoading &&
-                        <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className="w-full justify-start">
-                            {t('comment-placeholder')}
-                        </Button>}
+                        <div className={tweet.description && "w-full grid gap-2 lg:grid-cols-6"}>
+                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" color="primary" className={`${!tweet.description && "hidden"} w-full justify-start text-primary`} startContent={<MdOpenInBrowser size={20} />}>
+                                {t('view-all')}
+                            </Button>
+
+                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className="w-full justify-start lg:col-span-5" startContent={<LuMessageSquare size={18}/>}>
+                                {t('comment-placeholder')}
+                            </Button>
+                        </div>
+                    }
                 </CardFooter>
             </Card>
-            {recordMap && <TweetModal isOpen={isOpen} onOpenChange={onOpenChange} recordMap={recordMap} metadata={tweet}/>}
-
+            {recordMap && <TweetModal isOpen={isOpen} onOpenChange={onOpenChange} recordMap={recordMap} metadata={tweet} />}
         </>
     )
 }

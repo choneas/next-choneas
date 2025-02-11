@@ -1,9 +1,15 @@
 "use client"
 
-import { Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem } from "@heroui/react";
-import { useState } from "react";
+import {
+    Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem,
+    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button
+} from "@heroui/react";
+import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { MdLightMode, MdDarkMode } from "react-icons/md";
+import { FiMoreHorizontal, FiGithub } from "react-icons/fi";
+import { CgDarkMode } from "react-icons/cg";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { usePostMetadata } from "@/stores/post";
 import { Avatar } from "@/components/avatar";
@@ -14,7 +20,7 @@ export function Navbar() {
 
     return (
         <NextNavbar onMenuOpenChange={setIsMenuOpen} classNames={{
-            "base": `bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80 ${isMenuOpen && 'w-screen'}`,
+            "base": "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
             "menu": "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
         }}>
             <NavbarContent justify="start">
@@ -24,13 +30,12 @@ export function Navbar() {
                 />
 
                 <NavbarBrand />
-
             </NavbarContent>
 
             <NavbarItems />
 
             <NavbarContent justify="end">
-
+                <NavbarDropdown />
             </NavbarContent>
 
             <NavbarMenu />
@@ -38,7 +43,7 @@ export function Navbar() {
     )
 }
 
-const NavbarMenu = () => {
+function NavbarMenu() {
     const pathname = usePathname();
     const t = useTranslations("Navbar");
 
@@ -62,7 +67,7 @@ const NavbarMenu = () => {
     )
 }
 
-const NavbarItems = () => {
+function NavbarItems() {
     const pathname = usePathname();
     const t = useTranslations("Navbar");
 
@@ -88,7 +93,7 @@ const NavbarItems = () => {
     )
 }
 
-const NavbarBrand = () => {
+function NavbarBrand() {
     const t = useTranslations("Navbar");
     const pathname = usePathname();
     const { scrollY } = useScroll();
@@ -138,5 +143,144 @@ const NavbarBrand = () => {
                 </HeroNavbarBrand>
             </Link>
         </>
+    )
+}
+
+function NavbarDropdown() {
+    const t = useTranslations("Navbar-Dropdown")
+    const router = useRouter()
+    const [selectedLang, setSelectedLang] = useState<string>("Accept-Language")
+    const [selectedTheme, setSelectedTheme] = useState<string>("system")
+
+    useEffect(() => {
+        const prefLang = document.cookie.match(/NEXT_PREF_LOCALE=([^;]+)/)?.[1]
+        setSelectedLang(prefLang || "Accept-Language")
+    }, [])
+
+    const handleAction = (key: string | number) => {
+        const keyStr = String(key)
+        const langKeys = ["zh-CN", "en", "Accept-Language"]
+        const themeKeys = ["light", "dark", "system"]
+
+        if (langKeys.includes(keyStr)) {
+            setSelectedLang(keyStr)
+            if (keyStr === "Accept-Language") {
+                document.cookie = `NEXT_PREF_LOCALE=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+                router.refresh()
+            } else {
+                document.cookie = `NEXT_PREF_LOCALE=${keyStr}; path=/`
+                router.refresh()
+            }
+        } else if (themeKeys.includes(keyStr)) {
+            setSelectedTheme(keyStr)
+            // TODO: Handle theme change
+        }
+    }
+
+    const isSelected = (key: string) => {
+        return key === selectedLang || key === selectedTheme
+    }
+
+    return (
+        <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+                <Button isIconOnly radius="full" variant="light" color="secondary">
+                    <FiMoreHorizontal />
+                </Button>
+            </DropdownTrigger>
+
+            <DropdownMenu
+                disallowEmptySelection={false}
+                closeOnSelect={false}
+                selectionMode="multiple"
+                onAction={handleAction}
+                aria-label="Preferences"
+                selectedKeys={new Set([selectedLang, selectedTheme])}
+                disabledKeys={["light", "dark"]}
+            >
+                <DropdownSection title={t('prefer-language')}>
+                    <DropdownItem 
+                        className="font-code" 
+                        key="zh-CN"
+                        color={isSelected("zh-CN") ? "primary" : "default"}
+                        variant={isSelected("zh-CN") ? "flat" : undefined}
+                    >
+                        zh-CN
+                    </DropdownItem>
+                    <DropdownItem 
+                        className="font-code" 
+                        key="en"
+                        color={isSelected("en") ? "primary" : "default"}
+                        variant={isSelected("en") ? "flat" : undefined}
+                    >
+                        en
+                    </DropdownItem>
+                    <DropdownItem 
+                        className="font-code" 
+                        key="Accept-Language"
+                        color={isSelected("Accept-Language") ? "primary" : "default"}
+                        variant={isSelected("Accept-Language") ? "flat" : undefined}
+                    >
+                        Accept-Language
+                    </DropdownItem>
+                </DropdownSection>
+
+                <DropdownSection title={t('prefer-color-scheme')}>
+                    <DropdownItem 
+                        key="light" 
+                        className="h-[36]" 
+                        startContent={<MdLightMode />} 
+                        color={isSelected("light") ? "primary" : "default"}
+                        variant={isSelected("light") ? "flat" : undefined}
+                        textValue={t('light')}
+                    >
+                        <p>{t('light')}</p>
+                    </DropdownItem>
+                    <DropdownItem 
+                        key="dark" 
+                        className="h-[36]" 
+                        startContent={<MdDarkMode />} 
+                        color={isSelected("dark") ? "primary" : "default"}
+                        variant={isSelected("dark") ? "flat" : undefined}
+                        textValue={t('dark')}
+                    >
+                        <p>{t('dark')}</p>
+                    </DropdownItem>
+                    <DropdownItem 
+                        key="system" 
+                        className="h-[36]" 
+                        startContent={<CgDarkMode />} 
+                        color={isSelected("system") ? "primary" : "default"}
+                        variant={isSelected("system") ? "flat" : undefined}
+                        textValue={t('system')}
+                    >
+                        <p>{t('system')}</p>
+                    </DropdownItem>
+                </DropdownSection>
+
+                <DropdownSection title={t('view-on')}>
+                    <DropdownItem
+                        key="github"
+                        classNames={{
+                            wrapper: "hidden",
+                            selectedIcon: "hidden"
+                        }}
+                    >
+                        <Button
+                            isExternal
+                            as={Link}
+                            href={"https://github.com/" + process.env.NEXT_PUBLIC_REPO}
+                            color="primary"
+                            variant="flat"
+                            className="w-full text-primary"
+                            size="sm"
+                            startContent={<FiGithub />}
+                        >
+                            Github
+                        </Button>
+                    </DropdownItem>
+                </DropdownSection>
+            </DropdownMenu>
+        </Dropdown>
     )
 }

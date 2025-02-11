@@ -2,19 +2,24 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  let locale = request.cookies.get('NEXT_LOCALE')?.value
-  
-  if (!locale) {
-    const acceptLanguage = request.headers.get('Accept-Language')
-    locale = acceptLanguage?.startsWith('zh-CN') ? 'zh-CN' : 'en'
+  const prefLocale = request.cookies.get('NEXT_PREF_LOCALE')?.value
+  if (!prefLocale) {
+    const acceptLanguage = request.headers.get('Accept-Language') || ''
+    const locales = acceptLanguage.split(',')
+    const defaultLocale = locales[0]?.startsWith('zh') ? 'zh-CN' : 'en'
+    
+    const response = NextResponse.next()
+    response.cookies.set('NEXT_LOCALE', defaultLocale)
+    return response
   }
 
   const response = NextResponse.next()
-  response.cookies.set('NEXT_LOCALE', locale)
-  
+  response.cookies.set('NEXT_LOCALE', prefLocale)
   return response
 }
 
 export const config = {
-  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ]
 }

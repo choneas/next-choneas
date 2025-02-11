@@ -44,6 +44,7 @@ export function TweetModal(
 
     return (
         <Modal
+            radius="lg"
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             onClose={() => redirect("/")}

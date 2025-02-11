@@ -14,8 +14,8 @@
     "hello-iam": "👋 很高兴认识你，我是",
     "choneas": "Choneas",
     "name-desc": "又或是 符华大人的小赤鸢 🪶",
-    "description": "全栈程序鸢，C++ 算法，Web 开发，",
-    "description-line2": "喜欢 ACGN、插画、摄影、动画制作"
+    "description": "全栈程序鸢，C++ 算法，用户界面设计，",
+    "description-line2": "喜欢 ACGN、摄影、动画制作"
   },
   "Article": {
     "title": "目录",
@@ -34,6 +34,14 @@
     "description": "👋 你好，我是 Choneas。喜欢写代码、设计用户界面等计算机相关知识。同时也对插画、动画制作、摄影感兴趣。目前是一名在校学生。",
     "tech-stack": "技术栈",
     "social-links": "发现我"
+  },
+  "Navbar-Dropdown": {
+    "prefer-language": "语言偏好",
+    "prefer-color-scheme": "主题偏好",
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "view-on": "查看该项目"
   },
   "Table-Of-Contents": {
     "toc": "目录"
