@@ -34,13 +34,13 @@ function getTweetImageUrls(
         if (!block?.content) return [];
 
         const images: string[] = [];
-        
+
         for (const childId of block.content) {
             const child = recordMap.block[childId]?.value;
             if (child?.type === 'image') {
-                const source = recordMap.signed_urls?.[child.id] || 
-                             child.properties?.source?.[0]?.[0];
-                             
+                const source = recordMap.signed_urls?.[child.id] ||
+                    child.properties?.source?.[0]?.[0];
+
                 if (source && !source.includes('file.notion.so')) {
                     const imageUrl = defaultMapImageUrl(source, child);
                     if (imageUrl) images.push(imageUrl);
@@ -76,7 +76,7 @@ async function generatePostMetadata(
         metadata.slug = getPageProperty('Slug', block, recordMap);
         metadata.description = getPageProperty('Description', block, recordMap);
         metadata.type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
-        
+
         // 处理分类
         const categories = getPageProperty<string[]>('Category', block, recordMap) || [];
         metadata.category = categories.filter(Boolean).map(tag => t(tag));
@@ -111,28 +111,31 @@ async function generatePostMetadata(
 }
 
 async function getAllPosts() {
-  const rootPage = await getRootPage();
-  const processedIds = new Set<string>();
-  const articles: PostMetadata[] = [];
-  const tweets: PostMetadata[] = [];
-  
-  for (const [id, block] of Object.entries(rootPage.block)) {
-    if (block?.value?.type === 'page' && 
-        block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
-      if (processedIds.has(id)) continue;
-      
-      const metadata = await generatePostMetadata(rootPage, id);
-      processedIds.add(id);
-      
-      if (metadata.type === 'Tweet') {
-        tweets.push(metadata);
-      } else {
-        articles.push(metadata);
-      }
+    const rootPage = await getRootPage();
+    const processedIds = new Set<string>();
+    const articles: PostMetadata[] = [];
+    const tweets: PostMetadata[] = [];
+
+    for (const [id, block] of Object.entries(rootPage.block)) {
+        if (block?.value?.type === 'page' &&
+            block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
+            if (processedIds.has(id)) continue;
+
+            const metadata = await generatePostMetadata(rootPage, id);
+            
+            if (metadata.description === '无内容' || metadata.description === 'No content') metadata.description = undefined
+
+            if (metadata.type === 'Tweet' && Boolean(metadata.id)) {
+                processedIds.add(id)
+                tweets.push(metadata);
+            } else if (metadata.type === 'Article' && Boolean(metadata.id)) {
+                processedIds.add(id)
+                articles.push(metadata);
+            }
+        }
     }
-  }
-  
-  return { articles, tweets };
+
+    return { articles, tweets };
 }
 
 class ArticleNotFoundError extends Error {
@@ -161,24 +164,24 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
     // 如果是标准 UUID 格式，直接使用
     if (slugOrId.length === 32) {
         targetId = slugOrId;
-    } 
+    }
     // 如果是纯数字ID
     else if (/^\d+$/.test(slugOrId)) {
         for (const [id, block] of Object.entries(rootPage.block)) {
             const typedBlock = block as NotionBlock;
-            if (typedBlock?.value?.type === 'page' && 
+            if (typedBlock?.value?.type === 'page' &&
                 typedBlock?.value?.parent_table === 'collection' &&
                 typedBlock?.value?.properties?.['XwwZ']?.[0]?.[0] === slugOrId) {
                 targetId = id;
                 break;
             }
         }
-    } 
+    }
     // 如果是 slug
     else {
         for (const [id, block] of Object.entries(rootPage.block)) {
             const typedBlock = block as NotionBlock;
-            if (typedBlock?.value?.type === 'page' && 
+            if (typedBlock?.value?.type === 'page' &&
                 typedBlock?.value?.parent_table === 'collection' &&
                 typedBlock?.value?.properties?.['}YdW']?.[0]?.[0] === slugOrId) {
                 targetId = id;
@@ -187,7 +190,7 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
         }
     }
 
-    
+
     if (!targetId) {
         throw new ArticleNotFoundError('Article not found');
     }

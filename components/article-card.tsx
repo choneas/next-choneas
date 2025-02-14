@@ -76,7 +76,9 @@ export function ArticleCard({
     }
 
     return (
-        <Card>
+        <Card classNames={{
+            base: 'bg-content2'
+        }}>
             <NextLink href={href}>
                 <CardBody className="p-6">
                     <div className="flex flex-col gap-4">

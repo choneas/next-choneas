@@ -126,7 +126,7 @@ function NavbarBrand() {
                                         Choneas
                                     </motion.div>
                                     <motion.div
-                                        className="absolute truncate hover:text-clip text-secondary"
+                                        className="absolute truncate text-ellipsis text-secondary max-w-[12rem] md:max-w-[16rem]"
                                         style={{
                                             y: contentTextY,
                                             opacity: contentTextOpacity
@@ -192,7 +192,7 @@ function NavbarDropdown() {
         >
             <DropdownTrigger>
                 <Button isIconOnly radius="full" variant="light" color="secondary">
-                    <FiMoreHorizontal />
+                    <FiMoreHorizontal size={24} />
                 </Button>
             </DropdownTrigger>
 
@@ -238,7 +238,7 @@ function NavbarDropdown() {
                 <DropdownSection title={t('prefer-color-scheme')}>
                     <DropdownItem 
                         key="light" 
-                        className="h-[36]" 
+                        className="max-h-[36px]" 
                         startContent={<MdLightMode />} 
                         color={isSelected("light") ? "primary" : "default"}
                         variant={isSelected("light") ? "flat" : undefined}
@@ -248,7 +248,7 @@ function NavbarDropdown() {
                     </DropdownItem>
                     <DropdownItem 
                         key="dark" 
-                        className="h-[36]" 
+                        className="max-h-[36px]" 
                         startContent={<MdDarkMode />} 
                         color={isSelected("dark") ? "primary" : "default"}
                         variant={isSelected("dark") ? "flat" : undefined}
@@ -258,7 +258,7 @@ function NavbarDropdown() {
                     </DropdownItem>
                     <DropdownItem 
                         key="system" 
-                        className="h-[36]" 
+                        className="max-h-[36px]" 
                         startContent={<CgDarkMode />} 
                         color={isSelected("system") ? "primary" : "default"}
                         variant={isSelected("system") ? "flat" : undefined}

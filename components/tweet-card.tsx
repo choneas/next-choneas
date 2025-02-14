@@ -62,8 +62,8 @@ export function TweetCard({
             <Card classNames={{
                 base: "shadow-none p-3 border",
                 header: "z-20 flex inline-flex gap-2 content-center",
-                body: `z-20 bg-content1 -my-3 px-3 pb-2 ${!isLoading && "animate-fadeIn opacity-0"}`,
-                footer: `z-20 bg-content1 px-3 py-2 ${!isLoading && "animate-fadeIn opacity-0"}`
+                body: `z-20 bg-content2 -my-3 px-3 pb-2 ${!isLoading && "animate-fadeIn opacity-0"}`,
+                footer: `z-20 bg-content2 px-3 py-2 ${!isLoading && "animate-fadeIn opacity-0"}`
             }}>
                 <CardHeader>
                     <Avatar isMe size="sm" />
@@ -73,7 +73,7 @@ export function TweetCard({
                 </CardHeader>
 
                 <CardBody>
-                    <h3 className={isLoading ? 'pb-3' : ''}>{tweet.title}</h3>
+                    <h3 className={isLoading ? 'pb-3' : 'font-bold'}>{tweet.title}</h3>
                     {isLoading ? (
                         <TweetContentSkeleton hasDescription={tweet.description ? true : false} images={tweet.photos?.length ? Array(tweet.photos.length).fill(0) : undefined} />
                     ) : recordMap && (
@@ -83,16 +83,18 @@ export function TweetCard({
                                     <NotionPage recordMap={recordMap} type="tweet-preview" />
                                 </div>
                             ) :
-                                <div className="inline-flex items-cener space-x-2 pl-4">
-                                    <LuMessageCircle size={20} className="w-auto h-auto" />
-                                    <p className="text-content3-foreground">{tweet.description}</p>
+                                <div className="inline-flex relative items-cener space-x-2 pl-4">
+                                    <p className="text-content3-foreground">
+                                        <LuMessageCircle size={20} className="w-auto h-auto absolute top-3 hidden md:block" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        {tweet.description}
+                                    </p>
                                 </div>
                             }
 
                             {!isExpanded && !tweet.description && (
                                 <div className="relative -mt-8 z-10">
                                     <div className={`h-12 flex items-center justify-center`}>
-                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-xs">{t('view-all')}</Button>
+                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-md">{t('view-all')}</Button>
                                     </div>
                                 </div>
                             )}
@@ -104,12 +106,12 @@ export function TweetCard({
 
                 <CardFooter>
                     {!isLoading &&
-                        <div className={tweet.description && "w-full grid gap-2 lg:grid-cols-6"}>
+                        <div className={tweet.description ? "w-full grid gap-2 lg:grid-cols-6" : 'w-full gird grid-cols-1'}>
                             <Button disableRipple disableAnimation onPress={onOpen} variant="flat" color="primary" className={`${!tweet.description && "hidden"} w-full justify-start text-primary`} startContent={<MdOpenInBrowser size={20} />}>
                                 {t('view-all')}
                             </Button>
 
-                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className="w-full justify-start lg:col-span-5" startContent={<LuMessageSquare size={18} />}>
+                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className={`w-full justify-start ${tweet.description && 'lg:col-span-5'}`} startContent={<LuMessageSquare size={18} />}>
                                 {t('comment-placeholder')}
                             </Button>
                         </div>
@@ -182,10 +184,10 @@ export function TweetContentSkeleton(
             {hasDescription ?
                 <div className="grid lg:grid-cols-6 mt-4 gap-2">
                     <Skeleton className="rounded-lg h-10" />
-                    <Skeleton className="rounded-lg lg:col-span-5 h-10"/>
+                    <Skeleton className="rounded-lg lg:col-span-5 h-10" />
                 </div>
                 :
-                <Skeleton className="rounded-lg w-full mt-2 h-10"/>
+                <Skeleton className="rounded-lg w-full mt-2 h-10" />
             }
         </>
     )

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import NotionPage from "@/components/notion-page";
 import { getTranslations } from 'next-intl/server';
-import { ArticleHeader } from "@/components/article-header";
+import { PostHeader } from "@/components/post-header";
 import { Comment } from '@/components/comment';
 import { getPost, ArticleNotFoundError } from "@/lib/content";
 import { notFound } from 'next/navigation';
@@ -35,7 +35,7 @@ export default async function Article({
 
         return (
             <>
-                <ArticleHeader article={metadata} />
+                <PostHeader post={metadata} isTweet={false} />
 
                 <TableOfContents toc={metadata.toc!} />
 

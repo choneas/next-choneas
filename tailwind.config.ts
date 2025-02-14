@@ -37,6 +37,7 @@ export default {
           background: "#FFF8F6",
           foreground: "#231918",
           content1: "#FFF8F6",
+          content2: "FFF0EE",
           primary: {
             50: "#faf5f2",
             100: "#f3e8e1",
@@ -104,6 +105,7 @@ export default {
           background: "#1A1110",
           foreground: "#F1DFDB",
           content1: "#1A1610",
+          content2: "#231918",
           primary: {
             50: "#fef4f2",
             100: "#ffe5e1",

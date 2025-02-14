@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { TweetCard } from "@/components/tweet-card";
 import { getAllPosts } from "@/lib/content"
 
@@ -6,6 +8,7 @@ export async function TweetList({
 }: {
     sortOrder?: 'asc' | 'desc';
 }) {
+    const t = await getTranslations('Home');
     const order = sortOrder || 'asc';
     const { tweets } = await getAllPosts();
     tweets.sort((a, b) => {
@@ -16,11 +19,18 @@ export async function TweetList({
 
     return (
         <div className="flex flex-col gap-4">
-            {tweets.map(tweet => (
-                <div key={tweet.id}>
-                    <TweetCard tweet={tweet} />
-                </div>
-            ))}
+            {tweets.map((tweet, index) =>
+                index === 0 ? (
+                    <div key={tweet.id} className="flex flex-col">
+                        <TweetCard tweet={tweet} />
+                        <Link href="/article" className="pt-2 w-full text-secondary text-sm flex justify-center">{t('goto-articles')}</Link>
+                    </div>
+                ) : (
+                    <div key={tweet.id}>
+                        <TweetCard tweet={tweet} />
+                    </div>
+                )
+            )}
         </div>
     )
 }

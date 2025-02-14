@@ -8,30 +8,30 @@ import { formatDate } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
 import { usePostMetadata } from "@/stores/post"
 
-export function ArticleHeader({ article }: { article: PostMetadata }) {
+export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: boolean }) {
     const t = useTranslations("Article-Header")
     const locale = useLocale()
     const { setPostMetadata } = usePostMetadata()
 
     useEffect(() => {
-        setPostMetadata?.(article)
-    }, [article, setPostMetadata])
+        setPostMetadata?.(post)
+    }, [post, setPostMetadata])
 
     return (
         <>
-            {article.cover ? (
+            {post.cover ? (
                 <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2+0.5rem)] overflow-hidden mb-6">
                     <div className="relative md:h-[40vh] h-[80vh]">
                         <Image
                             fill
-                            src={article.cover}
-                            alt={article.title}
+                            src={post.cover}
+                            alt={post.title}
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
                             <div className="h-full container mx-auto flex flex-col justify-end pb-8">
                                 <div className="flex flex-wrap gap-2">
-                                    {article.category?.map((category) => (
+                                    {post.category?.map((category) => (
                                         <Chip
                                             key={category}
                                             variant="dot"
@@ -45,17 +45,17 @@ export function ArticleHeader({ article }: { article: PostMetadata }) {
                                     ))}
                                 </div>
                                 <h1 className="text-5xl font-bold my-2">
-                                    {article.icon}
+                                    {post.icon}
                                 </h1>
                                 <h1 className="text-4xl font-bold my-4">
-                                    {article.title.length !== 0 ?
-                                        article.title
+                                    {post.title.length !== 0 ?
+                                        post.title
                                         :
                                         t('tweet-details')
                                     }
                                 </h1>
                                 <p className="text-gray-300 text-sm mt-4">
-                                    {t('created_at') + (article.created_date ? formatDate(article.created_date, locale) : '') + ' · ' + t('updated_at') + (article.last_edit_date ? formatDate(article.last_edit_date, locale) : '')}
+                                    {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edit_date ? formatDate(post.last_edit_date, locale) : '') : '')}
                                 </p>
                             </div>
                         </div>
@@ -64,7 +64,7 @@ export function ArticleHeader({ article }: { article: PostMetadata }) {
             ) : (
                 <div className="container mx-auto mb-6">
                     <div className="flex flex-wrap gap-2">
-                        {article.category?.map((category) => (
+                        {post.category?.map((category) => (
                             <Chip
                                 key={category}
                                 variant="dot"
@@ -75,17 +75,17 @@ export function ArticleHeader({ article }: { article: PostMetadata }) {
                         ))}
                     </div>
                     <h1 className="text-5xl font-bold my-2">
-                        {article.icon}
+                        {post.icon}
                     </h1>
                     <h1 className="text-4xl font-bold my-4">
-                        {article.title.length !== 0 ?
-                            article.title
+                        {post.title.length !== 0 ?
+                            post.title
                             :
                             t('tweet-details')
                         }
                     </h1>
                     <p className="text-content2-foreground">
-                        {t('created_at') + (article.created_date ? formatDate(article.created_date, locale) : '') + ' · ' + t('updated_at') + (article.last_edit_date ? formatDate(article.last_edit_date, locale) : '')}
+                        {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edit_date ? formatDate(post.last_edit_date, locale) : '') : '')}
                     </p>
                 </div>
             )}

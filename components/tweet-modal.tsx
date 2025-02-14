@@ -1,7 +1,6 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal"
-import { redirect } from "next/navigation"
 import type { ExtendedRecordMap } from "notion-types"
-import { ArticleHeader } from "@/components/article-header"
+import { PostHeader } from "@/components/post-header"
 import NotionPage from "@/components/notion-page"
 import { Comment } from "@/components/comment"
 import { PostMetadata } from "@/types/content"
@@ -47,7 +46,6 @@ export function TweetModal(
             radius="lg"
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            onClose={() => redirect("/")}
             scrollBehavior="outside"
             backdrop="blur"
             placement="top"
@@ -61,7 +59,7 @@ export function TweetModal(
                 {() => (
                     <>
                         <ModalHeader>
-                            {!isLoading && <ArticleHeader article={metadata}/>}
+                            {!isLoading && <PostHeader isTweet post={metadata}/>}
                         </ModalHeader>
 
                         <ModalBody>
