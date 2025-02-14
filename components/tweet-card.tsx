@@ -1,5 +1,7 @@
 'use client'
 
+// TODO: Fix notion sync block and commit PR
+
 import { Card, CardHeader, CardBody, CardFooter, Skeleton, Button, Image, useDisclosure } from "@heroui/react"
 import { useState, useEffect, useRef } from "react"
 import { useLocale, useTranslations } from "next-intl"
@@ -138,7 +140,7 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
         <div className={`
             z-20 my-3 grid gap-2 overflow-hidden
             grid-cols-3 md:${getDesktopColumns(displayImages.length)}
-            ${displayImages.length >= 1 ? 'max-h-[12rem]' : ''}
+            ${displayImages.length >= 1 && 'max-h-[32rem] md:max-h-[12rem]'}
         `}>
             {displayImages.map((image, i) => (
                 <div
