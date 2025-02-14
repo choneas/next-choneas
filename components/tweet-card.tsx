@@ -85,7 +85,7 @@ export function TweetCard({
                             ) :
                                 <div className="inline-flex relative items-cener space-x-2 pl-4">
                                     <p className="text-content3-foreground">
-                                        <LuMessageCircle size={20} className="w-auto h-auto absolute top-3 hidden md:block" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <LuMessageCircle size={20} className="w-auto h-auto absolute top-3" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         {tweet.description}
                                     </p>
                                 </div>
@@ -136,9 +136,9 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
 
     return (
         <div className={`
-            z-20 mt-4 grid gap-2
+            z-20 my-3 grid gap-2 overflow-hidden
             grid-cols-3 md:${getDesktopColumns(displayImages.length)}
-            ${displayImages.length === 1 ? 'max-h-96' : ''}
+            ${displayImages.length >= 1 ? 'max-h-[12rem]' : ''}
         `}>
             {displayImages.map((image, i) => (
                 <div
@@ -154,10 +154,7 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
                         src={image}
                         alt={`Image ${i + 1}`}
                         radius="sm"
-                        className="object-cover w-full h-full hover:brightness-90 transition-all"
-                        classNames={{
-                            wrapper: "w-full h-full"
-                        }}
+                        className="object-cover max-h-[12rem] hover:brightness-90 transition-all"
                     />
                 </div>
             ))}
