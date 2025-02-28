@@ -9,6 +9,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
 import { FiMoreHorizontal, FiGithub } from "react-icons/fi";
 import { CgDarkMode } from "react-icons/cg";
+import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { usePostMetadata } from "@/stores/post";
@@ -147,6 +148,7 @@ function NavbarBrand() {
 }
 
 function NavbarDropdown() {
+    const { setTheme } = useTheme()
     const t = useTranslations("Navbar-Dropdown")
     const router = useRouter()
     const [selectedLang, setSelectedLang] = useState<string>("Accept-Language")
@@ -177,7 +179,10 @@ function NavbarDropdown() {
             }, 3200)
         } else if (themeKeys.includes(keyStr)) {
             setSelectedTheme(keyStr)
-            // TODO: Handle theme change
+            // 完成颜色模式切换
+            if (keyStr === "light" || keyStr === "dark" || keyStr === "system") {
+                setTheme(keyStr);
+            }
         }
     }
 
@@ -203,7 +208,6 @@ function NavbarDropdown() {
                 onAction={handleAction}
                 aria-label="Preferences"
                 selectedKeys={new Set([selectedLang, selectedTheme])}
-                disabledKeys={["light", "dark"]}
             >
                 <DropdownSection title={t('prefer-language')}>
                     <DropdownItem 

@@ -49,7 +49,7 @@ export function TweetCard({
         if (tweet.description) setIsExpanded(false)
         if (contentRef.current) {
             const height = contentRef.current.offsetHeight;
-            if (height > 160) {
+            if (height > 148) {
                 setIsExpanded(false)
             } else {
                 setIsExpanded(true)
@@ -62,7 +62,7 @@ export function TweetCard({
     return (
         <>
             <Card classNames={{
-                base: "shadow-none p-3 border",
+                base: "shadow-none p-3 border border-secondary bg-content2",
                 header: "z-20 flex inline-flex gap-2 content-center",
                 body: `z-20 bg-content2 -my-3 px-3 pb-2 ${!isLoading && "animate-fadeIn opacity-0"}`,
                 footer: `z-20 bg-content2 px-3 py-2 ${!isLoading && "animate-fadeIn opacity-0"}`
@@ -82,7 +82,7 @@ export function TweetCard({
                         <>
                             {!tweet.description ? (
                                 <div ref={contentRef} className="relative max-h-[178px] overflow-hidden">
-                                    <NotionPage recordMap={recordMap} type="tweet-preview" />
+                                    <NotionPage recordMap={recordMap} type="tweet-preview"/>
                                 </div>
                             ) :
                                 <div className="inline-flex relative items-cener space-x-2 pl-4">
@@ -94,10 +94,8 @@ export function TweetCard({
                             }
 
                             {!isExpanded && !tweet.description && (
-                                <div className="relative -mt-8 z-10">
-                                    <div className={`h-12 flex items-center justify-center`}>
-                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-md">{t('view-all')}</Button>
-                                    </div>
+                                <div className={`relative -mt-8 z-10 h-12 flex items-center justify-center bg-gradient-to-t from-content2/95 to-transparent`}>
+                                    <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-md">{t('view-all')}</Button>
                                 </div>
                             )}
 

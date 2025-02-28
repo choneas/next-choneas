@@ -52,7 +52,7 @@ export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRec
                     Equation,
                     Modal,
                     Pdf,
-                    Image: Image,
+                    nextImage: Image,
                     nextLink: Link
                 }}
             />
@@ -77,7 +77,7 @@ export default function NotionPage({ recordMap, type }: { recordMap: ExtendedRec
                     font-family: var(--font-code);
                 }
                 .notion-asset-wrapper-image {
-                    display: ${type === "tweet-preview" ? "none" : "unset"};
+                    display: ${type === "tweet-preview" ? "none" : "show"};
                 }
             `}</style>
         </>

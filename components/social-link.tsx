@@ -1,6 +1,5 @@
-"use client" // TODO: HeroUI doesn't support SSR in React 19
-
-import { Button, Link } from "@heroui/react";
+import { Button } from "@heroui/button";
+import { Link } from "@heroui/link";
 import type { SocialLink as SocialLinkProps } from "@/types/about";
 
 export function SocialLink(link: SocialLinkProps) {
