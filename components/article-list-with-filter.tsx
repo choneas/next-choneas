@@ -91,7 +91,7 @@ export function ArticleListWithFilter({
                     label={t('label-categories')}
                 >
                     {categories.map(category => (
-                        <SelectItem key={category} value={category}>
+                        <SelectItem key={category}>
                             {category}
                         </SelectItem>
                     ))}
