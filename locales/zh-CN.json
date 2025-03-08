@@ -5,7 +5,7 @@
     "suffix": " - Choneas 的个人博客"
   },
   "Navbar": {
-    "tweets": "动态",
+    "moments": "动态",
     "articles": "文章",
     "projects": "项目",
     "about": "关于"
@@ -47,7 +47,8 @@
   "Table-Of-Contents": {
     "toc": "目录"
   },
-  "Tweet": {
+  "Moment": {
+    "article-publish": "发表了文章",
     "view-all": "查看全部",
     "details": "动态详情",
     "comment-placeholder": "评论 ..."

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { TweetList }  from "@/components/tweet-list";
+import { MomentList }  from "@/components/moment-list";
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("Metadata");
@@ -27,7 +27,7 @@ export default async function Home() {
                 {t('description-line2')}
             </p>
 
-            <TweetList sortOrder="desc"/>
+            <MomentList sortOrder="desc"/>
         </div>
     );
 }

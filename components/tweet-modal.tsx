@@ -4,7 +4,7 @@ import { PostHeader } from "@/components/post-header"
 import NotionPage from "@/components/notion-page"
 import { Comment } from "@/components/comment"
 import { PostMetadata } from "@/types/content"
-import { TweetContentSkeleton } from "@/components/tweet-card"
+import { TweetContentSkeleton } from "@/components/moment-card"
 import { useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl"
 import { formatDate } from "@/lib/format";

@@ -168,6 +168,10 @@ export default {
           }
         }
       }
-    }
+    },
+    safelist: [
+      { pattern: /grid-cols-+/ }, // 捕获所有列数变化
+      { pattern: /h-$$.*px$$/ }    // 防敖丙突然长高
+    ]
   })],
 } satisfies Config;

@@ -134,7 +134,7 @@ function NavbarBrand() {
                                         }}
                                     >
                                         {pathname.includes("article/") && postMetadata?.title}
-                                        {pathname === '/' && t('tweets')}
+                                        {pathname === '/' && t('moments')}
                                     </motion.div>
                                 </div>
                             </>
