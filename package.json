@@ -1,7 +1,7 @@
 {
   "name": "next-choneas",
-  "version": "0.1.0",
-  "packageManager": "bun@1.2.2",
+  "version": "1.1.0",
+  "packageManager": "bun@1.2.4",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -26,7 +26,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
-    "react-notion-x": "^7.2.6",
+    "react-notion-x": "^7.3.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
