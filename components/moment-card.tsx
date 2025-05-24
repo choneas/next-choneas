@@ -59,12 +59,12 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
 
     return (
         <>
-            <Card
+            <Card className="outline-2 outline"
                 classNames={{
-                    base: `shadow-none p-3 border border-secondary bg-content2 ${!isTweet ? 'cursor-pointer' : undefined}`,
+                    base: `shadow-none p-3 outline-2 shadow bg-content2 ${!isTweet ? 'cursor-pointer' : undefined}`,
                     header: "z-20 flex inline-flex gap-2 content-center",
-                    body: `z-20 bg-content2 -my-3 px-3 pb-2 ${isTweet && !isLoading && "animate-fadeIn opacity-0"}`,
-                    footer: `z-20 bg-content2 px-3 py-2 ${isTweet && !isLoading && "animate-fadeIn opacity-0"}`
+                    body: `z-20 bg-content2 -my-3 px-3 pb-2 ${isTweet && !isLoading && "animate-fade-in-opacity"}`,
+                    footer: `z-20 bg-content2 px-3 py-2 ${isTweet && !isLoading && "animate-fade-in-opacity"}`
                 }}
             >
                 <CardHeader onClick={() => !isTweet && router.push('/article/' + moment.slug)}>
@@ -101,7 +101,7 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
                                     </div>
                                 )}
                                 {!isExpanded && !moment.description && (
-                                    <div className="relative -mt-8 z-10 h-12 flex items-center justify-center bg-gradient-to-t from-content2/95 to-transparent">
+                                    <div className="relative -mt-8 z-10 h-12 flex items-center justify-center bg-linear-to-t from-content2/95 to-transparent">
                                         <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-md">
                                             {t('view-all')}
                                         </Button>
@@ -155,7 +155,7 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
                     key={i}
                     className="relative w-full h-full" 
                 >
-                    <div className="relative w-full h-full overflow-hidden rounded-sm">
+                    <div className="relative w-full h-full overflow-hidden rounded-xs">
                         <Image
                             src={image}
                             onClick={onOpen}
@@ -175,7 +175,7 @@ export function TweetContentSkeleton(
     return (
         <>
             <Skeleton className="rounded-lg max-w-[24rem] h-6" />
-            <Skeleton className="rounded-lg max-w-[32rem] mt-2 h-6" />
+            <Skeleton className="rounded-lg max-w-lg mt-2 h-6" />
 
             {images && images.length > 0 && (
                 <div className="grid grid-cols-3 md:grid-cols-4 gap-2 my-3">

@@ -11,7 +11,7 @@ export function Comment({ metadata, className, type }: { metadata?: PostMetadata
     const { resolvedTheme } = useTheme();
 
     return (
-        <div className={className}>
+        <div className={'comments' + className}>
             <Giscus
                 repo={process.env.NEXT_PUBLIC_REPO as `${string}/${string}`}
                 repoId={process.env.NEXT_PUBLIC_REPO_ID as string}

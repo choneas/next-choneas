@@ -10,15 +10,16 @@ import { Providers } from "@/components/providers";
 
 const notoSerif = Noto_Serif_SC({
     variable: "--font-serif",
-    weight: ["400", "700"],
     subsets: ["latin"],
     display: "swap",
+    fallback: ["Noto Serif SC", "Noto Serif", "serif"],
 });
 
 const sourceCode = Source_Code_Pro({
     variable: "--font-code",
     display: "swap",
     subsets: ["latin"],
+    fallback: ["Source Code Pro", "monospace"],
 });
 
 export const metadata: Metadata = {

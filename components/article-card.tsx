@@ -1,5 +1,7 @@
-"use client"
-import { Card, CardHeader, CardBody, CardFooter, Image, Chip, Avatar } from "@heroui/react";
+import { Card, CardHeader, CardBody, CardFooter} from "@heroui/card"
+import { Avatar } from "@heroui/avatar";
+import { Image } from "@heroui/image";
+import { Chip } from "@heroui/chip"
 import NextLink from "next/link"
 import { useLocale } from 'next-intl';
 import { uuidToId } from "notion-utils";
@@ -56,11 +58,11 @@ export function ArticleCard({
                         removeWrapper
                         alt={article.title}
                         src={article.cover}
-                        className="z-0 w-full h-full object-cover"
+                        className="z-0 w-full h-full object-cover saturate-50"
                     />
-                    <CardFooter className="absolute bg-gradient-to-t from-black/80 pb-8 px-8 to-transparent bottom-0 z-10">
+                    <CardFooter className="absolute bg-linear-to-t from-black/80 pb-8 px-8 to-transparent bottom-0 z-10">
                         <div className="flex flex-col gap-4">
-                            <h2 className="text-2xl font-bold text-white">{article.title}</h2>
+                            <span className="text-2xl font-bold text-white">{article.title}</span>
                             {article.category && (
                                 <div className="flex flex-wrap gap-2">
                                     {article.category.map(tag => (
@@ -77,13 +79,13 @@ export function ArticleCard({
 
     return (
         <Card classNames={{
-            base: 'bg-content2'
+            base: 'bg-content2 shadow border-none'
         }}>
             <NextLink href={href}>
                 <CardBody className="p-6">
                     <div className="flex flex-col gap-4">
                         <AuthorAndDate />
-                        <h2 className="text-2xl font-bold">{article.title}</h2>
+                        <span className="text-2xl font-bold">{article.title}</span>
                         {article.category && (
                             <div className="flex flex-wrap gap-2">
                                 {article.category.map(tag => (

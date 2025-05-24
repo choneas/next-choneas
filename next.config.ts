@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
         hostname: "www.notion.so"
       }
     ]
-  }
+  },
+  allowedDevOrigins: ['127.0.0.1'],
 };
 
 export default withNextIntl(nextConfig);

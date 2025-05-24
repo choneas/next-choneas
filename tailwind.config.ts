@@ -17,15 +17,6 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        }
-      },
-      animation: {
-        fadeIn: 'fadeIn 0.3s ease-in-out forwards'
       }
     },
   },
@@ -168,10 +159,6 @@ export default {
           }
         }
       }
-    },
-    safelist: [
-      { pattern: /grid-cols-+/ }, // 捕获所有列数变化
-      { pattern: /h-$$.*px$$/ }    // 防敖丙突然长高
-    ]
+    }
   })],
 } satisfies Config;

@@ -21,8 +21,8 @@ export function Navbar() {
 
     return (
         <NextNavbar onMenuOpenChange={setIsMenuOpen} classNames={{
-            base: "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80",
-            menu: "bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-80 gap-4",
+            base: "bg-white/60 dark:bg-black/80",
+            menu: "bg-white/60 dark:bg-black/80 gap-4",
         }}>
             <NavbarContent justify="start">
                 <NavbarMenuToggle
@@ -33,7 +33,9 @@ export function Navbar() {
                 <NavbarBrand />
             </NavbarContent>
 
-            <NavbarItems />
+            <NavbarContent justify="center">
+                <NavbarItems />
+            </NavbarContent>
 
             <NavbarContent justify="end">
                 <NavbarDropdown />
@@ -55,7 +57,7 @@ function NavbarMenu() {
                     <NavbarMenuItem key={index}>
                         <Link
                             color="foreground"
-                            href={item.href}
+                            href={pathname.includes(item.href) && pathname != "/" ? "/" : item.href}
                             className={`flex justify-start gap-2 ${pathname.includes(item.href) && pathname != "/" ? "font-bold" : ""}`}
                         >
                             {item.icon}
@@ -127,7 +129,7 @@ function NavbarBrand() {
                                         Choneas
                                     </motion.div>
                                     <motion.div
-                                        className="absolute truncate text-ellipsis text-secondary max-w-[12rem] md:max-w-[16rem]"
+                                        className="absolute truncate text-ellipsis text-secondary max-w-48 md:max-w-[16rem]"
                                         style={{
                                             y: contentTextY,
                                             opacity: contentTextOpacity

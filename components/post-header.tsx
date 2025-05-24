@@ -16,20 +16,20 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
     useEffect(() => {
         setPostMetadata?.(post)
     }, [post, setPostMetadata])
-
     return (
         <>
             {post.cover ? (
-                <div className="relative -mt-[64px] w-screen -ml-[calc((100vw-100%)/2+0.5rem)] overflow-hidden mb-6">
-                    <div className="relative md:h-[40vh] h-[80vh]">
+                <div className="relative -mt-[72px] min-w-screen overflow-hidden mb-3">
+                    <div className="relative md:h-[50vh] h-[80vh]">
                         <Image
                             fill
                             src={post.cover}
                             alt={post.title}
+                            quality={80}
                             className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                            <div className="h-full container mx-auto flex flex-col justify-end pb-8">
+                        <div className={`absolute ${!isTweet && 'sm:pl-24 md:pl-48'} mx-auto pl-8 inset-0 bg-linear-to-t from-black/70 to-transparent`}>
+                            <div className="h-full mx-4 flex flex-col justify-end pb-8">
                                 <div className="flex flex-wrap gap-2">
                                     {post.category?.map((category) => (
                                         <Chip
@@ -44,10 +44,10 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                                         </Chip>
                                     ))}
                                 </div>
-                                <h1 className="text-5xl font-bold my-2">
+                                <span className="text-5xl font-bold my-2">
                                     {post.icon}
-                                </h1>
-                                <h1 className="text-4xl font-bold my-4">
+                                </span>
+                                <h1 className="text-4xl text-white font-bold my-4">
                                     {post.title.length !== 0 ?
                                         post.title
                                         :
@@ -62,7 +62,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                     </div>
                 </div>
             ) : (
-                <div className="container mx-auto mb-6">
+                <div className={isTweet ? 'pt-6 pb-4' : 'container mx-auto pt-8 px-8 sm:px-24 md:px-48 md:max-w-6xl'}>
                     <div className="flex flex-wrap gap-2">
                         {post.category?.map((category) => (
                             <Chip

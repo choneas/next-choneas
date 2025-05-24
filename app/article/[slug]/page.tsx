@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import { TableOfContents } from '@/components/table-of-contents';
 
 export async function generateMetadata(
-    {params}: {params: Promise<{slug: string}>}
+    { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
     const slug = (await params).slug;
     const t = await getTranslations('Metadata')
@@ -37,11 +37,13 @@ export default async function Article({
             <>
                 <PostHeader post={metadata} isTweet={false} />
 
-                <TableOfContents toc={metadata.toc!} />
+                <div className='container mx-auto pt-8 px-8 sm:px-24 md:px-48 md:max-w-6xl'>
+                    <TableOfContents toc={metadata.toc!} />
 
-                <NotionPage recordMap={recordMap}/>
+                    <NotionPage recordMap={recordMap} />
 
-                <Comment type='article' metadata={metadata} className='mt-8'/>
+                    <Comment type='article' metadata={metadata} className='mt-8' />
+                </div>
             </>
         );
     } catch (error) {

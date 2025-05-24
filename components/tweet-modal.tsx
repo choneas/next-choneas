@@ -55,7 +55,7 @@ export function TweetModal(
                 closeButton: "absolute top-4 right-4 size-8"
             }}
         >
-            <ModalContent className="container mx-auto pt-8 px-4 sm:px-8 md:px-12 md:max-w-[48rem]">
+            <ModalContent className="container mx-auto pt-8 px-4 sm:px-8 md:px-12 md:max-w-3xl">
                 {() => (
                     <>
                         <ModalHeader>

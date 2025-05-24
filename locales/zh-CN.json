@@ -48,7 +48,7 @@
     "toc": "目录"
   },
   "Moment": {
-    "article-publish": "发表了文章",
+    "article-publish": "发布了文章",
     "view-all": "查看全部",
     "details": "动态详情",
     "comment-placeholder": "评论 ..."
@@ -61,7 +61,7 @@
     "not-found": "没有找到相关内容"
   },
   "Article-Header": {
-    "created_at": "发表于 ",
+    "created_at": "发布于 ",
     "updated_at": "更新于 ",
     "tweet-details": "动态详情"
   },

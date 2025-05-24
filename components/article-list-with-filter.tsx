@@ -34,7 +34,6 @@ export function ArticleListWithFilter({
     }, [articles])
 
     const filteredArticles = articles.filter(article => {
-        // 分类筛选
         if (selectedCategories instanceof Set && selectedCategories.size > 0) {
             const categoryArray = Array.from(selectedCategories).map(String)
             if (!article.category || !categoryArray.some(t => article.category?.includes(t))) {
@@ -42,18 +41,15 @@ export function ArticleListWithFilter({
             }
         }
 
-        // 搜索筛选
         if (searchValue) {
             const searchTerms = searchValue.toLowerCase().split(/\s+/).filter(term => term.length > 0)
             const titleLower = article.title.toLowerCase()
             const descriptionLower = article.description?.toLowerCase() || ''
             
-            // 添加目录内容搜索
             const tocContent = article.toc
                 ?.map(item => item.text.toLowerCase())
                 .join(' ') || ''
 
-            // 检查所有搜索词是否都能在标题、描述或目录中找到
             return searchTerms.every(term => 
                 titleLower.includes(term) || 
                 descriptionLower.includes(term) ||
