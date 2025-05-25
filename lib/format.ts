@@ -25,27 +25,26 @@ export async function loadLocale(locale: string): Promise<void> {
 }
 
 export async function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): Promise<string> {
-    // const d = dayjs(date);
-    // await loadLocale(locale);
+    const d = dayjs(date);
+    await loadLocale(locale);
 
-    // if (!alias) {
-    //     return d.format(showTime ? 'L LT' : 'L');
-    // }
+    if (!alias) {
+        return d.format(showTime ? 'L LT' : 'L');
+    }
 
-    // const calendarConfig = {
-    //     sameDay: '[Today]',
-    //     lastDay: '[Yesterday]',
-    //     sameWeek: 'dddd',
-    //     lastWeek: 'L',
-    //     sameElse: d.year() === dayjs().year() ? 'MMM D' : 'L'
-    // };
+    const calendarConfig = {
+        sameDay: '[Today]',
+        lastDay: '[Yesterday]',
+        sameWeek: 'dddd',
+        lastWeek: 'L',
+        sameElse: d.year() === dayjs().year() ? 'MMM D' : 'L'
+    };
 
-    // let result = d.calendar(null, calendarConfig);
+    let result = d.calendar(null, calendarConfig);
     
-    // if (showTime) {
-    //     result += ' ' + d.format('HH:mm');
-    // }
-    const result = date.toString + locale + showTime?.valueOf().toString(); + alias.toString();
+    if (showTime) {
+        result += ' ' + d.format('HH:mm');
+    }
 
     return result;
 }

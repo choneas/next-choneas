@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Image from "next/image"
 import { Chip } from "@heroui/react"
 import { useTranslations, useLocale } from "next-intl"
@@ -12,29 +12,10 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
     const t = useTranslations("Article-Header")
     const locale = useLocale()
     const { setPostMetadata } = usePostMetadata()
-    const [createdAt, setCreatedAt] = useState<string>("")
-    const [updatedAt, setUpdatedAt] = useState<string>("")
 
     useEffect(() => {
         setPostMetadata?.(post)
     }, [post, setPostMetadata])
-
-    useEffect(() => {
-        let cancelled = false
-        async function formatDates() {
-            if (post.created_date) {
-                const str = await formatDate(post.created_date, locale)
-                if (!cancelled) setCreatedAt(str)
-            }
-            if (post.last_edited_time) {
-                const str = await formatDate(post.last_edited_time, locale)
-                if (!cancelled) setUpdatedAt(str)
-            }
-        }
-        formatDates()
-        return () => { cancelled = true }
-    }, [post.created_date, post.last_edited_time, locale])
-
     return (
         <>
             {post.cover ? (
@@ -74,7 +55,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                                     }
                                 </h1>
                                 <p className="text-gray-300 text-sm mt-4">
-                                    {t('created_at') + createdAt + (!isTweet ? ' · ' + t('updated_at') + updatedAt : '')}
+                                    {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                                 </p>
                             </div>
                         </div>
@@ -104,7 +85,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                         }
                     </h1>
                     <p className="text-content2-foreground">
-                        {t('created_at') + createdAt + (!isTweet ? ' · ' + t('updated_at') + updatedAt : '')}
+                        {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                     </p>
                 </div>
             )}
