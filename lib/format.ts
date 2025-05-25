@@ -1,50 +1,47 @@
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/en';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import isToday from 'dayjs/plugin/isToday';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-import calendar from 'dayjs/plugin/calendar';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 
+dayjs.extend(relativeTime);
 dayjs.extend(isToday);
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
-dayjs.extend(calendar);
-dayjs.extend(localizedFormat);
 
-export async function loadLocale(locale: string): Promise<void> {
-    const localeName = locale.toLowerCase();
-    try {
-        await import(`dayjs/locale/${localeName}.js`);
-    } catch {
-        console.warn(`Failed to load locale: ${localeName}, falling back to en`);
-        await import('dayjs/locale/en.js');
-        dayjs.locale('en');
-        return;
-    }
-    dayjs.locale(localeName);
+function isSameWeek(date1: dayjs.Dayjs, date2: dayjs.Dayjs): boolean {
+    const monday1 = date1.startOf('day').subtract(date1.day() === 0 ? 6 : date1.day() - 1, 'day');
+    const monday2 = date2.startOf('day').subtract(date2.day() === 0 ? 6 : date2.day() - 1, 'day');
+    return monday1.isSame(monday2, 'day');
 }
 
-export async function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): Promise<string> {
+export function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): string {
     const d = dayjs(date);
-    await loadLocale(locale);
+    const now = dayjs();
+    dayjs.locale(locale);
 
-    if (!alias) {
-        return d.format(showTime ? 'L LT' : 'L');
+    if (d.isToday() && alias) {
+        return locale === 'zh-CN' ? '今天' : 'Today';
     }
 
-    const calendarConfig = {
-        sameDay: '[Today]',
-        lastDay: '[Yesterday]',
-        sameWeek: 'dddd',
-        lastWeek: 'L',
-        sameElse: d.year() === dayjs().year() ? 'MMM D' : 'L'
-    };
+    if (d.isSame(now.subtract(1, 'day'), 'day') && alias) {
+        return locale === 'zh-CN' ? '昨天' : 'Yesterday';
+    }
 
-    let result = d.calendar(null, calendarConfig);
-    
+    if (isSameWeek(d, now) && alias) {
+        const weekday = locale === 'zh-CN' 
+            ? `星期${['日', '一', '二', '三', '四', '五', '六'][d.day()]}`
+            : d.format('dddd');
+        return weekday;
+    }
+
+    const isSameYear = d.year() === now.year();
+    const format = locale === 'zh-CN'
+        ? (isSameYear && alias ? 'M月D日' : 'YYYY年M月D日')
+        : (isSameYear && alias ? 'MMM D' : 'MMM D, YYYY');
+
+    let result = d.format(format);
     if (showTime) {
         result += ' ' + d.format('HH:mm');
     }
-
+    
     return result;
 }

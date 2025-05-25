@@ -5,9 +5,8 @@ import { ArticleListWithFilter } from '@/components/article-list-with-filter'
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations('Article')
-    const tm = await getTranslations('Metadata')
     return {
-        title: t('title') + tm('suffix'),
+        title: t('title') + " | Choneas's blog",
         description: t('description'),
     }
 }

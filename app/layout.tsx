@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
-import { Analytics } from "@vercel/analytics/next";
+// import { Analytics } from "@vercel/analytics/next"; TODO: Analytics hydration error
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
@@ -46,7 +46,6 @@ export default async function RootLayout({
                         {children}
                     </Providers>
                 </NextIntlClientProvider>
-                <Analytics />
             </body>
             <GoogleAnalytics gaId={process.env.GA_ID!}/>
         </html>

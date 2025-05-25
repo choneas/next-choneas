@@ -63,7 +63,7 @@ export function ProjectCard({ project }: { project: Project }) {
                                 className="w-full h-48 rounded-lg object-cover"
                             />
                         )}
-                        <p className="text-lg text-foreground">
+                        <p className="text-lg text-gray-600">
                             {project.isGithubRepo ? repoInfo?.description : project.description}
                         </p>
                     </>

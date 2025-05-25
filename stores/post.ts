@@ -10,7 +10,7 @@ export const usePostMetadata = create<PostMetadataStore>((set) => ({
     postMetadata: {
         title: '',
         created_date: new Date,
-        last_edited_time: new Date
+        last_edit_date: new Date
     },
     setPostMetadata: (article: PostMetadata) => set({ postMetadata: article })
 }));
