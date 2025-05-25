@@ -18,7 +18,7 @@ export function Comment({ metadata, className, type }: { metadata?: PostMetadata
                 category={process.env.NEXT_PUBLIC_CATEGORY as string}
                 categoryId={process.env.NEXT_PUBLIC_CATEGORY_ID as string}
                 mapping="specific"
-                term={type === "article" ? metadata?.slug : formatDate(metadata?.created_date || new Date(), "en", true, false)}
+                term={type === "article" ? metadata?.slug : formatDate(metadata?.created_date || new Date(), "en", true, false).toString()}
                 reactionsEnabled="1"
                 emitMetadata="0"
                 inputPosition="top"
