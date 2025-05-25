@@ -11,20 +11,20 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(calendar);
 dayjs.extend(localizedFormat);
 
-export function loadLocale(locale: string): void {
+export async function loadLocale(locale: string): Promise<void> {
     try {
-        require(`dayjs/locale/${locale.toLowerCase()}`);
+        await import(`dayjs/locale/${locale.toLowerCase()}`);
     } catch (e) {
         console.warn(`Failed to load locale: ${locale}, falling back to en`);
-        require('dayjs/locale/en');
+        await import('dayjs/locale/en');
         locale = 'en';
     }
     dayjs.locale(locale.toLowerCase());
 }
 
-export function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): string {
+export async function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): Promise<string> {
     const d = dayjs(date);
-    loadLocale(locale);
+    await loadLocale(locale);
 
     if (!alias) {
         return d.format(showTime ? 'L LT' : 'L');
