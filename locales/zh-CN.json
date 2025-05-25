@@ -37,6 +37,7 @@
     "social-links": "发现我"
   },
   "Navbar-Dropdown": {
+    "preferences": "偏好设置",
     "prefer-language": "语言偏好",
     "prefer-color-scheme": "主题偏好",
     "light": "浅色",

@@ -1,8 +1,10 @@
 "use client"
 
+// TODO: Improve Dropdown definition
+
 import {
     Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem,
-    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner
+    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner, Tooltip
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -110,7 +112,11 @@ function NavbarBrand() {
 
     return (
         <>
-            <Link disableAnimation href="/" color="foreground">
+            <Link
+                disableAnimation
+                href="/"
+                color="foreground"
+            >
                 <HeroNavbarBrand className="flex gap-4 font-bold">
                     <Avatar isMe />
                     {
@@ -181,7 +187,6 @@ function NavbarDropdown() {
             }, 3200)
         } else if (themeKeys.includes(keyStr)) {
             setSelectedTheme(keyStr)
-            // 完成颜色模式切换
             if (keyStr === "light" || keyStr === "dark" || keyStr === "system") {
                 setTheme(keyStr);
             }
@@ -198,7 +203,13 @@ function NavbarDropdown() {
             backdrop="opaque"
         >
             <DropdownTrigger>
-                <Button isIconOnly radius="full" variant="light" color="secondary">
+                <Button
+                    isIconOnly
+                    radius="full"
+                    variant="light"
+                    color="secondary"
+                    aria-label={t('preferences')}
+                >
                     <FiMoreHorizontal size={24} />
                 </Button>
             </DropdownTrigger>
@@ -208,7 +219,7 @@ function NavbarDropdown() {
                 closeOnSelect={false}
                 selectionMode="multiple"
                 onAction={handleAction}
-                aria-label="Preferences"
+                aria-label={t('preferences')}
                 selectedKeys={new Set([selectedLang, selectedTheme])}
             >
                 <DropdownSection title={t('prefer-language')}>

@@ -66,12 +66,19 @@ export function TweetModal(
                             {isLoading ? (
                                 <TweetContentSkeleton images={metadata.photos?.length ? Array(metadata.photos.length).fill(0) : undefined} />
                             ) : (
-                                <NotionPage recordMap={recordMap} type="tweet-details"/>
+                                <NotionPage
+                                    recordMap={recordMap}
+                                    type="tweet-details"
+                                />
                             )}
                         </ModalBody>
 
                         <ModalFooter>
-                            <Comment type="tweet" metadata={metadata} className="mt-8 w-full pb-16"/>
+                            <Comment
+                                type="tweet"
+                                metadata={metadata}
+                                className="mt-8 w-full pb-16"
+                            />
                         </ModalFooter>
                     </>
                 )}

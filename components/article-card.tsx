@@ -39,9 +39,9 @@ export function ArticleCard({
                     <span>·</span>
                 </>
             )}
-            {article.last_edit_date && (
+            {article.created_date && (
                 <time>
-                    {formatDate(article.last_edit_date, locale, showTime)}
+                    {formatDate(article.created_date, locale, showTime)}
                 </time>
             )}
         </div>

@@ -7,8 +7,9 @@ import { socialLinks, techStacks } from "@/data/about"
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations('About')
+    const tm = await getTranslations('Metadata')
     return {
-        title: t('title') + " | Choneas's blog",
+        title: t('title') + tm('suffix'),
         description: t('description'),
     }
 }
@@ -20,7 +21,7 @@ export default async function About() {
         <div className="flex flex-col gap-6">
             <div className="space-y-4">
                 <h1>{t("title")}</h1>
-                <p className="text-lg">{t("description")}</p>
+                <span className="text-lg">{t("description")}</span>
             </div>
 
             <div className="space-y-4">

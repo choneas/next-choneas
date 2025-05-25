@@ -1,5 +1,10 @@
 import type { TableOfContentsEntry } from 'notion-utils'
-import type { Author } from '@/types/author'
+interface Author {
+    uuid: string
+    name: string
+    avatar: string
+}
+
 
 export interface PostMetadata {
     id?: string
@@ -17,7 +22,7 @@ export interface PostMetadata {
     cover_position?: number
     photos?: string[]
     created_date: Date
-    last_edit_date: Date
+    last_edited_time: Date
 }
 
 export interface PropertySchema {

@@ -1,4 +1,4 @@
-import type { SocialLink, TechStack } from "@/types/about";
+import { ReactNode } from "react";
 
 // Social
 import { FaBilibili, FaBluesky, FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
@@ -7,6 +7,20 @@ import { FaBilibili, FaBluesky, FaXTwitter, FaGithub, FaDiscord } from "react-ic
 import { FaReact, FaFigma, FaNodeJs, FaPython } from "react-icons/fa6";
 import { SiNextdotjs, SiTypescript, SiMongodb, SiTailwindcss, SiShadcnui, SiNextui } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
+
+export interface SocialLink {
+    platform: string
+    name?: string
+    href?: string
+    color?: string
+    icon?: ReactNode
+}
+
+export interface TechStack {
+    name: string
+    icon: ReactNode
+    href?: string
+}
 
 export const socialLinks: SocialLink[] = [
     {

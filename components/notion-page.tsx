@@ -1,4 +1,5 @@
 "use client"
+
 import * as React from 'react'
 import { Image, Link } from '@heroui/react'
 import { type ExtendedRecordMap } from 'notion-types'
@@ -78,9 +79,11 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
                 .notion-collection-page-properties {
                     display: none;
                 }
-                .notion-asset-wrapper-image {
-                    display: ${type === "tweet-preview" ? "none" : "block"};
-                }
+                ${type === "tweet-preview"
+                    ? `.notion-asset-wrapper-image {
+                        display: none;
+                    }`
+                    : ""}
             `}</style>
         </>
     )
@@ -129,7 +132,12 @@ const NotionTableReplacer: React.FC = () => {
                         <Table aria-label={`Notion Table ${tableIndex + 1}`}>
                             <TableHeader columns={columns}>
                                 {(column) => (
-                                    <TableColumn key={column.key} className='bg-content2'>{column.label}</TableColumn>
+                                    <TableColumn
+                                        key={column.key}
+                                        className='bg-content2'
+                                    >
+                                        {column.label}
+                                    </TableColumn>
                                 )}
                             </TableHeader>
                             <TableBody items={items}>

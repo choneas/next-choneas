@@ -1,7 +1,5 @@
 'use client'
 
-// TODO: Fix notion sync block and commit PR
-
 import { Card, CardHeader, CardBody, CardFooter, Skeleton, Button, Image, useDisclosure } from "@heroui/react"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
@@ -59,7 +57,7 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
 
     return (
         <>
-            <Card className="outline-2 outline"
+            <Card
                 classNames={{
                     base: `shadow-none p-3 outline-2 shadow bg-content2 ${!isTweet ? 'cursor-pointer' : undefined}`,
                     header: "z-20 flex inline-flex gap-2 content-center",
@@ -90,19 +88,34 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
                             <>
                                 {!moment.description ? (
                                     <div ref={contentRef} className="relative max-h-[178px] overflow-hidden">
-                                        <NotionPage recordMap={recordMap} type="tweet-preview" />
+                                        <NotionPage
+                                            recordMap={recordMap}
+                                            type="tweet-preview"
+                                        />
                                     </div>
                                 ) : (
                                     <div className="inline-flex relative items-center space-x-2 pl-4">
                                         <p className="text-content3-foreground">
-                                            <LuMessageCircle size={20} className="w-auto h-auto absolute top-3" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <LuMessageCircle
+                                                size={20}
+                                                className="w-auto h-auto absolute top-3"
+                                            />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             {moment.description}
                                         </p>
                                     </div>
                                 )}
                                 {!isExpanded && !moment.description && (
                                     <div className="relative -mt-8 z-10 h-12 flex items-center justify-center bg-linear-to-t from-content2/95 to-transparent">
-                                        <Button disableRipple onPress={onOpen} color="primary" variant="flat" radius="full" size="sm" className="text-primary backdrop-blur-md">
+                                        <Button
+                                            disableRipple
+                                            onPress={onOpen}
+                                            color="primary"
+                                            variant="flat"
+                                            radius="full"
+                                            size="sm"
+                                            className="text-primary backdrop-blur-md"
+                                        >
                                             {t('view-all')}
                                         </Button>
                                     </div>
@@ -120,11 +133,26 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
                 {isTweet && !isLoading && (
                     <CardFooter>
                         <div className={moment.description ? "w-full grid gap-2 lg:grid-cols-6" : 'w-full grid grid-cols-1'}>
-                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" color="primary" className={`${!moment.description && "hidden"} w-full justify-start text-primary`} startContent={<MdOpenInBrowser size={20} />}>
+                            <Button
+                                disableRipple
+                                disableAnimation
+                                onPress={onOpen}
+                                variant="flat"
+                                color="primary"
+                                className={`${!moment.description && "hidden"} w-full justify-start text-primary`}
+                                startContent={<MdOpenInBrowser size={20} />}
+                            >
                                 {t('view-all')}
                             </Button>
 
-                            <Button disableRipple disableAnimation onPress={onOpen} variant="flat" className={`w-full justify-start ${moment.description && 'lg:col-span-5'}`} startContent={<LuMessageSquare size={18} />}>
+                            <Button
+                                disableRipple
+                                disableAnimation
+                                onPress={onOpen}
+                                variant="flat"
+                                className={`w-full justify-start ${moment.description && 'lg:col-span-5'}`}
+                                startContent={<LuMessageSquare size={18} />}
+                            >
                                 {t('comment-placeholder')}
                             </Button>
                         </div>
@@ -132,7 +160,12 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
                 )}
             </Card>
             {isTweet && recordMap && (
-                <TweetModal isOpen={isOpen} onOpenChange={onOpenChange} recordMap={recordMap} metadata={moment} />
+                <TweetModal
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    recordMap={recordMap}
+                    metadata={moment}
+                />
             )}
         </>
     )
@@ -153,7 +186,7 @@ function ImagePreview({ images, onOpen }: { images: string[], onOpen?: () => voi
             {displayImages.map((image, i) => (
                 <div
                     key={i}
-                    className="relative w-full h-full" 
+                    className="relative max-w-36 max-h-36" 
                 >
                     <div className="relative w-full h-full overflow-hidden rounded-xs">
                         <Image
@@ -182,7 +215,7 @@ export function TweetContentSkeleton(
                     {images.map((_, i) => (
                         <Skeleton 
                             key={i} 
-                            className={`rounded-lg aspect-square ${images.length === 1 ? 'md:col-span-2 md:h-96' : ''}`}
+                            className={`rounded-lg aspect-square ${images.length === 1 ? 'md:col-span-2 md:h-36' : ''}`}
                         />
                     ))}
                 </div>

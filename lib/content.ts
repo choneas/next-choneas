@@ -1,5 +1,7 @@
 "use server"
 
+// TODO: Categories -> Tags
+
 import { NotionAPI } from "notion-client";
 import type { ExtendedRecordMap, PageBlock } from "notion-types";
 import { idToUuid, defaultMapImageUrl, getPageTableOfContents, getPageProperty } from "notion-utils";
@@ -7,7 +9,6 @@ import { getTranslations } from "next-intl/server";
 import type { PostMetadata } from "@/types/content";
 
 const notion = new NotionAPI();
-
 const CACHE_DURATION = process.env.NODE_ENV === 'development' ? 1000 : 5 * 60 * 1000;
 let cachedRootPage: ExtendedRecordMap | null = null;
 let cachedRootPageTimestamp: number | null = null;
@@ -17,6 +18,7 @@ async function getRootPage() {
         if (!cachedRootPage || (cachedRootPageTimestamp && Date.now() - cachedRootPageTimestamp > CACHE_DURATION)) {
             cachedRootPage = await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
             cachedRootPageTimestamp = Date.now();
+            console.log(cachedRootPage)
         }
         return cachedRootPage;
     } catch (error) {
@@ -68,25 +70,25 @@ async function generatePostMetadata(
             notionid: pageId,
             title: getPageProperty('title', block, recordMap) || '',
             created_date: new Date(block.created_time),
-            last_edit_date: new Date(block.last_edited_time)
+            last_edited_time: new Date(block.last_edited_time)
         };
 
-        // 获取基本属性
+        // Get ID, Slug, Description, Type
         metadata.id = getPageProperty('ID', block, recordMap);
         metadata.slug = getPageProperty('Slug', block, recordMap);
         metadata.description = getPageProperty('Description', block, recordMap);
         metadata.type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
 
-        // 处理分类
+        // Get Categories
         const categories = getPageProperty<string[]>('Category', block, recordMap) || [];
         metadata.category = categories.filter(Boolean).map(tag => t(tag));
 
-        // 处理图标
+        // Page Icon (Emoji)
         if (block.format?.page_icon) {
             metadata.icon = block.format.page_icon;
         }
 
-        // 处理封面
+        // Page Cover
         if (block.format?.page_cover) {
             metadata.cover = defaultMapImageUrl(block.format.page_cover, block);
             if (block.format.social_media_image_preview_url) {
@@ -95,12 +97,12 @@ async function generatePostMetadata(
             metadata.cover_position = block.format.page_cover_position;
         }
 
-        // 处理推文图片
+        // Get images for tweets
         if (metadata.type === 'Tweet') {
             metadata.photos = getTweetImageUrls(recordMap, pageId);
         }
 
-        // 获取目录
+        // Get TOC
         metadata.toc = getPageTableOfContents(block as PageBlock, recordMap);
 
         return metadata;
@@ -117,8 +119,17 @@ async function getAllPosts() {
     const tweets: PostMetadata[] = [];
 
     for (const [id, block] of Object.entries(rootPage.block)) {
+        // Find the collection ID with role "reader" instead of NOTION_ROOT_COLLECTION_ID
+        const readerCollectionId = Object.values(rootPage.collection)
+            .find(collection => collection.role === "reader")?.value.id;
+
+        if (!readerCollectionId) {
+            console.error('No collection with reader role found');
+            return { articles, tweets };
+        }
+
         if (block?.value?.type === 'page' &&
-            block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
+            block?.value?.parent_id === readerCollectionId) {
             if (processedIds.has(id)) continue;
 
             const metadata = await generatePostMetadata(rootPage, id);
@@ -126,11 +137,11 @@ async function getAllPosts() {
             if (metadata.description === '无内容' || metadata.description === 'No content') metadata.description = undefined
 
             if (metadata.type === 'Tweet' && Boolean(metadata.id)) {
-                processedIds.add(id)
-                tweets.push(metadata);
+            processedIds.add(id)
+            tweets.push(metadata);
             } else if (metadata.type === 'Article' && Boolean(metadata.id)) {
-                processedIds.add(id)
-                articles.push(metadata);
+            processedIds.add(id)
+            articles.push(metadata);
             }
         }
     }
@@ -150,8 +161,8 @@ interface NotionBlock {
         type: string;
         parent_table: string;
         properties: {
-            'XwwZ'?: [[string]];  // ID property
-            '}YdW'?: [[string]];  // Slug property
+            'XwwZ'?: [[string]];  // TODO: No absolute type for ID
+            '}YdW'?: [[string]];  
             [key: string]: [[string]] | undefined;
         };
     };
@@ -161,11 +172,11 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
     const rootPage = await getRootPage();
     let targetId: string | undefined;
 
-    // 如果是标准 UUID 格式，直接使用
+    // If the slugOrId is a standard UUID format, use it directly
     if (slugOrId.length === 32) {
         targetId = slugOrId;
     }
-    // 如果是纯数字ID
+    // If it's a pure numeric ID
     else if (/^\d+$/.test(slugOrId)) {
         for (const [id, block] of Object.entries(rootPage.block)) {
             const typedBlock = block as NotionBlock;
@@ -177,7 +188,7 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
             }
         }
     }
-    // 如果是 slug
+    // If it's a slug
     else {
         for (const [id, block] of Object.entries(rootPage.block)) {
             const typedBlock = block as NotionBlock;
