@@ -16,8 +16,8 @@ export interface PostMetadata {
     cover_preview?: string
     cover_position?: number
     photos?: string[]
-    created_date: Date
-    last_edit_date: Date
+    created_time: Date
+    last_edited_time: Date
 }
 
 export interface PropertySchema {

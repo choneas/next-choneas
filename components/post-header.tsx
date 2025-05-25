@@ -55,7 +55,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                                     }
                                 </h1>
                                 <p className="text-gray-300 text-sm mt-4">
-                                    {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edit_date ? formatDate(post.last_edit_date, locale) : '') : '')}
+                                    {t('created_at') + (post.created_time ? formatDate(post.created_time, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                                 </p>
                             </div>
                         </div>
@@ -85,7 +85,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                         }
                     </h1>
                     <p className="text-content2-foreground">
-                        {t('created_at') + (post.created_date ? formatDate(post.created_date, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edit_date ? formatDate(post.last_edit_date, locale) : '') : '')}
+                        {t('created_at') + (post.created_time ? formatDate(post.created_time, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                     </p>
                 </div>
             )}

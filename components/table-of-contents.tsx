@@ -1,5 +1,6 @@
-// TODO: Finish TOC
 "use client"
+
+// TODO: Finish TOC
 
 import { TableOfContentsEntry } from "notion-utils";
 // import { Listbox, ListboxItem } from "@heroui/react";

@@ -1,4 +1,5 @@
 "use client"
+
 import * as React from 'react'
 import { Image, Link } from '@heroui/react'
 import { type ExtendedRecordMap } from 'notion-types'
@@ -78,9 +79,11 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
                 .notion-collection-page-properties {
                     display: none;
                 }
+                ${type === "tweet-preview" ? `
                 .notion-asset-wrapper-image {
-                    display: ${type === "tweet-preview" ? "none" : "block"};
-                }
+                    display: none;
+                }` : ""}
+                
             `}</style>
         </>
     )

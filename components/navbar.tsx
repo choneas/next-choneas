@@ -98,6 +98,7 @@ function NavbarItems() {
 
 function NavbarBrand() {
     const t = useTranslations("Navbar");
+    const tm = useTranslations("Metadata")
     const pathname = usePathname();
     const { scrollY } = useScroll();
     const { postMetadata } = usePostMetadata();
@@ -110,7 +111,11 @@ function NavbarBrand() {
 
     return (
         <>
-            <Link disableAnimation href="/" color="foreground">
+            <Link
+                disableAnimation
+                href="/"
+                color="foreground"
+            >
                 <HeroNavbarBrand className="flex gap-4 font-bold">
                     <Avatar isMe />
                     {
@@ -126,7 +131,7 @@ function NavbarBrand() {
                                             scale: headTextScale
                                         }}
                                     >
-                                        Choneas
+                                        {tm('name')}
                                     </motion.div>
                                     <motion.div
                                         className="absolute truncate text-ellipsis text-secondary max-w-48 md:max-w-[16rem]"
@@ -141,7 +146,12 @@ function NavbarBrand() {
                                 </div>
                             </>
                             :
-                            <p className="text-primary" translate="no">Choneas</p>
+                            <p
+                                className="text-primary"
+                                translate="no"
+                            >
+                                {tm('name')}
+                            </p>
                     }
                 </HeroNavbarBrand>
             </Link>
@@ -181,7 +191,6 @@ function NavbarDropdown() {
             }, 3200)
         } else if (themeKeys.includes(keyStr)) {
             setSelectedTheme(keyStr)
-            // 完成颜色模式切换
             if (keyStr === "light" || keyStr === "dark" || keyStr === "system") {
                 setTheme(keyStr);
             }
@@ -198,7 +207,13 @@ function NavbarDropdown() {
             backdrop="opaque"
         >
             <DropdownTrigger>
-                <Button isIconOnly radius="full" variant="light" color="secondary">
+                <Button
+                    isIconOnly
+                    radius="full"
+                    variant="light"
+                    color="secondary"
+                    aria-label={t('preferences')}
+                >
                     <FiMoreHorizontal size={24} />
                 </Button>
             </DropdownTrigger>

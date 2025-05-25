@@ -24,7 +24,7 @@ export function TweetModal(
 
     useEffect(() => {
         if (isOpen) {
-            document.title = (metadata.title || formatDate(metadata.created_date, locale, true, false)) + t('suffix');
+            document.title = (metadata.title || formatDate(metadata.created_time, locale, true, false)) + t('suffix');
             const metaDescription = document.querySelector('meta[name="description"]');
             if (metaDescription) {
                   metaDescription.setAttribute('content', metadata.description || '');

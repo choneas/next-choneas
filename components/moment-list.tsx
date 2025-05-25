@@ -6,7 +6,7 @@ export async function MomentList({ sortOrder }: { sortOrder?: 'asc' | 'desc' }) 
     const { tweets, articles } = await getAllPosts();
     const moments = [...tweets, ...articles];
     moments.sort((a, b) => {
-        const comparison = new Date(b.created_date).getTime() - new Date(a.created_date).getTime();
+        const comparison = new Date(b.created_time).getTime() - new Date(a.created_time).getTime();
         return order === 'desc' ? comparison : -comparison;
     });
     return (

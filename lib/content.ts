@@ -67,8 +67,8 @@ async function generatePostMetadata(
         const metadata: PostMetadata = {
             notionid: pageId,
             title: getPageProperty('title', block, recordMap) || '',
-            created_date: new Date(block.created_time),
-            last_edit_date: new Date(block.last_edited_time)
+            created_time: new Date(block.created_time),
+            last_edited_time: new Date(block.last_edited_time)
         };
 
         // 获取基本属性

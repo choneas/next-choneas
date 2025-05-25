@@ -59,8 +59,8 @@ export function ArticleListWithFilter({
 
         return true
     }).sort((a, b) => {
-        const timeA = a.created_date ? new Date(a.created_date).getTime() : 0
-        const timeB = b.created_date ? new Date(b.created_date).getTime() : 0
+        const timeA = a.created_time ? new Date(a.created_time).getTime() : 0
+        const timeB = b.created_time ? new Date(b.created_time).getTime() : 0
         return sortOrder === 'desc' ? timeB - timeA : timeA - timeB
     })
 

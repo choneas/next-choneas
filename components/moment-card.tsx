@@ -1,7 +1,5 @@
 'use client'
 
-// TODO: Fix notion sync block and commit PR
-
 import { Card, CardHeader, CardBody, CardFooter, Skeleton, Button, Image, useDisclosure } from "@heroui/react"
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
@@ -71,7 +69,7 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
                     <Avatar isMe size="sm" />
                     <p className="text-content4-foreground">
                         {isTweet && 'Choneas · '}
-                        {formatDate(moment.created_date, locale, true)}
+                        {formatDate(moment.created_time, locale, true)}
                         {!isTweet && " · " + t('article-publish')}
                     </p>
                 </CardHeader>
