@@ -45,10 +45,7 @@ export async function formatDate(date: Date, locale: string, showTime?: boolean,
     // if (showTime) {
     //     result += ' ' + d.format('HH:mm');
     // }
-    date
-    locale
-    showTime
-    alias
+    const result = date.toString + locale + showTime?.valueOf().toString(); + alias.toString();
 
-    return "TIME";
+    return result;
 }
