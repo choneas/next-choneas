@@ -18,7 +18,6 @@ async function getRootPage() {
         if (!cachedRootPage || (cachedRootPageTimestamp && Date.now() - cachedRootPageTimestamp > CACHE_DURATION)) {
             cachedRootPage = await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
             cachedRootPageTimestamp = Date.now();
-            console.log(cachedRootPage)
         }
         return cachedRootPage;
     } catch (error) {
