@@ -12,14 +12,16 @@ dayjs.extend(calendar);
 dayjs.extend(localizedFormat);
 
 export async function loadLocale(locale: string): Promise<void> {
+    const localeName = locale.toLowerCase();
     try {
-        await import(`dayjs/locale/${locale.toLowerCase()}`);
+        await import(`dayjs/locale/${localeName}.js`);
     } catch (e) {
-        console.warn(`Failed to load locale: ${locale}, falling back to en`);
-        await import('dayjs/locale/en');
-        locale = 'en';
+        console.warn(`Failed to load locale: ${localeName}, falling back to en`);
+        await import('dayjs/locale/en.js');
+        dayjs.locale('en');
+        return;
     }
-    dayjs.locale(locale.toLowerCase());
+    dayjs.locale(localeName);
 }
 
 export async function formatDate(date: Date, locale: string, showTime?: boolean, alias: boolean = true): Promise<string> {
