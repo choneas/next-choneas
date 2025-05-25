@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import Image from "next/image"
 import { Chip } from "@heroui/react"
 import { useTranslations, useLocale } from "next-intl"
-import { formatDate } from "@/lib/format"
+import { formatDate, loadLocale } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
 import { usePostMetadata } from "@/stores/post"
 
@@ -14,8 +14,9 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
     const { setPostMetadata } = usePostMetadata()
 
     useEffect(() => {
+        loadLocale(locale)
         setPostMetadata?.(post)
-    }, [post, setPostMetadata])
+    }, [post, setPostMetadata, locale])
     return (
         <>
             {post.cover ? (
