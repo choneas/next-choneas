@@ -15,7 +15,7 @@ export async function loadLocale(locale: string): Promise<void> {
     const localeName = locale.toLowerCase();
     try {
         await import(`dayjs/locale/${localeName}.js`);
-    } catch (e) {
+    } catch {
         console.warn(`Failed to load locale: ${localeName}, falling back to en`);
         await import('dayjs/locale/en.js');
         dayjs.locale('en');

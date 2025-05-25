@@ -4,7 +4,7 @@
 
 import {
     Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem,
-    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner, Tooltip
+    Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
