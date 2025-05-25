@@ -37,7 +37,7 @@
     "tech-stack": "Tech Stack"
   },
   "Navbar-Dropdown": {
-    "aria-label": "Preferences",
+    "preferences": "Preferences",
     "prefer-language": "Prefer Language",
     "prefer-color-scheme": "Prefer Color Scheme",
     "light": "Light",
