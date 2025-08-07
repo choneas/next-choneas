@@ -6,12 +6,14 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 
 const notoSerif = Noto_Serif_SC({
     variable: "--font-serif",
     subsets: ["latin"],
     display: "swap",
+    weight: "variable",
     fallback: ["Noto Serif SC", "Noto Serif", "serif"],
 });
 
@@ -44,6 +46,7 @@ export default async function RootLayout({
                     <Providers>
                         <Navbar />
                         {children}
+                        <Footer />
                     </Providers>
                 </NextIntlClientProvider>
                 <Analytics />

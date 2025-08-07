@@ -4,8 +4,8 @@ import {
     Navbar as NextNavbar, NavbarMenuToggle, NavbarBrand as HeroNavbarBrand, NavbarContent, NavbarItem, Link, NavbarMenu as HeroNavbarMenu, NavbarMenuItem,
     Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem, Button, Spinner
 } from "@heroui/react";
-import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect, createContext, useContext } from "react";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
 import { FiMoreHorizontal, FiGithub } from "react-icons/fi";
 import { CgDarkMode } from "react-icons/cg";
@@ -16,33 +16,69 @@ import { usePostMetadata } from "@/stores/post";
 import { Avatar } from "@/components/avatar";
 import { navItems } from "@/data/navbar";
 
+interface NavbarContextType {
+    scrollY: MotionValue<number>;
+    navbarBlur: MotionValue<number>;
+    pathname: string;
+}
+
+const NavbarContext = createContext<NavbarContextType | null>(null);
+
+export function useNavbarContext() {
+    const context = useContext(NavbarContext);
+    if (!context) {
+        throw new Error("useNavbarContext must be used within a NavbarProvider");
+    }
+    return context;
+}
+
 export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { scrollY } = useScroll();
+    const pathname = usePathname();
+
+    const navbarBlur = useTransform(scrollY, [0, 100], [0, 16]);
+    const backdropFilterStyle = useTransform(navbarBlur, value => `blur(${value}px)`);
+    const contextValue = {
+        scrollY,
+        navbarBlur,
+        pathname
+    };
 
     return (
-        <NextNavbar onMenuOpenChange={setIsMenuOpen} classNames={{
-            base: "bg-white/60 dark:bg-black/80",
-            menu: "bg-white/60 dark:bg-black/80 gap-4",
-        }}>
-            <NavbarContent justify="start">
-                <NavbarMenuToggle
-                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                    className="sm:hidden"
-                />
+        <NavbarContext.Provider value={contextValue}>
+            <motion.div
+                className="sticky top-0 inset-x-0 z-40"
+                style={{
+                    backdropFilter: pathname === '/' ? backdropFilterStyle : 'blur(16px)',
+                    WebkitBackdropFilter: pathname === '/' ? backdropFilterStyle : 'blur(16px)',
+                }}
+            >
+                <NextNavbar onMenuOpenChange={setIsMenuOpen} classNames={{
+                    base: "bg-transparent backdrop-saturate-150 relative",
+                    menu: "bg-white/60 dark:bg-black/80 gap-4",
+                }}>
+                    <NavbarContent justify="start">
+                        <NavbarMenuToggle
+                            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                            className="sm:hidden"
+                        />
 
-                <NavbarBrand />
-            </NavbarContent>
+                        <NavbarBrand />
+                    </NavbarContent>
 
-            <NavbarContent justify="center">
-                <NavbarItems />
-            </NavbarContent>
+                    <NavbarContent className="absolute left-1/2 -translate-x-1/2 hidden sm:flex">
+                        <NavbarItems />
+                    </NavbarContent>
 
-            <NavbarContent justify="end">
-                <NavbarDropdown />
-            </NavbarContent>
+                    <NavbarContent justify="end">
+                        <NavbarDropdown />
+                    </NavbarContent>
 
-            <NavbarMenu />
-        </NextNavbar>
+                    <NavbarMenu />
+                </NextNavbar>
+            </motion.div>
+        </NavbarContext.Provider>
     )
 }
 
@@ -75,7 +111,7 @@ function NavbarItems() {
     const t = useTranslations("Navbar");
 
     return (
-        <NavbarContent justify="center">
+        <>
             {
                 navItems.map((item, index) => {
                     return (
@@ -92,16 +128,14 @@ function NavbarItems() {
                     )
                 })
             }
-        </NavbarContent>
+        </>
     )
 }
 
 function NavbarBrand() {
-    const t = useTranslations("Navbar");
     const tm = useTranslations("Metadata")
-    const pathname = usePathname();
-    const { scrollY } = useScroll();
     const { postMetadata } = usePostMetadata();
+    const { scrollY, pathname } = useNavbarContext();
 
     const headTextY = useTransform(scrollY, [0, 100], [-6, -15])
     const contentTextY = useTransform(scrollY, [0, 100], [30, 0])
@@ -119,7 +153,7 @@ function NavbarBrand() {
                 <HeroNavbarBrand className="flex gap-4 font-bold">
                     <Avatar isMe />
                     {
-                        pathname.includes("article/") || pathname === '/' ?
+                        pathname.includes("article/") ?
                             <>
                                 <div className="flex pt-2 pb-4 justify-start overflow-hidden h-6">
                                     <motion.div
@@ -141,7 +175,7 @@ function NavbarBrand() {
                                         }}
                                     >
                                         {pathname.includes("article/") && postMetadata?.title}
-                                        {pathname === '/' && t('moments')}
+                                        {/* 移除首页的二级标题显示 */}
                                     </motion.div>
                                 </div>
                             </>

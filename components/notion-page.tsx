@@ -13,7 +13,6 @@ import dynamic from 'next/dynamic'
 const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: "tweet-preview" | "tweet-details" }) => {
     const { resolvedTheme } = useTheme();
 
-
     const Code = dynamic(() =>
         import('react-notion-x/build/third-party/code').then((m) => m.Code),
         {
@@ -67,10 +66,12 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
                     --notion-max-width: 720px;
                     font-size: 1.125rem;
                     line-height: 1.75rem;
+                    color: var(--foreground) !important;
                 }
-                  .notion *::selection {
-                        background: var(--color-primary);
-                    }
+                .notion *::selection {
+                    background-color: var(--primary-DEFAULT) !important;
+                    color: var(--primary-foreground) !important;
+                }
                 .notion-page {
                     width: 100%;
                     padding-left: 0%;
@@ -89,7 +90,7 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
     )
 }
 
-const NotionTableReplacer: React.FC = () => {
+const NotionTableReplacer = () => {
     React.useEffect(() => {
         if (typeof document === 'undefined') return;
         const notionTables = document.querySelectorAll('.notion-simple-table');

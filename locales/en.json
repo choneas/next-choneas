@@ -85,5 +85,10 @@
     "label-search": "Search title or description",
     "not-found": "No result.",
     "placeholder-categories": "Category"
+  },
+  "Footer": {
+    "copyright": "© {startYear}-{currentYear} Choneas. All rights reserved.",
+    "license": "This work is licensed under a",
+    "licenseLink": "Creative Commons Attribution 4.0 International License"
   }
 }

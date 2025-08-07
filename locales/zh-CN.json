@@ -85,5 +85,10 @@
     "Honkai: Star Rail": "崩坏：星穹铁道",
     "Genshin Impact": "原神",
     "Honkai Impact 3rd": "崩坏 3rd"
+  },
+  "Footer": {
+    "copyright": "© {startYear}-{currentYear} Choneas. 保留所有权利。",
+    "license": "本作品采用",
+    "licenseLink": "知识共享署名 4.0 国际许可协议"
   }
 }

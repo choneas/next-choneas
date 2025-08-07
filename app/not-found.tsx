@@ -12,7 +12,7 @@ export default function NotFound() {
             <Image
                 unoptimized
                 alt="Theresa nodding"
-                src="/gifs/theresa-nod.gif"
+                src="/pictures/theresa-nod.gif"
                 width={200}
                 height={200}
             />
