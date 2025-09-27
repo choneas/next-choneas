@@ -11,7 +11,7 @@ import { VscVscode } from "react-icons/vsc";
 export const socialLinks: SocialLink[] = [
     {
         platform: "Bilibili",
-        name: "符华大人的小赤鸢",
+        name: "Choneas",
         icon: <FaBilibili />,
         href: "https://space.bilibili.com/628078791",
     },

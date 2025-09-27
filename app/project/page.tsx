@@ -18,7 +18,7 @@ export default async function Project(){
     return (
         <>
             <h1>{t('title')}</h1>
-            <span className="pt-4 text-lg">{t('description')}</span>
+            <span className="pt-4 text-lg my-4">{t('description')}</span>
 
             <div className="flex flex-col gap-4">
                 {projects.map((project, index) => (
