@@ -37,7 +37,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                                             variant="dot"
                                             classNames={{
                                                 base: "mb-2 backdrop-blur",
-                                                content: "text-white",
+                                                content: "text-foreground",
                                             }}
                                         >
                                             {category}

@@ -68,10 +68,10 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
                     line-height: 1.75rem;
                     color: var(--foreground) !important;
                 }
-                .notion *::selection {
-                    background-color: var(--primary-DEFAULT) !important;
-                    color: var(--primary-foreground) !important;
-                }
+                // .notion *::selection {
+                //     background-color: var(--heroui-primary) !important;
+                //     color: var(--heroui-foreground) !important;
+                // }
                 .notion-page {
                     width: 100%;
                     padding-left: 0%;

@@ -57,7 +57,7 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
 
     return (
         <>
-            <Card className="outline-2 outline"
+            <Card
                 classNames={{
                     base: `shadow-none p-3 outline-2 shadow bg-content2 ${!isTweet ? 'cursor-pointer' : undefined}`,
                     header: "z-20 flex inline-flex gap-2 content-center",

@@ -1,15 +1,10 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
-:root {
-    @apply selection:bg-primary selection:text-primary-foreground;
-    --outline: #857370;
-    --outline-variant: #D8C2BE;
-}
-
-.dark {
-    --outline: #A08C89;
-    --outline-variant: #534341;
+@layer base {
+    ::selection {
+        @apply bg-primary/55
+    }
 }
 
 @theme {
