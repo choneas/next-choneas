@@ -52,43 +52,58 @@
   "Moment": {
     "article-publish": "发布了文章",
     "view-all": "查看全部",
+    "collapse": "收起",
     "details": "动态详情",
-    "comment-placeholder": "评论 ..."
+    "comment-placeholder": "评论 ...",
+    "open-in-new-tab": "在新标签页打开"
   },
   "Article-Filter": {
-    "placeholder-categories": "类别",
-    "label-categories": "选择一个或多个类别",
+    "placeholder-tags": "标签",
+    "label-tags": "选择一个或多个标签",
     "placeholder-search": "搜索...",
     "label-search": "搜索文章标题或摘要",
     "not-found": "没有找到相关内容"
   },
-  "Article-Header": {
+  "Post-Header": {
     "created_at": "发布于 ",
     "updated_at": "更新于 ",
     "tweet-details": "动态详情"
   },
   "Tag": {
+    "Reflections": "领悟",
+    "Thoughts": "想法",
+    "Insights": "洞察",
+    "Media": "媒体",
+    "ACGN": "次文化",
     "Life": "生活",
-    "ACGN": "次元文化",
-    "Daily Notes": "随手记",
-    "C++": "C++",
-    "React": "React",
+    "Tech": "技术",
     "DevOps": "开发运维",
-    "Backend": "后端",
     "Frontend": "前端",
-    "Algorithm": "算法",
-    "Cosplay": "角色扮演(cosplay)",
-    "Makeup": "妆面",
-    "Illustration": "插画",
-    "Xiao": "魈",
-    "Fuhua": "符华",
-    "Honkai: Star Rail": "崩坏：星穹铁道",
-    "Genshin Impact": "原神",
-    "Honkai Impact 3rd": "崩坏 3rd"
+    "Embedded": "嵌入式",
+    "Programming": "编程"
   },
   "Footer": {
     "copyright": "© {startYear}-{currentYear} Choneas. 保留所有权利。",
     "license": "本作品采用",
-    "licenseLink": "知识共享署名 4.0 国际许可协议"
+    "licenseLink": "CC BY-NC-SA 4.0 协议"
+  },
+  "Format": {
+    "today": "今天",
+    "yesterday": "昨天",
+    "weekdays": [
+      "星期日",
+      "星期一",
+      "星期二",
+      "星期三",
+      "星期四",
+      "星期五",
+      "星期六"
+    ],
+    "dateFormat": {
+      "sameYear": "M月D日",
+      "differentYear": "YYYY年M月D日",
+      "full": "YYYY年M月D日"
+    },
+    "timeFormat": "HH:mm"
   }
 }

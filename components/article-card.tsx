@@ -1,8 +1,8 @@
-import { Card, CardHeader, CardBody, CardFooter} from "@heroui/card"
-import { Avatar } from "@heroui/avatar";
-import { Image } from "@heroui/image";
-import { Chip } from "@heroui/chip"
+import { Card } from "@heroui/react"
+import { Avatar } from "@/components/avatar";
+import { Tags } from "@/components/tags"
 import NextLink from "next/link"
+import Image from "next/image"
 import { useLocale } from 'next-intl';
 import { uuidToId } from "notion-utils";
 import type { PostMetadata } from "@/types/content";
@@ -18,11 +18,10 @@ export function ArticleCard({
     showTime?: boolean;
 }) {
     const locale = useLocale();
-    const href = `/article/${
-        linkParam === 'slug' && article.slug ? article.slug :
+    const href = `/article/${linkParam === 'slug' && article.slug ? article.slug :
         linkParam === 'notionid' && article.notionid ? uuidToId(article.notionid) :
-        article.id
-    }`;
+            article.id
+        }`;
 
     const AuthorAndDate = ({ className = "" }) => (
         <div className={`flex items-center gap-2 text-sm ${className}`}>
@@ -41,7 +40,7 @@ export function ArticleCard({
             )}
             {article.last_edited_time && (
                 <time>
-                    {formatDate(article.last_edited_time, locale, showTime)}
+                    {formatDate(article.created_time, locale, showTime)}
                 </time>
             )}
         </div>
@@ -49,52 +48,68 @@ export function ArticleCard({
 
     if (article.cover) {
         return (
-            <Card className="relative h-[300px]">
-                <NextLink href={href} className="h-full">
-                    <CardHeader className="absolute z-10 top-4 left-4">
-                        <AuthorAndDate className="text-white" />
-                    </CardHeader>
-                    <Image
-                        removeWrapper
-                        alt={article.title}
-                        src={article.cover}
-                        className="z-0 w-full h-full object-cover saturate-50"
-                    />
-                    <CardFooter className="absolute bg-linear-to-t from-black/80 pb-8 px-8 to-transparent bottom-0 z-10">
-                        <div className="flex flex-col gap-4">
-                            <span className="text-2xl font-bold text-white">{article.title}</span>
-                            {article.category && (
-                                <div className="flex flex-wrap gap-2">
-                                    {article.category.map(tag => (
-                                        <Chip key={tag} size="sm">{tag}</Chip>
-                                    ))}
-                                </div>
+            <Card className="bg-content2 shadow border-none">
+                <NextLink href={href}>
+                    <div className="md:hidden">
+                        <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
+                            <Image
+                                alt={article.title}
+                                src={article.cover}
+                                fill
+                                className="object-cover"
+                                sizes="100vw"
+                            />
+                        </div>
+                    </div>
+
+                    {/* 桌面端：Grid 布局，图片在右侧 */}
+                    <div className="hidden md:grid md:grid-cols-[1fr_380px] gap-4 p-4">
+                        <div className="flex flex-col gap-3">
+                            <AuthorAndDate />
+                            <span className="text-2xl font-semibold">{article.title}</span>
+                            {article.tags && article.tags.length > 0 && (
+                                <Tags tags={article.tags} />
                             )}
                         </div>
-                    </CardFooter>
+
+                        <div className="relative w-full h-[200px] overflow-hidden rounded-[calc(var(--radius-md)*3)]">
+                            <Image
+                                alt={article.title}
+                                src={article.cover}
+                                fill
+                                className="object-cover"
+                                sizes="200px"
+                            />
+                        </div>
+                    </div>
+
+                    {/* 移动端：内容在下方 */}
+                    <Card.Content className="md:hidden p-4">
+                        <div className="flex flex-col gap-3">
+                            <AuthorAndDate />
+                            <span className="text-2xl font-semibold">{article.title}</span>
+                            {article.tags && article.tags.length > 0 && (
+                                <Tags tags={article.tags} />
+                            )}
+                        </div>
+                    </Card.Content>
                 </NextLink>
             </Card>
         );
     }
 
     return (
-        <Card classNames={{
-            base: 'bg-content2 shadow border-none'
-        }}>
+        <Card className="bg-content2 shadow border-none">
             <NextLink href={href}>
-                <CardBody className="p-6">
-                    <div className="flex flex-col gap-4">
+                <Card.Content className="p-3">
+                    <div className="flex flex-col gap-3">
                         <AuthorAndDate />
-                        <span className="text-2xl font-bold">{article.title}</span>
-                        {article.category && (
-                            <div className="flex flex-wrap gap-2">
-                                {article.category.map(tag => (
-                                    <Chip key={tag} size="sm">{tag}</Chip>
-                                ))}
-                            </div>
+                        <span className="text-2xl font-semibold">{article.title}</span>
+                        {article.tags && article.tags.length > 0 && (
+                            <Tags tags={article.tags} />
                         )}
                     </div>
-                </CardBody>
+                </Card.Content>
             </NextLink>
         </Card>
     );

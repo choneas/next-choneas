@@ -1,15 +1,30 @@
-import { Avatar as HeroAvatar, AvatarProps as HeroAvatarProps } from "@heroui/react";
+import { Avatar as HeroAvatar } from "@heroui/react";
 
-interface AvatarProps extends HeroAvatarProps {
-    isMe?: boolean; // TODO: Being removed
+interface AvatarProps {
+    isMe?: boolean;
+    size?: 'sm' | 'md' | 'lg';
+    className?: string;
+    src?: string;
+    alt?: string;
+    name?: string;
 }
 
-export function Avatar({ isMe, ...props }: AvatarProps) {
+export function Avatar({ isMe, size = 'md', className, src, alt, name }: AvatarProps) {
+    const avatarSrc = isMe ? "/avatars/choneas.png" : src;
+    const avatarAlt = isMe ? "Choneas" : (alt || name || "User");
+    const fallbackText = isMe ? "C" : (name ? name.charAt(0).toUpperCase() : "U");
+
     return (
-        <HeroAvatar 
-            {...props} 
-            name={isMe? "Choneas" : props.name}
-            src={isMe ? "/avatars/choneas.png" : props.src}
-        />
+        <HeroAvatar size={size} className={className}>
+            {avatarSrc && (
+                <HeroAvatar.Image 
+                    src={avatarSrc} 
+                    alt={avatarAlt}
+                />
+            )}
+            <HeroAvatar.Fallback>
+                {fallbackText}
+            </HeroAvatar.Fallback>
+        </HeroAvatar>
     )
 }

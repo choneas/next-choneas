@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getMessages } from 'next-intl/server';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
+import { NavbarWrapper } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 
@@ -35,25 +36,32 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const locale = await getLocale();
-    const messages = await getMessages();
-
     return (
-        <html suppressHydrationWarning lang={locale}>
+        <html suppressHydrationWarning>
             <body
                 className={`${notoSerif.variable} ${sourceCode.variable} font-serif text-foreground bg-background antialiased`}
             >
-                <NextIntlClientProvider messages={messages}>
-                    <Providers>
-                        <Navbar />
-                        {children}
-                        <Footer />
-                    </Providers>
-                </NextIntlClientProvider>
+                <Suspense fallback={null}>
+                    <LayoutContent>{children}</LayoutContent>
+                </Suspense>
                 <Analytics />
             </body>
-            <GoogleAnalytics gaId={process.env.GA_ID!}/>
+            <GoogleAnalytics gaId={process.env.GA_ID!} />
             <SpeedInsights />
         </html>
+    );
+}
+
+async function LayoutContent({ children }: { children: React.ReactNode }) {
+    const messages = await getMessages();
+
+    return (
+        <NextIntlClientProvider messages={messages}>
+            <Providers>
+                <NavbarWrapper />
+                {children}
+                <Footer />
+            </Providers>
+        </NextIntlClientProvider>
     );
 }

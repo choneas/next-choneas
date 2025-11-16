@@ -1,4 +1,4 @@
-import { Button } from "@heroui/button"
+import { Button } from "@heroui/react"
 import { GoHomeFill } from "react-icons/go"
 import Image from "next/image"
 import Link from "next/link"
@@ -17,8 +17,15 @@ export default function NotFound() {
                 height={200}
             />
 
-            <Button as={Link} href="/" color="primary" startContent={<GoHomeFill />}>Go Home</Button>
-
+            <Button variant="primary" size="lg">
+                <Link
+                    href="/"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
+                >
+                    <GoHomeFill />
+                    Go Home
+                </Link>
+            </Button>
         </div>
     )
 }

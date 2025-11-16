@@ -11,7 +11,7 @@ export function Footer() {
             <p>{t("copyright", { startYear, currentYear })}</p>
             <p>
                 {t("license")}{' '}
-                <Link href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="underline">
+                <Link href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer" className="underline">
                     {t("licenseLink")}
                 </Link>
             </p>

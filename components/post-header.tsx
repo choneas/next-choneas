@@ -2,14 +2,14 @@
 
 import { useEffect } from "react"
 import Image from "next/image"
-import { Chip } from "@heroui/react"
+import { Tags } from "@/components/tags"
 import { useTranslations, useLocale } from "next-intl"
 import { formatDate } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
 import { usePostMetadata } from "@/stores/post"
 
 export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: boolean }) {
-    const t = useTranslations("Article-Header")
+    const t = useTranslations("Post-Header")
     const locale = useLocale()
     const { setPostMetadata } = usePostMetadata()
 
@@ -28,22 +28,13 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                             quality={80}
                             className="w-full h-full object-cover"
                         />
-                        <div className={`absolute ${!isTweet && 'sm:pl-24 md:pl-48'} mx-auto pl-8 inset-0 bg-linear-to-t from-black/70 to-transparent`}>
-                            <div className="h-full mx-4 flex flex-col justify-end pb-8">
-                                <div className="flex flex-wrap gap-2">
-                                    {post.category?.map((category) => (
-                                        <Chip
-                                            key={category}
-                                            variant="dot"
-                                            classNames={{
-                                                base: "mb-2 backdrop-blur",
-                                                content: "text-foreground",
-                                            }}
-                                        >
-                                            {category}
-                                        </Chip>
-                                    ))}
-                                </div>
+                        <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent">
+                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'article-container' : 'px-8'}`}>
+                                <Tags
+                                    tags={post.tags || []}
+                                    variant="soft"
+                                    className="mb-2 backdrop-blur"
+                                />
                                 <span className="text-5xl font-bold my-2">
                                     {post.icon}
                                 </span>
@@ -62,18 +53,11 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                     </div>
                 </div>
             ) : (
-                <div className={isTweet ? 'pt-6 pb-4' : 'container mx-auto pt-8 px-8 sm:px-24 md:px-48 md:max-w-6xl'}>
-                    <div className="flex flex-wrap gap-2">
-                        {post.category?.map((category) => (
-                            <Chip
-                                key={category}
-                                variant="dot"
-                                className="mr-2"
-                            >
-                                {category}
-                            </Chip>
-                        ))}
-                    </div>
+                <div className={isTweet ? 'pt-6 pb-4' : 'article-container pt-8'}>
+                    <Tags
+                        tags={post.tags || []}
+                        variant="soft"
+                    />
                     <h1 className="text-5xl font-bold my-2">
                         {post.icon}
                     </h1>

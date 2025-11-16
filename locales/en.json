@@ -52,43 +52,58 @@
   "Moment": {
     "article-publish": "Published an article",
     "view-all": "View all",
+    "collapse": "Collapse",
     "details": "Tweet Details",
-    "comment-placeholder": "Leave a comment..."
+    "comment-placeholder": "Leave a comment...",
+    "open-in-new-tab": "Open in new tab"
   },
-  "Article-Header": {
+  "Post-Header": {
     "created_at": "Posted at ",
     "updated_at": "Edited at ",
     "tweet-details": "Tweet Details"
   },
   "Tag": {
+    "Reflections": "Reflections",
+    "Thoughts": "Thoughts",
+    "Insights": "Insights",
+    "Media": "Media",
     "ACGN": "ACGN",
-    "Algorithm": "Algorithm",
-    "Backend": "Backend",
-    "C++": "C++",
-    "Cosplay": "Cosplay",
-    "Daily Notes": "Daily Notes",
+    "Life": "Life",
+    "Tech": "Tech",
     "DevOps": "DevOps",
     "Frontend": "Frontend",
-    "Fuhua": "Fuhua",
-    "Genshin Impact": "Genshin Impact",
-    "Honkai Impact 3rd": "Honkai Impact 3rd",
-    "Honkai: Star Rail": "Honkai: Star Rail",
-    "Illustration": "Illustration",
-    "Life": "Life",
-    "Makeup": "Makeup",
-    "React": "React",
-    "Xiao": "Xiao"
+    "Embedded": "Embedded",
+    "Programming": "Programming"
   },
   "Article-Filter": {
-    "label-categories": "Select categories",
+    "label-tags": "Select tags",
     "placeholder-search": "Search...",
     "label-search": "Search title or description",
     "not-found": "No result.",
-    "placeholder-categories": "Category"
+    "placeholder-tags": "Tag"
   },
   "Footer": {
     "copyright": "© {startYear}-{currentYear} Choneas. All rights reserved.",
     "license": "This work is licensed under a",
-    "licenseLink": "Creative Commons Attribution 4.0 International License"
+    "licenseLink": "CC BY-NC-SA 4.0 License"
+  },
+  "Format": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "weekdays": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dateFormat": {
+      "sameYear": "MMM D",
+      "differentYear": "MMM D, YYYY",
+      "full": "MMM D, YYYY"
+    },
+    "timeFormat": "HH:mm"
   }
 }

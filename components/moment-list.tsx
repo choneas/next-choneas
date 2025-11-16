@@ -1,7 +1,13 @@
+"use cache: private";
+
+import { cacheLife, cacheTag } from "next/cache";
 import { MomentCard } from "@/components/moment-card";
 import { getAllPosts } from "@/lib/content";
 
 export async function MomentList({ sortOrder }: { sortOrder?: 'asc' | 'desc' }) {
+    cacheLife("minutes");
+    cacheTag("moments", "homepage");
+
     const order = sortOrder || 'desc';
     const { tweets, articles } = await getAllPosts();
     const moments = [...tweets, ...articles];

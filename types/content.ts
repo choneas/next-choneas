@@ -8,7 +8,7 @@ export interface PostMetadata {
     type?: "Article" | "Tweet"
     slug?: string
     author?: Author[]
-    category?: string[]
+    tags?: string[]
     description?: string
     toc?: TableOfContentsEntry[]
     icon?: string

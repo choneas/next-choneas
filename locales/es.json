@@ -1,0 +1,109 @@
+{
+  "Metadata": {
+    "name": "Choneas",
+    "title": "Blog de Choneas",
+    "description": "Código, grabación y compartir vida.",
+    "suffix": " - Blog de Choneas"
+  },
+  "Navbar": {
+    "articles": "Artículos",
+    "projects": "Proyectos",
+    "about": "Acerca de",
+    "moments": "Momentos"
+  },
+  "Home": {
+    "hello-iam": "👋 Encantado de conocerte, soy",
+    "choneas": "Choneas",
+    "name-desc": "o ( Del Maestro Fuhua ) Pequeño Fénix",
+    "description": "Programador full stack, desarrollador de algoritmos C++, diseñador UI/UX, y ",
+    "description-line2": "ACGN.",
+    "goto-articles": "¿No es lo que buscas? Ir a Contenidos"
+  },
+  "Article": {
+    "title": "Contenidos",
+    "description": "Puedes encontrar todas las publicaciones aquí o filtrarlas. Son parte de documentar mi crecimiento. Espero que te sean útiles."
+  },
+  "Project": {
+    "title": "Proyectos",
+    "description": "La búsqueda de conocimiento y desarrollo profesional es un esfuerzo continuo, que abarca la adquisición de nueva experiencia de desarrollo y el refinamiento de especificaciones de codificación.",
+    "error": {
+      "fetch-failed": "Error al obtener información del proyecto.",
+      "not-found": "Proyecto eliminado o inválido."
+    }
+  },
+  "About": {
+    "title": "Acerca de",
+    "description": "👋 Saludos. Mi nombre es Choneas. Poseo un fuerte interés en los campos de la informática, incluyendo programación, diseño de interfaces de usuario y disciplinas relacionadas. Además, tengo un gran interés en ilustración, producción de animación y fotografía. Actualmente, estoy matriculado en estudios académicos.",
+    "social-links": "Encuéntrame",
+    "tech-stack": "Stack Tecnológico"
+  },
+  "Navbar-Dropdown": {
+    "preferences": "Preferencias",
+    "prefer-language": "Idioma Preferido",
+    "prefer-color-scheme": "Esquema de Color Preferido",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Seguir Sistema",
+    "view-on": "Ver en"
+  },
+  "Table-Of-Contents": {
+    "toc": "Tabla de Contenidos"
+  },
+  "Moment": {
+    "article-publish": "Publicó un artículo",
+    "view-all": "Ver todo",
+    "collapse": "Colapsar",
+    "details": "Detalles del Tweet",
+    "comment-placeholder": "Deja un comentario...",
+    "open-in-new-tab": "Abrir en nueva pestaña"
+  },
+  "Post-Header": {
+    "created_at": "Publicado el ",
+    "updated_at": "Editado el ",
+    "tweet-details": "Detalles del Tweet"
+  },
+  "Tag": {
+    "Reflections": "Reflexiones",
+    "Thoughts": "Pensamientos",
+    "Insights": "Perspectivas",
+    "Media": "Medios",
+    "ACGN": "Subcultura ACGN",
+    "Life": "Vida",
+    "Tech": "Tecnología",
+    "DevOps": "DevOps",
+    "Frontend": "Frontend",
+    "Embedded": "Embebido",
+    "Programming": "Programación"
+  },
+  "Article-Filter": {
+    "label-tags": "Seleccionar etiquetas",
+    "placeholder-search": "Buscar...",
+    "label-search": "Buscar título o descripción",
+    "not-found": "Sin resultados.",
+    "placeholder-tags": "Etiqueta"
+  },
+  "Footer": {
+    "copyright": "© {startYear}-{currentYear} Choneas. Todos los derechos reservados.",
+    "license": "Este trabajo está licenciado bajo una",
+    "licenseLink": "CC BY-NC-SA 4.0"
+  },
+  "Format": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "weekdays": [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado"
+    ],
+    "dateFormat": {
+      "sameYear": "D [de] MMM",
+      "differentYear": "D [de] MMM, YYYY",
+      "full": "D [de] MMM, YYYY"
+    },
+    "timeFormat": "HH:mm"
+  }
+}

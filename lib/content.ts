@@ -1,28 +1,50 @@
 "use server"
 
-import { NotionAPI } from "notion-client";
 import type { ExtendedRecordMap, PageBlock } from "notion-types";
 import { idToUuid, defaultMapImageUrl, getPageTableOfContents, getPageProperty } from "notion-utils";
 import { getTranslations } from "next-intl/server";
+import { unstable_cache } from "next/cache";
 import type { PostMetadata } from "@/types/content";
+import { createNotionClient } from "@/lib/notion-proxy";
 
-const notion = new NotionAPI();
+const notion = createNotionClient();
 
-const CACHE_DURATION = process.env.NODE_ENV === 'development' ? 1000 : 5 * 60 * 1000;
-let cachedRootPage: ExtendedRecordMap | null = null;
-let cachedRootPageTimestamp: number | null = null;
+// 使用 Next.js 16 unstable_cache 缓存根页面（5 分钟）
+const getCachedRootPage = unstable_cache(
+    async () => {
+        try {
+            return await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
+        } catch (error) {
+            console.error('Failed to fetch root page:', error);
+            throw error;
+        }
+    },
+    ['notion-root-page'],
+    {
+        revalidate: 300, // 5 分钟
+        tags: ['notion-root']
+    }
+);
+
+// 使用 Next.js 16 unstable_cache 缓存单篇文章（1 分钟）
+const getCachedPost = unstable_cache(
+    async (pageId: string) => {
+        try {
+            return await notion.getPage(pageId);
+        } catch (error) {
+            console.error('Failed to fetch post:', error);
+            throw error;
+        }
+    },
+    ['notion-post'],
+    {
+        revalidate: 60, // 1 分钟
+        tags: ['notion-post']
+    }
+);
 
 async function getRootPage() {
-    try {
-        if (!cachedRootPage || (cachedRootPageTimestamp && Date.now() - cachedRootPageTimestamp > CACHE_DURATION)) {
-            cachedRootPage = await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
-            cachedRootPageTimestamp = Date.now();
-        }
-        return cachedRootPage;
-    } catch (error) {
-        console.error('Failed to fetch root page:', error);
-        throw error;
-    }
+    return await getCachedRootPage();
 }
 
 function getTweetImageUrls(
@@ -77,9 +99,9 @@ async function generatePostMetadata(
         metadata.description = getPageProperty('Description', block, recordMap);
         metadata.type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
 
-        // 处理分类
-        const categories = getPageProperty<string[]>('Category', block, recordMap) || [];
-        metadata.category = categories.filter(Boolean).map(tag => t(tag));
+        // 处理标签
+        const tags = getPageProperty<string[]>('Tags', block, recordMap) || [];
+        metadata.tags = tags.filter(Boolean).map(tag => t(tag));
 
         // 处理图标
         if (block.format?.page_icon) {
@@ -195,7 +217,7 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
         throw new ArticleNotFoundError('Article not found');
     }
 
-    const recordMap = await notion.getPage(targetId);
+    const recordMap = await getCachedPost(targetId);
     const metadata = await generatePostMetadata(recordMap, targetId);
 
 

@@ -112,6 +112,30 @@ cp .env.example .env
 
 请参阅 [Google Analytics](https://developers.google.com/analytics) 文档以获取更多信息。
 
+#### Notion 代理配置（可选）
+
+如果你在中国大陆访问 Notion API 速度较慢，可以启用代理服务来提升访问速度。
+
+代理服务来源：[notionfaster.org](https://www.notionfaster.org/)
+
+在 `.env` 文件中配置以下变量：
+
+```bash
+# 启用 Notion 代理（默认为 false）
+ENABLE_NOTION_PROXY=true
+
+# Notion API 代理域名
+NOTION_PROXY_DOMAIN=154.40.44.47
+
+# Notion S3 资源代理域名
+NOTION_S3_PROXY_DOMAIN=101.32.183.34
+```
+
+**注意**：
+- 代理服务仅建议在中国大陆网络环境下使用
+- 如果代理服务不可用，系统会自动回退到直接访问
+- 非中国大陆用户建议保持 `ENABLE_NOTION_PROXY=false`
+
 ### 评论区
 
 1. 你需要先将本地仓库上传到自己的 Github 上，并设置为公开。然后参阅 [giscus](https://giscus.app/) 进行配置，

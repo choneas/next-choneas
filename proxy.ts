@@ -1,20 +1,28 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import {
+  getSupportedLocalesSync,
+  findBestMatch,
+  parseAcceptLanguage
+} from '@/lib/locales.server'
 
 export function proxy(request: NextRequest) {
+  const supportedLocales = getSupportedLocalesSync()
   const prefLocale = request.cookies.get('NEXT_PREF_LOCALE')?.value
-  if (!prefLocale) {
+
+  let selectedLocale: string
+
+  if (prefLocale && supportedLocales.includes(prefLocale)) {
+    selectedLocale = prefLocale
+  } else {
+    // 自动检测
     const acceptLanguage = request.headers.get('Accept-Language') || ''
-    const locales = acceptLanguage.split(',')
-    const defaultLocale = locales[0]?.startsWith('zh') ? 'zh-CN' : 'en'
-    
-    const response = NextResponse.next()
-    response.cookies.set('NEXT_LOCALE', defaultLocale)
-    return response
+    const preferredLocales = parseAcceptLanguage(acceptLanguage)
+    selectedLocale = findBestMatch(preferredLocales, supportedLocales)
   }
 
   const response = NextResponse.next()
-  response.cookies.set('NEXT_LOCALE', prefLocale)
+  response.cookies.set('NEXT_LOCALE', selectedLocale, { path: '/' })
   return response
 }
 

@@ -17,8 +17,9 @@ export async function generateMetadata(
     return {
         title: metadata.title + t('suffix'),
         description: metadata.description,
-        keywords: metadata.category,
+        keywords: metadata.tags,
         openGraph: {
+            // TODO: Open Graph
             images: metadata.cover
         }
     }
@@ -37,7 +38,7 @@ export default async function Article({
             <>
                 <PostHeader post={metadata} isTweet={false} />
 
-                <div className='container mx-auto pt-8 px-8 sm:px-24 md:px-48 md:max-w-6xl'>
+                <div className='article-container pt-8'>
                     <TableOfContents toc={metadata.toc!} />
 
                     <NotionPage recordMap={recordMap} />

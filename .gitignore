@@ -22,6 +22,7 @@
 /build
 
 # misc
+.kiro/
 .DS_Store
 *.pem
 

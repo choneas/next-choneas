@@ -1,45 +1,569 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
+@import "@heroui/styles";
+
 @layer base {
-    ::selection {
-        @apply bg-primary/55
-    }
+
+  /* Vicissitude Light Theme (默认) */
+  :root,
+  [data-theme="light"] {
+    color-scheme: light;
+
+    /* Primitive Colors */
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.9911 0 0);
+    --eclipse: oklch(0.2103 0.0059 285.89);
+
+    /* Background & Surface - MD3 映射 */
+    --background: #FFF8F6;
+    --foreground: #231918;
+    --surface: #FCEAE7;
+    --surface-foreground: #231918;
+    --overlay: #FFF0EE;
+    --overlay-foreground: #231918;
+
+    /* Primary Colors - MD3 映射 */
+    --accent: #904B40;
+    --accent-foreground: #FFFFFF;
+    --accent-soft: #775651;
+    --accent-soft-foreground: #FFFFFF;
+
+    /* Status Colors */
+    --success: oklch(0.7329 0.1935 150.81);
+    --success-foreground: var(--eclipse);
+    --warning: oklch(0.7819 0.1585 72.33);
+    --warning-foreground: var(--eclipse);
+    --danger: #BA1A1A;
+    --danger-foreground: #FFFFFF;
+
+    /* Form Field Colors - MD3 映射 */
+    --field-background: #F1DFDB;
+    --field-foreground: #231918;
+    --field-placeholder: #534341;
+    --field-border: transparent;
+
+    /* Other Colors */
+    --default: #F1DFDB;
+    --default-foreground: var(--eclipse);
+    --muted: oklch(0.5517 0.0138 285.94);
+    --scrollbar: oklch(87.1% 0.006 286.286);
+    --border: #FFF0EE;
+    --divider: #D8C2BE;
+    --focus: #904B40;
+    --link: #904B40;
+
+    /* Shadows */
+    --surface-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06);
+    --overlay-shadow: 0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
+    --field-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06);
+
+    /* Layout */
+    --radius: 0.5rem;
+    --radius-sm: calc(var(--radius) * 0.75);
+    --radius-md: var(--radius);
+    --radius-lg: calc(var(--radius) * 1.5);
+    --radius-xl: calc(var(--radius) * 2);
+    --field-radius: calc(var(--radius) * 1.5);
+    --spacing: 0.27rem;
+    --border-width: 0px;
+    --field-border-width: var(--border-width);
+    --disabled-opacity: 0.5;
+    --ring-offset-width: 2px;
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+    --skeleton-animation: shimmer;
+  }
+
+  /* Vicissitude Dark Theme */
+  .dark,
+  [data-theme="dark"] {
+    color-scheme: dark;
+
+    /* Background & Surface - MD3 映射 */
+    --background: #1A1110;
+    --foreground: #F1DFDB;
+    --surface: #271D1C;
+    --surface-foreground: #F1DFDB;
+    --overlay: #231918;
+    --overlay-foreground: #F1DFDB;
+
+    /* Primary Colors - MD3 映射 */
+    --accent: #FFB4A8;
+    --accent-foreground: #561E16;
+    --accent-soft: #E7BDB6;
+    --accent-soft-foreground: #442925;
+
+    /* Status Colors */
+    --success: oklch(0.7329 0.1935 150.81);
+    --success-foreground: var(--eclipse);
+    --warning: oklch(0.8203 0.1388 76.34);
+    --warning-foreground: var(--eclipse);
+    --danger: #FFB4AB;
+    --danger-foreground: #690005;
+
+    /* Form Field Colors - MD3 映射 */
+    --field-background: #3D3230;
+    --field-foreground: #F1DFDB;
+    --field-placeholder: #D8C2BE;
+    --field-border: transparent;
+
+    /* Other Colors */
+    --default: #3D3230;
+    --default-foreground: var(--snow);
+    --muted: oklch(70.5% 0.015 286.067);
+    --scrollbar: oklch(70.5% 0.015 286.067);
+    --border: #231918;
+    --divider: #534341;
+    --focus: #FFB4A8;
+    --link: #FFB4A8;
+
+    /* Shadows (transparent in dark mode) */
+    --surface-shadow: 0 0 0 0 transparent inset;
+    --overlay-shadow: 0 0 0 0 transparent inset;
+    --field-shadow: 0 0 0 0 transparent inset;
+  }
+}
+
+/* 4. Tailwind 主题扩展 */
+@theme inline {
+  /* 映射所有颜色变量到 Tailwind */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-overlay: var(--overlay);
+  --color-overlay-foreground: var(--overlay-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-field: var(--field-background);
+  --color-field-foreground: var(--field-foreground);
+  --color-field-placeholder: var(--field-placeholder);
+  --color-field-border: var(--field-border);
+  --color-default: var(--default);
+  --color-default-foreground: var(--default-foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-divider: var(--divider);
+  --color-focus: var(--focus);
+  --color-link: var(--link);
+  --color-scrollbar: var(--scrollbar);
+  --shadow-surface: var(--surface-shadow);
+  --shadow-overlay: var(--overlay-shadow);
+  --shadow-field: var(--field-shadow);
+
+  /* 自动计算 hover 状态 */
+  --color-accent-hover: color-mix(in oklab, var(--color-accent) 90%, var(--color-accent-foreground) 10%);
+  --color-accent-soft-hover: color-mix(in oklab, var(--color-accent-soft) 90%, var(--color-accent-soft-foreground) 10%);
+  --color-success-hover: color-mix(in oklab, var(--color-success) 90%, var(--color-success-foreground) 10%);
+  --color-warning-hover: color-mix(in oklab, var(--color-warning) 90%, var(--color-warning-foreground) 10%);
+  --color-danger-hover: color-mix(in oklab, var(--color-danger) 90%, var(--color-danger-foreground) 10%);
+  --color-field-hover: color-mix(in oklab, var(--color-field) 90%, var(--color-field-foreground) 2%);
+
+  /* 自动计算 surface 层级 */
+  --color-surface-secondary: color-mix(in oklab, var(--surface) 94%, var(--surface-foreground) 6%);
+  --color-surface-tertiary: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
+  --color-surface-quaternary: color-mix(in oklab, var(--surface) 86%, var(--surface-foreground) 14%);
+
+  /* 自动计算 background 层级 */
+  --color-background-secondary: color-mix(in oklab, var(--color-background) 96%, var(--color-foreground) 4%);
+  --color-background-tertiary: color-mix(in oklab, var(--color-background) 92%, var(--color-foreground) 8%);
+  --color-background-quaternary: color-mix(in oklab, var(--color-background) 86%, var(--color-foreground) 14%);
 }
 
 @theme {
-    --animate-fade-in-opacity: fade-in-opacity 0.6s ease-out;
-    @keyframes fade-in-opacity {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
+  --text-xs: 0.75rem;
+  --text-sm: 0.95rem;
+  --text-base: 1.1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.55rem;
+}
+
+@layer {
+
+  body {
+    font-size: var(--text-base);
+  }
+
+  h1 {
+    font-size: var(--text-4xl);
+    @apply font-extrabold
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+    @apply font-semibold
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+    @apply font-semibold
+  }
+
+  h4 {
+    font-size: var(--text-xl);
+    @apply font-semibold
+  }
+
+  h5 {
+    font-size: var(--text-lg);
+  }
+
+  h6 {
+    font-size: var(--text-base);
+  }
+
+  /* 文本选中样式 */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  ::-moz-selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  /* span 元素不可选中 */
+  span {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  /* 允许特定 span 可选中 */
+  span.selectable,
+  .notion span,
+  code span,
+  pre span {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+  }
+}
+
+@layer components {
+
+  /* 统一的阅读容器边距 - 不使用 @apply */
+  .article-container {
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .article-container {
+      padding-left: 6rem;
+      padding-right: 6rem;
     }
   }
 
-@theme inline {
-    --color-outline: var(--outline);
-    --color-outline-variant: var(--outline-variant);
-}
+  @media (min-width: 768px) {
+    .article-container {
+      padding-left: 12rem;
+      padding-right: 12rem;
+    }
+  }
 
-h1 {
-    @apply text-4xl lg:text-5xl font-extrabold tracking-tight
-}
+  .notion {
+    font-family: var(--font-serif) !important;
+    font-size: var(--text-lg) !important;
+    line-height: var(--line-height-relaxed) !important;
+    color: var(--color-foreground) !important;
+    --notion-max-width: 720px;
+  }
 
-h2 {
-    @apply text-3xl font-semibold tracking-tight
-}
+  .notion ::selection {
+    background-color: var(--color-accent) !important;
+    color: var(--color-accent-foreground) !important;
+  }
 
-h3 {
-    @apply text-2xl font-semibold tracking-tight
-}
+  .notion-page {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 
-h4 {
-    @apply text-xl font-semibold tracking-tight
-}
+  .notion-collection-page-properties {
+    display: none !important;
+  }
 
-p {
-    @apply text-base my-2 tracking-tight
+  /* Tweet 预览模式：隐藏图片 */
+  .tweet-preview .notion-asset-wrapper-image {
+    display: none !important;
+  }
+
+  /* Tweet 预览模式：标题样式统一 */
+  .tweet-preview h1,
+  .tweet-preview h2,
+  .tweet-preview h3,
+  .tweet-preview h4,
+  .tweet-preview h5,
+  .tweet-preview h6 {
+    font-size: var(--text-lg) !important;
+    margin-top: 0 !important;
+    font-weight: normal !important;
+  }
+
+  .tweet-preview p {
+    margin-top: 0 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .notion-code,
+  .notion-callout {
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .notion-quote {
+    border-radius: 0 !important;
+  }
+
+  .notion-callout {
+    background: var(--color-surface-secondary) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  /* Notion 文件图标颜色 */
+  .notion-file-icon {
+    color: var(--color-foreground) !important;
+  }
+
+  .notion-file-icon svg {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  .notion-file-icon path {
+    fill: currentColor !important;
+  }
+
+  /* Notion 链接样式 */
+  .notion a:not(.notion-hash-link) {
+    color: var(--color-accent) !important;
+    text-decoration: none !important;
+    border-bottom: 1px solid var(--color-accent) !important;
+    opacity: 1 !important;
+    transition: opacity 0.2s ease !important;
+  }
+
+  .notion a:not(.notion-hash-link):hover {
+    opacity: 0.7 !important;
+  }
+
+  .notion .notion-hash-link {
+    opacity: 0.0 !important;
+  }
+
+  .notion .notion-hash-link:hover {
+    opacity: 0.6 !important;
+  }
+
+  /* Notion 外部链接 mention 样式 */
+  .notion .notion-external-mention,
+  .notion .notion-link-mention-link {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  .notion .notion-external-mention:hover,
+  .notion .notion-link-mention-link:hover {
+    opacity: 1 !important;
+    background-color: var(--color-surface-secondary) !important;
+  }
+
+  /* Notion 文件链接样式 */
+  .notion .notion-file-link {
+    color: var(--color-foreground) !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  .notion .notion-file-link:hover {
+    opacity: 0.7 !important;
+    background-color: transparent !important;
+  }
+
+  .notion-page-section-gray {
+    background: var(--color-surface-secondary) !important;
+  }
+
+  .notion-page-section-brown {
+    background: var(--color-accent-soft) !important;
+  }
+
+  /* Notion 灰色文本 */
+  .notion .notion-gray {
+    color: color-mix(in srgb, var(--color-foreground) 70%, transparent) !important;
+  }
+
+  .dark .notion-callout {
+    background: var(--color-surface-tertiary) !important;
+  }
+
+  /* Notion Table 样式覆盖 */
+  .notion-simple-table {
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    border: none !important;
+  }
+
+  .notion-simple-table table {
+    border: none !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .notion-simple-table td {
+    background: var(--color-surface) !important;
+    border-right: 1px solid var(--color-divider) !important;
+    border-bottom: 1px solid var(--color-divider) !important;
+    border-left: none !important;
+    border-top: none !important;
+    color: var(--color-foreground) !important;
+  }
+
+  .notion-simple-table td:last-child {
+    border-right: none !important;
+  }
+
+  .notion-simple-table tr:last-child td {
+    border-bottom: none !important;
+  }
+
+  .notion-simple-table tr:first-child td {
+    background: var(--color-surface-secondary) !important;
+    font-weight: 600 !important;
+  }
+
+  .notion-simple-table tr:hover td {
+    background: var(--color-surface-tertiary) !important;
+  }
+
+  .dark .notion-simple-table td {
+    background: var(--color-surface) !important;
+    border-right: 1px solid var(--color-divider) !important;
+    border-bottom: 1px solid var(--color-divider) !important;
+  }
+
+  .dark .notion-simple-table tr:first-child td {
+    background: var(--color-surface-secondary) !important;
+  }
+
+  .dark .notion-simple-table tr:hover td {
+    background: var(--color-surface-tertiary) !important;
+  }
+
+  .tweet-preview .notion h1,
+  .tweet-preview .notion h2,
+  .tweet-preview .notion h3,
+  .tweet-preview .notion h4,
+  .tweet-preview .notion h5,
+  .tweet-preview .notion h6 {
+    text: var(--text-base) !important;
+    margin-top: 0 !important;
+    font-weight: var(--font-normal) !important;
+  }
+
+  .tweet-preview .notion p {
+    margin-top: 0 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Tweet 图片预览样式 */
+  .tweet-images {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+
+  .tweet-images.cols-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .tweet-images.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tweet-images.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tweet-images.cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    .tweet-images.cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .tweet-image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-secondary);
+  }
+
+  /* 根据图片数量调整高度 */
+  .tweet-images.cols-1 .tweet-image-wrapper {
+    max-height: 400px;
+  }
+
+  .tweet-images.cols-2 .tweet-image-wrapper,
+  .tweet-images.cols-3 .tweet-image-wrapper,
+  .tweet-images.cols-4 .tweet-image-wrapper {
+    height: 150px;
+  }
+
+  @media (min-width: 768px) {
+
+    .tweet-images.cols-2 .tweet-image-wrapper,
+    .tweet-images.cols-3 .tweet-image-wrapper,
+    .tweet-images.cols-4 .tweet-image-wrapper {
+      height: 180px;
+    }
+  }
+
+  .tweet-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+  }
+
+  /* 收起按钮动画 - 从底部移动到 Card 底部 */
+  @keyframes slideUpToCard {
+    0% {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    100% {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
 }
