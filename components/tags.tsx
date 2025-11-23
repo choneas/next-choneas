@@ -7,7 +7,7 @@ interface TagsProps {
     className?: string;
 }
 
-export function Tags({ tags, variant = "secondary", size = "sm", className = "" }: TagsProps) {
+export function Tags({ tags, variant = "secondary", size = "md", className = "" }: TagsProps) {
     if (!tags || tags.length === 0) return null;
 
     return (

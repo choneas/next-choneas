@@ -13,7 +13,9 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.notion.so"
       }
-    ]
+    ],
+    minimumCacheTTL: 86400,
+    formats: ['image/webp'],
   },
   allowedDevOrigins: ['127.0.0.1'],
   cacheComponents: true,

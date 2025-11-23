@@ -73,16 +73,17 @@ export default async function Home() {
         //     <MomentList sortOrder="desc"/>
         // </div>
         <>
-            <div className="relative h-screen max-w-screen -mt-16">
+            <header className="relative h-screen max-w-screen">
                 <Image
                     fill
+                    role="presentation"
                     src="/pictures/landscape.jpg"
                     alt="Background"
                     className="-z-10 object-cover"
                 />
                 <div className="absolute inset-0 bg-black/50 -z-10 hidden dark:block" />
                 <div className="flex flex-col justify-end gap-4 md:flex-row md:items-end h-full px-8 md:px-12 pb-16 pt-(--navbar-height)">
-                    <div className="md:grow">
+                    <div role="heading" className="md:grow">
                         <span className="font-thin text-6xl md:text-8xl text-accent/55">Live with</span><br />
                         <span className="font-light text-7xl md:text-8xl text-accent">Culture.</span>
                     </div>
@@ -91,12 +92,12 @@ export default async function Home() {
                         <InfoCard icon={<FaCodeBranch />} title="技术栈" description="React, Next.js, TailwindCSS" />
                     </div> */}
                 </div>
-            </div>
-            <div className="container my-10 md:my-16 mx-auto px-8 md:px-12 max-w-6xl">
+            </header>
+            <main className="container my-10 md:my-16 mx-auto px-8 md:px-12 max-w-6xl">
                 <Suspense fallback={<MomentListSkeleton />}>
                     <MomentList sortOrder="desc" />
                 </Suspense>
-            </div>
+            </main>
         </>
     );
 }

@@ -47,7 +47,9 @@
     "view-on": "View on"
   },
   "Table-Of-Contents": {
-    "toc": "Table of Contents"
+    "toc": "Table of Contents",
+    "in-this-article": "In this article",
+    "intro": "Intro"
   },
   "Moment": {
     "article-publish": "Published an article",
@@ -76,9 +78,9 @@
     "Programming": "Programming"
   },
   "Article-Filter": {
-    "label-tags": "Select tags",
-    "placeholder-search": "Search...",
-    "label-search": "Search title or description",
+    "label-tags": "",
+    "placeholder-search": "Search title or description",
+    "label-search": "",
     "not-found": "No result.",
     "placeholder-tags": "Tag"
   },
@@ -105,5 +107,8 @@
       "full": "MMM D, YYYY"
     },
     "timeFormat": "HH:mm"
+  },
+  "Accessibility": {
+    "skip-to-content": "Skip to content"
   }
 }

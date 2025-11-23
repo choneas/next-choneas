@@ -2,22 +2,35 @@
 
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { FiMoreHorizontal } from "react-icons/fi";
 import { usePathname } from "next/navigation";
-import { Button } from "@heroui/react";
 import { usePostMetadata } from "@/stores/post";
 import { NavbarContext } from "@/components/navbar/navbar-context";
 import { NavbarBrand } from "@/components/navbar/navbar-brand";
 import { NavbarItems } from "@/components/navbar/navbar-items";
-import { NavbarMenu } from "@/components/navbar/navbar-menu";
 import { NavbarDropdown } from "@/components/navbar/navbar-dropdown";
+import { NavbarMobileMenu } from "./navbar-mobile-menu";
 
 interface NavbarProps {
     translations: Record<string, string>;
 }
 
+/*
+    规则:
+    - 海洋层（整个 nav）：
+        * 在首页/有封面文章时：背景和模糊跟随滚动变化
+        * 其他页面：固定背景和模糊
+        * Dropdown 打开时：固定背景和模糊
+    - 岛屿层（三个独立容器）：
+        * 背景模糊始终固定（blur(16px) saturate(150%)）
+        * 背景透明度固定（40% opacity）
+    - 移动端：
+        * Navbar 在底部（fixed bottom-0）
+        * 只显示菜单按钮岛屿 + Brand 岛屿 + More 岛屿
+ */
+
 export function Navbar({ translations }: NavbarProps) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { scrollY } = useScroll();
     const pathname = usePathname();
     const { postMetadata } = usePostMetadata();
@@ -25,72 +38,184 @@ export function Navbar({ translations }: NavbarProps) {
     const isArticlePage = pathname.includes('/article/');
     const isHomePage = pathname === '/';
     const hasCover = isArticlePage && !!postMetadata?.cover;
-    const useGradientEffect = isHomePage || isArticlePage;
+    const useScrollEffect = (isHomePage || hasCover) && !isDropdownOpen && !isMobileMenuOpen;
 
-    const navbarBlur = useTransform(scrollY, [0, 400], [0, 16]);
-    const navbarSaturate = useTransform(scrollY, [0, 400], [100, 150]);
-    const bgWhiteMix = useTransform(scrollY, [0, 400], [0, 40]);
 
-    const backdropFilterStyle = useTransform(
-        [navbarBlur, navbarSaturate],
+
+    // Ocean layer (nav background) - follows scroll on specific pages
+    const oceanBlur = useTransform(scrollY, [0, 400], [0, 16]);
+    const oceanSaturate = useTransform(scrollY, [0, 400], [100, 150]);
+    const oceanOpacity = useTransform(scrollY, [0, 400], [0, 10]);
+
+    const oceanBackdropFilter = useTransform(
+        [oceanBlur, oceanSaturate],
         ([blur, saturate]) => `blur(${blur}px) saturate(${saturate}%)`
     );
 
-    const backgroundColorStyle = useTransform(
-        bgWhiteMix,
-        (mix) => `color-mix(in srgb, transparent ${100 - mix}%, white ${mix}%)`
+    const oceanBackground = useTransform(
+        oceanOpacity,
+        (opacity) => `color-mix(in srgb, transparent ${100 - opacity}%, var(--color-background) ${opacity}%)`
     );
+
+    // Fixed values for non-scroll pages or when dropdown is open
+    const fixedOceanBackdrop = "blur(16px) saturate(150%)";
+    const fixedOceanBackground = "color-mix(in srgb, transparent 90%, var(--color-background) 10%)";
+
+    const computedOceanBackdrop = useScrollEffect ? oceanBackdropFilter : fixedOceanBackdrop;
+    const computedOceanBackground = useScrollEffect ? oceanBackground : fixedOceanBackground;
+
+    // Island layer - changes when dropdown is open
+    const islandStyle = {
+        backdropFilter: (isDropdownOpen || isMobileMenuOpen) ? "blur(20px) saturate(180%)" : "blur(18px) saturate(160%)",
+        WebkitBackdropFilter: (isDropdownOpen || isMobileMenuOpen) ? "blur(20px) saturate(180%)" : "blur(18px) saturate(160%)",
+        backgroundColor: (isDropdownOpen || isMobileMenuOpen)
+            ? "color-mix(in srgb, var(--color-background) 96%, transparent 4%)"
+            : "color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 55%, transparent 45%)"
+    };
 
     const contextValue = {
         scrollY,
-        navbarBlur,
+        navbarBlur: oceanBlur,
         pathname,
         hasCover
     };
 
     return (
         <NavbarContext.Provider value={contextValue}>
+            {/* Overlay when dropdown is open */}
+            {(isDropdownOpen || isMobileMenuOpen) && (
+                <motion.div
+                    className="fixed inset-0 z-30 bg-black/50"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={() => {
+                        setIsDropdownOpen(false);
+                        setIsMobileMenuOpen(false);
+                    }}
+                />
+            )}
+
+            {/* Ocean layer - gradient blur background */}
+            <div className="fixed sm:top-0 bottom-0 sm:bottom-auto inset-x-0 z-40 pointer-events-none h-40 sm:h-64">
+                {/* Desktop: top to bottom gradient */}
+                <motion.div
+                    className="hidden sm:block absolute inset-0"
+                    style={{
+                        backdropFilter: computedOceanBackdrop,
+                        WebkitBackdropFilter: computedOceanBackdrop,
+                        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)",
+                        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
+                    }}
+                />
+                <motion.div
+                    className="hidden sm:block absolute inset-0"
+                    style={{
+                        background: computedOceanBackground,
+                        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)",
+                        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
+                    }}
+                />
+
+                {/* Mobile: bottom to top gradient */}
+                <motion.div
+                    className="sm:hidden absolute inset-0"
+                    style={{
+                        backdropFilter: computedOceanBackdrop,
+                        WebkitBackdropFilter: computedOceanBackdrop,
+                        maskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)",
+                        WebkitMaskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
+                    }}
+                />
+                <motion.div
+                    className="sm:hidden absolute inset-0"
+                    style={{
+                        background: computedOceanBackground,
+                        maskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)",
+                        WebkitMaskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
+                    }}
+                />
+            </div>
+
+            {/* Navbar content */}
             <motion.nav
-                className={`sticky top-0 inset-x-0 z-40 ${!useGradientEffect ? 'bg-transparent backdrop-saturate-150' : ''}`}
-                style={{
-                    backdropFilter: useGradientEffect ? backdropFilterStyle : 'blur(16px) saturate(150%)',
-                    WebkitBackdropFilter: useGradientEffect ? backdropFilterStyle : 'blur(16px) saturate(150%)',
-                    backgroundColor: useGradientEffect ? backgroundColorStyle : undefined,
-                }}
+                className="fixed sm:top-4 bottom-4 sm:bottom-auto inset-x-0 z-40 px-4 sm:px-6 lg:px-8 pointer-events-auto"
             >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Left section */}
-                        <div className="flex items-center gap-4">
-                            <Button
-                                isIconOnly
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="sm:hidden p-2"
-                                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                            >
-                                <FiMoreHorizontal size={24} />
-                            </Button>
-                            <NavbarBrand />
-                        </div>
+                {/* Desktop layout */}
+                <div className="hidden sm:flex max-w-7xl mx-auto items-center justify-center gap-3 relative h-12">
+                    {/* Brand island - Left (absolute positioning) */}
+                    <motion.div
+                        className="absolute left-0 flex items-center h-12 rounded-full pl-3 pr-4"
+                        style={{
+                            ...islandStyle,
+                            maxWidth: "calc(50vw - 200px)", // Reserve space for Items and More
+                            overflow: "hidden"
+                        }}
+                        layout
+                        transition={{
+                            layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+                        }}
+                    >
+                        <NavbarBrand />
+                    </motion.div>
 
-                        {/* Center section - Desktop nav items */}
-                        <div className="absolute left-1/2 -translate-x-1/2 hidden sm:flex gap-4">
-                            <NavbarItems pathname={pathname} translations={translations} />
-                        </div>
+                    {/* Items island - Center (absolute positioning for guaranteed centering) */}
+                    <motion.div
+                        className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-12 rounded-full overflow-hidden"
+                        style={islandStyle}
+                    >
+                        <NavbarItems pathname={pathname} translations={translations} />
+                    </motion.div>
 
-                        {/* Right section */}
-                        <div className="flex items-center">
-                            <NavbarDropdown />
-                        </div>
-                    </div>
+                    {/* More dropdown island - Right (absolute positioning) */}
+                    <motion.div
+                        className="absolute right-0 flex items-center justify-center h-12 w-12 rounded-full p-0"
+                        style={islandStyle}
+                    >
+                        <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />
+                    </motion.div>
                 </div>
 
-                {/* Mobile menu */}
-                {isMenuOpen && (
-                    <div className="sm:hidden bg-white/60 dark:bg-black/80 px-4 py-4 gap-4">
-                        <NavbarMenu pathname={pathname} translations={translations} />
-                    </div>
-                )}
+                {/* Mobile layout */}
+                <div className="sm:hidden max-w-7xl mx-auto flex items-center justify-between gap-3">
+                    {/* Mobile menu button island - Left */}
+                    <motion.div
+                        className="flex items-center justify-center h-12 w-12 rounded-full p-0 shrink-0"
+                        style={islandStyle}
+                    >
+                        <NavbarMobileMenu
+                            isOpen={isMobileMenuOpen}
+                            onOpenChange={setIsMobileMenuOpen}
+                            pathname={pathname}
+                            translations={translations}
+                        />
+                    </motion.div>
+
+                    {/* Brand island - Center */}
+                    <motion.div
+                        className="flex items-center h-12 rounded-full pl-3 pr-4"
+                        style={{
+                            ...islandStyle,
+                            maxWidth: "calc(100vw - 180px)", // Reserve space for menu button, More, and gaps
+                            overflow: "hidden"
+                        }}
+                        layout
+                        transition={{
+                            layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+                        }}
+                    >
+                        <NavbarBrand />
+                    </motion.div>
+
+                    {/* More dropdown island - Right */}
+                    <motion.div
+                        className="flex items-center justify-center h-12 w-12 rounded-full p-0 shrink-0"
+                        style={islandStyle}
+                    >
+                        <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />
+                    </motion.div>
+                </div>
             </motion.nav>
         </NavbarContext.Provider>
     )

@@ -19,8 +19,7 @@ export function TweetModalWrapper({
 
     useEffect(() => {
         onOpen();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [onOpen]);
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {

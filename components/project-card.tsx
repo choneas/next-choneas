@@ -13,8 +13,8 @@ export function ProjectCard({ project }: { project: Project }) {
     const [error, setError] = useState<boolean>(false);
     const locale = useLocale();
     const t = useTranslations('Project');
-    
-    const finalLink = project.isGithubRepo && project.repo 
+
+    const finalLink = project.isGithubRepo && project.repo
         ? `https://github.com/${project.repo}`
         : project.link;
 
@@ -33,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
     }, [project.repo, project.isGithubRepo]);
 
     return (
-        <Link 
+        <Link
             href={finalLink || '#'}
             target="_blank"
             rel="noopener noreferrer"
@@ -51,18 +51,22 @@ export function ProjectCard({ project }: { project: Project }) {
                         </span>
                     )}
                 </Card.Header>
-                
+
                 <Card.Content className="flex flex-col gap-3 px-4 py-2">
                     {error ? (
                         <p className="text-danger">{t('error.fetch-failed')}</p>
                     ) : (
                         <>
                             {project.cover && (
-                                <img
-                                    src={project.cover}
-                                    alt={project.name || ''}
-                                    className="w-full h-48 rounded-lg object-cover"
-                                />
+                                <>
+                                    {/* TODO: Replace with next/image for better performance */}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={project.cover}
+                                        alt={project.name || ''}
+                                        className="w-full h-48 rounded-lg object-cover"
+                                    />
+                                </>
                             )}
                             <p className="text-lg text-gray-600">
                                 {project.isGithubRepo ? repoInfo?.description : project.description}

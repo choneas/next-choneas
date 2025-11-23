@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 
 async function getNavbarTranslations(locale: string) {
     "use cache: private"
-    cacheLife({ stale: 3600, revalidate: 86400 }); // 1小时 stale，1天 revalidate
+    cacheLife({ stale: 3600, revalidate: 86400 });
 
     const t = await getTranslations({ locale, namespace: "Navbar" });
 

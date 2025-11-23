@@ -4,14 +4,13 @@ import { redirect } from "next/navigation";
 export default async function SmartRoute({
     params,
 }: {
-    params: Promise<{ slug: string }>,
+    params: Promise<{ post: string }>,
 }) {
-    const slug = (await params).slug;
+    const post = (await params).post;
 
     try {
-        const { metadata } = await getPost(slug, true);
+        const { metadata } = await getPost(post, true);
 
-        // 根据类型重定向到对应页面
         if (metadata.type === "Tweet") {
             redirect(`/tweet/${metadata.slug || metadata.id}`);
         } else {
@@ -19,8 +18,7 @@ export default async function SmartRoute({
         }
     } catch (error) {
         if (error instanceof ArticleNotFoundError) {
-            // 如果找不到，尝试作为 article 处理
-            redirect(`/article/${slug}`);
+            redirect(`/article/${post}`);
         }
         throw error;
     }

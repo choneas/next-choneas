@@ -19,26 +19,26 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
     return (
         <>
             {post.cover ? (
-                <div className="relative -mt-[72px] min-w-screen overflow-hidden mb-3">
+                <div className="post-header relative -mt-[72px] max-w-screen overflow-hidden mb-3">
                     <div className="relative md:h-[50vh] h-[80vh]">
                         <Image
                             fill
                             src={post.cover}
                             alt={post.title}
                             quality={80}
-                            className="w-full h-full object-cover"
+                            className="h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent">
-                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'article-container' : 'px-8'}`}>
+                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'max-w-6xl mx-auto px-8 sm:px-24 md:px-48' : 'px-8'}`}>
                                 <Tags
                                     tags={post.tags || []}
                                     variant="soft"
-                                    className="mb-2 backdrop-blur"
+                                    size="lg"
                                 />
                                 <span className="text-5xl font-bold my-2">
                                     {post.icon}
                                 </span>
-                                <h1 className="text-4xl text-white font-bold my-4">
+                                <h1 role="heading" className="text-4xl text-white font-bold my-4">
                                     {post.title.length !== 0 ?
                                         post.title
                                         :
@@ -53,10 +53,11 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                     </div>
                 </div>
             ) : (
-                <div className={isTweet ? 'pt-6 pb-4' : 'article-container pt-8'}>
+                <div className={isTweet ? 'pt-6 pb-4' : 'post-header max-w-6xl mx-auto px-8 sm:mt-20 sm:px-24 md:px-48 pt-8'}>
                     <Tags
                         tags={post.tags || []}
                         variant="soft"
+                        size="lg"
                     />
                     <h1 className="text-5xl font-bold my-2">
                         {post.icon}

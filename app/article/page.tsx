@@ -16,13 +16,13 @@ export default async function Contents() {
     const { articles } = await getAllPosts()
 
     return (
-        <div className="container mx-auto px-8 sm:px-24 pt-8">
+        <main className="container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
             <h1>{t('title')}</h1>
             <p>{t('description')}</p>
 
             <div className='py-4'>
                 <ArticleList articles={articles} />
             </div>
-        </div>
+        </main>
     )
 }

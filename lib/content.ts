@@ -2,12 +2,17 @@
 
 import type { ExtendedRecordMap, PageBlock } from "notion-types";
 import { idToUuid, defaultMapImageUrl, getPageTableOfContents, getPageProperty } from "notion-utils";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { unstable_cache } from "next/cache";
+import { NotionAPI } from "notion-client";
 import type { PostMetadata } from "@/types/content";
-import { createNotionClient } from "@/lib/notion-proxy";
+import { getReadingTime } from "@/utils/read-time";
 
-const notion = createNotionClient();
+// Note: The custom Notion proxy is disabled, so we rely on the official SDK directly.
+const notion = new NotionAPI({
+    authToken: process.env.NOTION_AUTH_TOKEN,
+    apiBaseUrl: process.env.NOTION_API_BASE_URL
+});
 
 // 使用 Next.js 16 unstable_cache 缓存根页面（5 分钟）
 const getCachedRootPage = unstable_cache(
@@ -82,6 +87,7 @@ async function generatePostMetadata(
     pageId: string
 ): Promise<PostMetadata> {
     const t = await getTranslations("Tag");
+    const locale = await getLocale();
     const resolvedPageId = pageId.length === 32 ? idToUuid(pageId) : pageId;
     const block = recordMap.block[resolvedPageId].value;
 
@@ -125,6 +131,9 @@ async function generatePostMetadata(
         // 获取目录
         metadata.toc = getPageTableOfContents(block as PageBlock, recordMap);
 
+        // 计算阅读时间
+        metadata.readingTime = getReadingTime(recordMap, locale);
+
         return metadata;
     } catch (error) {
         console.error('Error generating post metadata:', error);
@@ -143,8 +152,10 @@ async function getAllPosts() {
             block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
             if (processedIds.has(id)) continue;
 
-            const metadata = await generatePostMetadata(rootPage, id);
-            
+            // 获取完整的文章内容以计算阅读时间
+            const postRecordMap = await getCachedPost(id);
+            const metadata = await generatePostMetadata(postRecordMap, id);
+
             if (metadata.description === '无内容' || metadata.description === 'No content') metadata.description = undefined
 
             if (metadata.type === 'Tweet' && Boolean(metadata.id)) {

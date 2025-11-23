@@ -14,17 +14,17 @@ interface NavItem {
 const navItems: NavItem[] = [
     {
         name: "articles",
-        icon: <FaPenNib />,
+        icon: <FaPenNib size={24} />,
         href: "/article",
     },
     {
         name: "projects",
-        icon: <PiAtom />,
+        icon: <PiAtom size={24} />,
         href: "/project",
     },
     {
         name: "about",
-        icon: <FiInfo />,
+        icon: <FiInfo size={24} />,
         href: "/about",
     },
 ]

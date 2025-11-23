@@ -6,10 +6,12 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
-import "./globals.css";
 import { NavbarWrapper } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
+import { SkipToContent } from "@/components/skip-to-content";
+import "overlayscrollbars/overlayscrollbars.css";
+import "./globals.css";
 
 const notoSerif = Noto_Serif_SC({
     variable: "--font-serif",
@@ -58,6 +60,7 @@ async function LayoutContent({ children }: { children: React.ReactNode }) {
     return (
         <NextIntlClientProvider messages={messages}>
             <Providers>
+                <SkipToContent />
                 <NavbarWrapper />
                 {children}
                 <Footer />

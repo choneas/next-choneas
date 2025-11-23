@@ -1,5 +1,3 @@
-"use client"
-
 import { Link } from "@heroui/react";
 import { navItems } from "@/data/navbar";
 
@@ -11,7 +9,6 @@ interface NavbarMenuProps {
 /**
  * NavbarMenu 客户端组件
  * 显示移动端菜单
- * 接收预翻译的文本以支持 SSR
  */
 export function NavbarMenu({ pathname, translations }: NavbarMenuProps) {
     return (

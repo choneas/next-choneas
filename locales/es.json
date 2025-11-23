@@ -105,5 +105,8 @@
       "full": "D [de] MMM, YYYY"
     },
     "timeFormat": "HH:mm"
+  },
+  "Accessibility": {
+    "skip-to-content": "Saltar al contenido principal"
   }
 }

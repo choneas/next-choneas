@@ -35,17 +35,16 @@ export default async function Article({
         const { metadata, recordMap } = await getPost(slug);
 
         return (
-            <>
+            <main>
                 <PostHeader post={metadata} isTweet={false} />
 
-                <div className='article-container pt-8'>
-                    <TableOfContents toc={metadata.toc!} />
-
+                <div className="max-w-6xl mx-auto px-8 sm:px-24 md:px-48">
                     <NotionPage recordMap={recordMap} />
-
                     <Comment type='article' metadata={metadata} className='mt-8' />
                 </div>
-            </>
+
+                <TableOfContents toc={metadata.toc!} type="Article" />
+            </main>
         );
     } catch (error) {
         if (error instanceof ArticleNotFoundError) {

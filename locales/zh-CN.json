@@ -47,7 +47,9 @@
     "view-on": "查看网站"
   },
   "Table-Of-Contents": {
-    "toc": "目录"
+    "toc": "目录",
+    "in-this-article": "本文内容",
+    "intro": "简介"
   },
   "Moment": {
     "article-publish": "发布了文章",
@@ -105,5 +107,8 @@
       "full": "YYYY年M月D日"
     },
     "timeFormat": "HH:mm"
+  },
+  "Accessibility": {
+    "skip-to-content": "跳转到主要内容"
   }
 }

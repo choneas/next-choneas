@@ -1,26 +1,28 @@
-import { Card } from "@heroui/react"
+import { Card } from "@heroui/react";
 import { Avatar } from "@/components/avatar";
-import { Tags } from "@/components/tags"
-import NextLink from "next/link"
-import Image from "next/image"
-import { useLocale } from 'next-intl';
+import { Tags } from "@/components/tags";
+import NextLink from "next/link";
+import Image from "next/image";
+import { useLocale } from "next-intl";
 import { uuidToId } from "notion-utils";
 import type { PostMetadata } from "@/types/content";
 import { formatDate } from "@/lib/format";
 
 export function ArticleCard({
     article,
-    linkParam = 'slug',
-    showTime = false
+    linkParam = "slug",
+    showTime = false,
 }: {
     article: PostMetadata;
-    linkParam?: 'slug' | 'id' | 'notionid';
+    linkParam?: "slug" | "id" | "notionid";
     showTime?: boolean;
 }) {
     const locale = useLocale();
-    const href = `/article/${linkParam === 'slug' && article.slug ? article.slug :
-        linkParam === 'notionid' && article.notionid ? uuidToId(article.notionid) :
-            article.id
+
+    const href =
+        `/article/${linkParam === "slug" && article.slug ? article.slug :
+            linkParam === "notionid" && article.notionid ? uuidToId(article.notionid) :
+                article.id
         }`;
 
     const AuthorAndDate = ({ className = "" }) => (
@@ -41,16 +43,28 @@ export function ArticleCard({
             {article.last_edited_time && (
                 <time>
                     {formatDate(article.created_time, locale, showTime)}
+                    {article.readingTime && ` · ${article.readingTime}`}
                 </time>
             )}
         </div>
     );
 
+    const focusClass =
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset";
+
     if (article.cover) {
         return (
-            <Card className="bg-content2 shadow border-none">
-                <NextLink href={href}>
-                    <div className="md:hidden">
+            <Card
+                asChild
+                className="bg-content2 shadow border-none"
+                aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+            >
+                <NextLink
+                    href={href}
+                    tabIndex={0}
+                    className={`${focusClass} block`}
+                >
+                    <div className="lg:hidden">
                         <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
                             <Image
                                 alt={article.title}
@@ -62,35 +76,25 @@ export function ArticleCard({
                         </div>
                     </div>
 
-                    {/* 桌面端：Grid 布局，图片在右侧 */}
-                    <div className="hidden md:grid md:grid-cols-[1fr_380px] gap-4 p-4">
+                    {/* Mobile: grid, photos on right */}
+                    <div className="hidden lg:grid lg:grid-cols-[1fr_380px] gap-4 p-4">
                         <div className="flex flex-col gap-3">
                             <AuthorAndDate />
                             <span className="text-2xl font-semibold">{article.title}</span>
-                            {article.tags && article.tags.length > 0 && (
-                                <Tags tags={article.tags} />
-                            )}
+                            {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                         </div>
 
                         <div className="relative w-full h-[200px] overflow-hidden rounded-[calc(var(--radius-md)*3)]">
-                            <Image
-                                alt={article.title}
-                                src={article.cover}
-                                fill
-                                className="object-cover"
-                                sizes="200px"
-                            />
+                            <Image alt={article.title} src={article.cover} fill className="object-cover" />
                         </div>
                     </div>
 
-                    {/* 移动端：内容在下方 */}
-                    <Card.Content className="md:hidden p-4">
+                    {/* Mobile: content on down */}
+                    <Card.Content className="lg:hidden p-4">
                         <div className="flex flex-col gap-3">
                             <AuthorAndDate />
                             <span className="text-2xl font-semibold">{article.title}</span>
-                            {article.tags && article.tags.length > 0 && (
-                                <Tags tags={article.tags} />
-                            )}
+                            {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                         </div>
                     </Card.Content>
                 </NextLink>
@@ -99,15 +103,17 @@ export function ArticleCard({
     }
 
     return (
-        <Card className="bg-content2 shadow border-none">
-            <NextLink href={href}>
+        <Card
+            asChild
+            aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+            className="bg-content2 shadow border-none"
+        >
+            <NextLink href={href} tabIndex={0} className={`${focusClass} block`}>
                 <Card.Content className="p-3">
                     <div className="flex flex-col gap-3">
                         <AuthorAndDate />
                         <span className="text-2xl font-semibold">{article.title}</span>
-                        {article.tags && article.tags.length > 0 && (
-                            <Tags tags={article.tags} />
-                        )}
+                        {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                     </div>
                 </Card.Content>
             </NextLink>

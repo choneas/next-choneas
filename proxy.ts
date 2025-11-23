@@ -15,7 +15,6 @@ export function proxy(request: NextRequest) {
   if (prefLocale && supportedLocales.includes(prefLocale)) {
     selectedLocale = prefLocale
   } else {
-    // 自动检测
     const acceptLanguage = request.headers.get('Accept-Language') || ''
     const preferredLocales = parseAcceptLanguage(acceptLanguage)
     selectedLocale = findBestMatch(preferredLocales, supportedLocales)

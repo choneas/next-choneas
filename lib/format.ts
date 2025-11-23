@@ -3,9 +3,11 @@ import 'dayjs/locale/zh-cn';
 import 'dayjs/locale/en';
 import 'dayjs/locale/es';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
 import isToday from 'dayjs/plugin/isToday';
 
 dayjs.extend(relativeTime);
+dayjs.extend(duration);
 dayjs.extend(isToday);
 
 export interface FormatConfig {
@@ -33,17 +35,19 @@ function getFormatConfig(locale: string): FormatConfig {
 
     try {
         // 使用 require 同步加载
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const messages = require(`@/locales/${locale}.json`);
         const config: FormatConfig = messages.Format;
         configCache.set(locale, config);
         return config;
-    } catch (error) {
+    } catch {
         console.warn(`Failed to load format config for locale "${locale}", falling back to English`);
         try {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const fallback = require('@/locales/en.json');
             const config: FormatConfig = fallback.Format;
             return config;
-        } catch (fallbackError) {
+        } catch {
             // 最终后备方案
             return {
                 today: 'Today',
@@ -123,4 +127,16 @@ export function formatRelativeTime(date: Date, locale: string): string {
     const dayjsLocale = locale.toLowerCase();
     dayjs.locale(dayjsLocale);
     return dayjs(date).fromNow();
+}
+
+/**
+ * 格式化阅读时间
+ * @param minutes - 阅读时间（分钟）
+ * @param locale - 语言代码
+ * @returns 格式化后的阅读时间字符串（如 "5 分钟"、"5 minutes"）
+ */
+export function formatReadingTime(minutes: number, locale: string): string {
+    const dayjsLocale = locale.toLowerCase();
+    dayjs.locale(dayjsLocale);
+    return dayjs.duration(minutes, 'minutes').humanize();
 }

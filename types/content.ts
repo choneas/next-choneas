@@ -18,6 +18,8 @@ export interface PostMetadata {
     photos?: string[]
     created_time: Date
     last_edited_time: Date
+    readingTimeMinutes?: number
+    readingTime?: string // Formatted reading time with locale
 }
 
 export interface PropertySchema {

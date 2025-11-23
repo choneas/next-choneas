@@ -225,7 +225,6 @@
     font-size: var(--text-base);
   }
 
-  /* 文本选中样式 */
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-accent-foreground);
@@ -236,7 +235,6 @@
     color: var(--color-accent-foreground);
   }
 
-  /* span 元素不可选中 */
   span {
     user-select: none;
     -webkit-user-select: none;
@@ -244,7 +242,6 @@
     -ms-user-select: none;
   }
 
-  /* 允许特定 span 可选中 */
   span.selectable,
   .notion span,
   code span,
@@ -257,8 +254,6 @@
 }
 
 @layer components {
-
-  /* 统一的阅读容器边距 - 不使用 @apply */
   .article-container {
     max-width: 72rem;
     margin-left: auto;
@@ -283,7 +278,7 @@
 
   .notion {
     font-family: var(--font-serif) !important;
-    font-size: var(--text-lg) !important;
+    font-size: calc(var(--text-lg) + 0.14rem) !important;
     line-height: var(--line-height-relaxed) !important;
     color: var(--color-foreground) !important;
     --notion-max-width: 720px;
@@ -322,6 +317,7 @@
   }
 
   .tweet-preview p {
+    font-size: var(--text-lg) !important;
     margin-top: 0 !important;
     margin-bottom: 0.5rem !important;
   }
@@ -355,7 +351,7 @@
   }
 
   /* Notion 链接样式 */
-  .notion a:not(.notion-hash-link) {
+  .notion a:not(.notion-hash-link, .notion-external, .notion-link-mention-link) {
     color: var(--color-accent) !important;
     text-decoration: none !important;
     border-bottom: 1px solid var(--color-accent) !important;
@@ -363,21 +359,17 @@
     transition: opacity 0.2s ease !important;
   }
 
-  .notion a:not(.notion-hash-link):hover {
-    opacity: 0.7 !important;
-  }
-
   .notion .notion-hash-link {
     opacity: 0.0 !important;
   }
 
-  .notion .notion-hash-link:hover {
-    opacity: 0.6 !important;
-  }
-
-  /* Notion 外部链接 mention 样式 */
   .notion .notion-external-mention,
   .notion .notion-link-mention-link {
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+
+  .notion .notion-link-mention .notion-link-mention-link>a {
     text-decoration: none !important;
     border-bottom: none !important;
   }
@@ -388,8 +380,7 @@
     background-color: var(--color-surface-secondary) !important;
   }
 
-  /* Notion 文件链接样式 */
-  .notion .notion-file-link {
+  .notion .notion-file-link .notion-external-title .notion-link-mention-title {
     color: var(--color-foreground) !important;
     text-decoration: none !important;
     border-bottom: none !important;
@@ -476,7 +467,7 @@
   .tweet-preview .notion h4,
   .tweet-preview .notion h5,
   .tweet-preview .notion h6 {
-    text: var(--text-base) !important;
+    font-size: var(--text-base) !important;
     margin-top: 0 !important;
     font-weight: var(--font-normal) !important;
   }
@@ -550,20 +541,45 @@
     transition: transform 0.2s ease;
   }
 
-  /* 收起按钮动画 - 从底部移动到 Card 底部 */
-  @keyframes slideUpToCard {
-    0% {
-      position: fixed;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    100% {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+  /* Island effect - shared by Navbar and TOC */
+  .island-base {
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    background-color: color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 55%, transparent 45%);
   }
+
+  .island-active {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background-color: color-mix(in srgb, var(--color-background) 96%, transparent 4%);
+  }
+}
+
+/* Navbar ghost button custom styles */
+.navbar-ghost-btn[data-variant="ghost"] {
+  background-color: transparent !important;
+}
+
+.navbar-ghost-btn[data-variant="ghost"]:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent 92%) !important;
+}
+
+/* OverlayScrollbars custom theme */
+.os-theme-custom {
+  --os-size: 8px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-track-border-radius: 4px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: transparent;
+  --os-track-bg-active: transparent;
+  --os-handle-border-radius: 4px;
+  --os-handle-bg: var(--color-scrollbar);
+  --os-handle-bg-hover: color-mix(in srgb, var(--color-scrollbar) 80%, var(--color-foreground) 20%);
+  --os-handle-bg-active: color-mix(in srgb, var(--color-scrollbar) 70%, var(--color-foreground) 30%);
+  --os-handle-min-size: 40px;
+  --os-handle-max-size: none;
+  --os-handle-perpendicular-size: 100%;
+  --os-handle-perpendicular-size-hover: 100%;
+  --os-handle-perpendicular-size-active: 100%;
 }

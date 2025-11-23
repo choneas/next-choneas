@@ -3,8 +3,7 @@ import { cookies, headers } from 'next/headers';
 import {
     getSupportedLocales,
     findBestMatch,
-    parseAcceptLanguage,
-    DEFAULT_LOCALE
+    parseAcceptLanguage
 } from '@/lib/locales.server';
 
 export default getRequestConfig(async () => {

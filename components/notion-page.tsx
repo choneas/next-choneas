@@ -52,6 +52,7 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
     return (
         <div className={type === "tweet-preview" ? "notion tweet-preview" : "notion"}>
             <NotionRenderer
+                disableHeader
                 recordMap={recordMap}
                 darkMode={mounted ? resolvedTheme === 'dark' : false}
                 fullPage={false}
@@ -65,6 +66,7 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
                     nextLink: Link
                 }}
             />
+            {/* TODO: Re-enable when HeroUI 3.0 Table component is available */}
             {/* <NotionTableReplacer /> */}
         </div>
     )
@@ -75,8 +77,9 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
 // The Table component from v2 is not available in v3.0.0-beta.1.
 // This component needs to be updated once the Table API is available in HeroUI 3.0.
 // Requirements: 6.3, 6.4
+// Temporarily disabled - HeroUI 3.0 Table component not available
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NotionTableReplacer = () => {
-    // Temporarily disabled - HeroUI 3.0 Table component not available
     // React.useEffect(() => {
     //     if (typeof document === 'undefined') return;
     //     const notionTables = document.querySelectorAll('.notion-simple-table');
