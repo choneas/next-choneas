@@ -1,28 +1,17 @@
 # Next Choneas
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-blue?logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-blue?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://react.dev/)
 [![React Notion X](https://img.shields.io/badge/React_Notion_X-API-orange?logo=notion)](https://github.com/NotionX/react-notion-x)
 [![License](https://img.shields.io/github/license/choneas/next-choneas)](LICENSE)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/choneas/next-choneas)
 
-🚀 基于 Next.js + Notion + React Notion X 打造的极简、优雅、支持国际化的个人博客系统。
+ 基于 Next.js + Notion + React Notion X 的支持国际化的个人博客。
 
 ---
 
-## ✨ 特性
-
-- 📖 **内容管理**：文章内容通过 Notion 数据库集中管理。
-- ⚡ **极速渲染**：基于 [React Notion X](https://github.com/NotionX/react-notion-x) 实现高性能页面渲染。
-- 🌏 **多语言支持**：内置国际化，轻松切换多语言界面。
-- 🎨 **极简美观**：使用 [HeroUI](https://heroui.com) + [TailwindCSS](https://tailwindcss.com) 作为用户界面样式。
-- 🔒 **隐私友好**：支持通过配置 Token 访问 Notion 私有数据库。
-- 🛠️ **易于定制**：自定义语言文本，主题颜色，评论区等。
-
----
-
-## 🚀 Quick Start
+## 
 
 1. **克隆项目**
    ```bash
@@ -48,7 +37,7 @@
 
 ---
 
-## ⚙️ 配置 Notion
+## ⚙️ Notion Configuration
 
 若将 Notion 页面设为私密，图片等资源可能无法正常加载。
 
@@ -62,9 +51,9 @@
 | Type             | Select           | 详见下方                 |
 | Author           | Person           | 文章作者 (Notion用户)    |
 | Description      | String           | 文章摘要 (SEO)           |
-| Category         | Multiselect      | 文章分类                 |
-| Created time     | Created time     | 创建时间                 |
-| Last edited time | Last edited time | 修改时间                 |
+| Tags             | Multiselect      | 文章标签                 |
+| Created Time     | Created time     | 创建时间                 |
+| Last Edited Time | Last edited time | 修改时间                 |
 
 ### Type
 
@@ -76,7 +65,7 @@
 
 ---
 
-## 🛠️ 配置站点
+## 🛠️ Site Configuration
 
 ### 环境变量
 
@@ -157,7 +146,7 @@ NOTION_S3_PROXY_DOMAIN=101.32.183.34
 
 ---
 
-### 国际化
+### 🌏 i18n
 
 关于页、首页的信息等。
 
@@ -169,7 +158,7 @@ NOTION_S3_PROXY_DOMAIN=101.32.183.34
 
 *规范化中... 涉及 [data](./data/)*
 
-## 📦 部署
+## 📦 Deploy
 
 支持一键部署到 [Vercel](https://vercel.com/)：
 
@@ -177,7 +166,7 @@ NOTION_S3_PROXY_DOMAIN=101.32.183.34
 
 ---
 
-## 🙏 致谢
+## 🙏 Thanks
 
 - [shenlu89/shenlu.me](https://github.com/shenlu89/shenlu.me) — 启发了我许多 Next.js 项目的规范
 - [tangly1024/NotionNext](https://github.com/tangly1024/NotionNext) — 发现 React Notion X 项目，并对配置优化提供了诸多参考
