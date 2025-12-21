@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { Avatar as HeroAvatar } from "@heroui/react";
+import type { Platform } from "@/types/content";
 
 interface AvatarProps {
-    isMe?: boolean;
+    platform?: Platform;
     size?: 'sm' | 'md' | 'lg';
     className?: string;
     src?: string;
@@ -10,38 +10,31 @@ interface AvatarProps {
     name?: string;
 }
 
-/**
- * Avatar component with Next.js Image optimization
- * Uses Next.js Image for automatic caching and optimization
- */
-export function Avatar({ isMe, size = 'md', className, src, alt, name }: AvatarProps) {
-    const avatarSrc = isMe ? "/avatars/choneas.png" : src;
-    const avatarAlt = isMe ? "Choneas" : (alt || name || "User");
-    const fallbackText = isMe ? "C" : (name ? name.charAt(0).toUpperCase() : "U");
+const STATIC_AVATARS: Record<string, string> = {
+    notion: "/avatars/choneas.png",
+    fallback: "/avatars/choneas.png",
+};
 
-    // Size mapping for Next.js Image
-    const sizeMap = {
-        sm: 32,
-        md: 40,
-        lg: 56
-    };
-    const imageSize = sizeMap[size];
+export function Avatar({ platform, size = 'md', className, src, alt, name }: AvatarProps) {
+    const avatarSrc = platform === 'notion'
+        ? STATIC_AVATARS.notion
+        : src || STATIC_AVATARS.fallback;
+
+    const avatarAlt = alt || name || (platform ? `${platform} avatar` : "User");
+    const fallbackText = name ? name.charAt(0).toUpperCase() : "C";
 
     return (
         <HeroAvatar size={size} className={className}>
-            {avatarSrc && (
-                <HeroAvatar.Image asChild>
-                    <Image
-                        src={avatarSrc}
-                        alt={avatarAlt}
-                        width={imageSize}
-                        height={imageSize}
-                        priority={isMe} // Preload user's own avatar
-                        quality={90}
-                        unoptimized={false} // Enable Next.js optimization
-                    />
-                </HeroAvatar.Image>
-            )}
+            <HeroAvatar.Image
+                src={avatarSrc}
+                alt={avatarAlt}
+                onError={(e) => {
+                    if (platform !== 'notion' && src) {
+                        const target = e.target as HTMLImageElement;
+                        target.src = STATIC_AVATARS.fallback;
+                    }
+                }}
+            />
             <HeroAvatar.Fallback>
                 {fallbackText}
             </HeroAvatar.Fallback>

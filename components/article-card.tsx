@@ -1,10 +1,10 @@
-import { Card } from "@heroui/react";
-import { Avatar } from "@/components/avatar";
-import { Tags } from "@/components/tags";
 import NextLink from "next/link";
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import { uuidToId } from "notion-utils";
+import { Card } from "@heroui/react";
+import { Avatar } from "@/components/avatar";
+import { Tags } from "@/components/tags";
 import type { PostMetadata } from "@/types/content";
 import { formatDate } from "@/lib/format";
 
@@ -54,16 +54,13 @@ export function ArticleCard({
 
     if (article.cover) {
         return (
-            <Card
-                asChild
-                className="bg-content2 shadow border-none"
+            <NextLink
+                href={href}
+                tabIndex={0}
+                className={`${focusClass} block`}
                 aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
             >
-                <NextLink
-                    href={href}
-                    tabIndex={0}
-                    className={`${focusClass} block`}
-                >
+                <Card className="bg-content2 shadow border-none">
                     <div className="lg:hidden">
                         <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
                             <Image
@@ -97,18 +94,19 @@ export function ArticleCard({
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                         </div>
                     </Card.Content>
-                </NextLink>
-            </Card>
+                </Card>
+            </NextLink>
         );
     }
 
     return (
-        <Card
-            asChild
+        <NextLink
+            href={href}
+            tabIndex={0}
+            className={`${focusClass} block`}
             aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
-            className="bg-content2 shadow border-none"
         >
-            <NextLink href={href} tabIndex={0} className={`${focusClass} block`}>
+            <Card className="bg-content2 shadow border-none">
                 <Card.Content className="p-3">
                     <div className="flex flex-col gap-3">
                         <AuthorAndDate />
@@ -116,7 +114,7 @@ export function ArticleCard({
                         {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                     </div>
                 </Card.Content>
-            </NextLink>
-        </Card>
+            </Card>
+        </NextLink>
     );
 }

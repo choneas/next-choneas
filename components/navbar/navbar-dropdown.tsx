@@ -15,15 +15,16 @@ interface NavbarDropdownProps {
 }
 
 export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
-    const { setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
     const t = useTranslations("Navbar-Dropdown");
     const router = useRouter();
     const [selectedLang, setSelectedLang] = useState<string>("Accept-Language");
-    const [selectedTheme, setSelectedTheme] = useState<string>("system");
     const [loadingLang, setLoadingLang] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const prefLang = document.cookie.match(/NEXT_PREF_LOCALE=([^;]+)/)?.[1];
         setSelectedLang(prefLang || "Accept-Language");
     }, []);
@@ -45,7 +46,6 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
 
     const handleThemeChange = (key: React.Key) => {
         const keyStr = String(key);
-        setSelectedTheme(keyStr);
         if (keyStr === "light" || keyStr === "dark" || keyStr === "system") {
             setTheme(keyStr);
         }
@@ -56,21 +56,129 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
         onVisibilityChange?.(open);
     };
 
+    // Prevent hydration mismatch by not rendering theme UI until mounted
+    if (!mounted) {
+        return (
+            <Dropdown
+                isOpen={isOpen}
+                onOpenChange={handleOpenChange}
+            >
+                <Dropdown.Trigger
+                    className="flex h-14 w-14 items-center justify-center transition-colors rounded-full outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)]"
+                    aria-label={t("preferences")}
+                >
+                    <FiMoreHorizontal className="text-accent" size={20} />
+                </Dropdown.Trigger>
+                <Dropdown.Popover
+                    placement="bottom end"
+                    className="w-72 px-4 py-5 mobile-dropdown-fix-right"
+                >
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <span className="pl-2 text-sm font-medium">{t("prefer-language")}</span>
+                            <ListBox
+                                aria-label="Language selection"
+                                selectionMode="single"
+                                selectedKeys={[selectedLang]}
+                                onSelectionChange={(keys) => {
+                                    const key = Array.from(keys)[0];
+                                    if (key) handleLangChange(key);
+                                }}
+                            >
+                                {CLIENT_LOCALES.map((locale) => (
+                                    <ListBox.Item
+                                        key={locale}
+                                        id={locale}
+                                        textValue={locale}
+                                        className={selectedLang === locale ? "bg-accent/10" : ""}
+                                    >
+                                        {loadingLang === locale && <Spinner size="sm" />}
+                                        <Label className="font-mono text-sm">{locale}</Label>
+                                        <ListBox.ItemIndicator />
+                                    </ListBox.Item>
+                                ))}
+                                <ListBox.Item
+                                    id="Accept-Language"
+                                    textValue="Accept-Language"
+                                    className={selectedLang === "Accept-Language" ? "bg-accent/10" : ""}
+                                >
+                                    {loadingLang === "Accept-Language" && <Spinner size="sm" />}
+                                    <Label className="font-mono text-sm">Accept-Language</Label>
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            </ListBox>
+                        </div>
+
+                        <div>
+                            <span className="pl-2 text-sm font-medium">{t("prefer-color-scheme")}</span>
+                            <ListBox
+                                aria-label="Theme selection"
+                                selectionMode="single"
+                                selectedKeys={["system"]}
+                                className=""
+                            >
+                                <ListBox.Item
+                                    id="light"
+                                    textValue={t("light")}
+                                >
+                                    <MdLightMode />
+                                    <Label>{t("light")}</Label>
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                                <ListBox.Item
+                                    id="dark"
+                                    textValue={t("dark")}
+                                >
+                                    <MdDarkMode />
+                                    <Label>{t("dark")}</Label>
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                                <ListBox.Item
+                                    id="system"
+                                    textValue={t("system")}
+                                    className="bg-accent/10"
+                                >
+                                    <CgDarkMode />
+                                    <Label>{t("system")}</Label>
+                                    <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                            </ListBox>
+                        </div>
+
+                        <div className="px-2">
+                            <span className="text-sm font-medium">{t("view-on")}</span>
+                            <Link
+                                href={`https://github.com/${process.env.NEXT_PUBLIC_REPO ?? ""}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                underline="none"
+                                className="mt-2 flex w-full items-center gap-2 rounded-full justify-center px-3 py-2 text-sm transition-colors bg-accent/10 hover:bg-accent/20 text-accent"
+                            >
+                                <FiGithub className="text-accent" />
+                                Github
+                            </Link>
+                        </div>
+                    </div>
+                </Dropdown.Popover>
+            </Dropdown>
+        );
+    }
+
     return (
         <Dropdown
             isOpen={isOpen}
             onOpenChange={handleOpenChange}
         >
             <Dropdown.Trigger
-                className="flex h-10 w-10 items-center justify-center transition-colors rounded-full outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)]"
+                className="flex h-14 w-14 items-center justify-center transition-colors rounded-full outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)]"
                 aria-label={t("preferences")}
             >
                 <FiMoreHorizontal className="text-accent" size={20} />
             </Dropdown.Trigger>
 
             <Dropdown.Popover
-                placement="top end"
-                className="w-72 px-4 py-5"
+                placement="bottom end"
+                className="w-72 px-4 py-5 mobile-dropdown-fix-right"
             >
                 <div className="flex flex-col gap-4">
                     <div>
@@ -113,7 +221,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                         <ListBox
                             aria-label="Theme selection"
                             selectionMode="single"
-                            selectedKeys={[selectedTheme]}
+                            selectedKeys={theme ? [theme] : ["system"]}
                             onSelectionChange={(keys) => {
                                 const key = Array.from(keys)[0];
                                 if (key) handleThemeChange(key);
@@ -123,7 +231,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                             <ListBox.Item
                                 id="light"
                                 textValue={t("light")}
-                                className={selectedTheme === "light" ? "bg-accent/10" : ""}
+                                className={theme === "light" ? "bg-accent/10" : ""}
                             >
                                 <MdLightMode />
                                 <Label>{t("light")}</Label>
@@ -132,7 +240,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                             <ListBox.Item
                                 id="dark"
                                 textValue={t("dark")}
-                                className={selectedTheme === "dark" ? "bg-accent/10" : ""}
+                                className={theme === "dark" ? "bg-accent/10" : ""}
                             >
                                 <MdDarkMode />
                                 <Label>{t("dark")}</Label>
@@ -141,7 +249,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                             <ListBox.Item
                                 id="system"
                                 textValue={t("system")}
-                                className={selectedTheme === "system" ? "bg-accent/10" : ""}
+                                className={theme === "system" ? "bg-accent/10" : ""}
                             >
                                 <CgDarkMode />
                                 <Label>{t("system")}</Label>

@@ -1,32 +1,62 @@
 import { ReactNode } from 'react';
 
-import { FaPenNib } from "react-icons/fa";
-import { PiAtom } from "react-icons/pi";
-import { FiInfo } from "react-icons/fi";
+import {
+    BsPenFill,
+    BsPen
+} from "react-icons/bs";
+import {
+    PiAtomFill,
+    PiAtom
+} from "react-icons/pi";
+import {
+    FaCircleInfo
+} from "react-icons/fa6";
+import {
+    FiInfo
+} from "react-icons/fi";
 
-interface NavItem {
-    name: string
-    description?: string
-    icon?: ReactNode
-    href: string
+interface NavItemIcon {
+    filled: ReactNode;
+    outline: ReactNode;
 }
 
+interface NavItem {
+    name: string;
+    description?: string;
+    icon: NavItemIcon;
+    href: string;
+}
+
+/**
+ * Navigation items configuration with filled and outline icon variants
+ * Each item has both filled (active state) and outline (inactive state) icons
+ */
 const navItems: NavItem[] = [
     {
         name: "articles",
-        icon: <FaPenNib size={24} />,
+        icon: {
+            filled: <BsPenFill size={28} />,
+            outline: <BsPen size={28} />
+        },
         href: "/article",
     },
     {
         name: "projects",
-        icon: <PiAtom size={24} />,
+        icon: {
+            filled: <PiAtomFill size={28} />,
+            outline: <PiAtom size={28} />
+        },
         href: "/project",
     },
     {
         name: "about",
-        icon: <FiInfo size={24} />,
+        icon: {
+            filled: <FaCircleInfo size={28} />,
+            outline: <FiInfo size={28} />
+        },
         href: "/about",
     },
-]
+];
 
-export { navItems }
+export { navItems };
+export type { NavItem, NavItemIcon };

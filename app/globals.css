@@ -255,30 +255,12 @@
 
 @layer components {
   .article-container {
-    max-width: 72rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
-  @media (min-width: 640px) {
-    .article-container {
-      padding-left: 6rem;
-      padding-right: 6rem;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .article-container {
-      padding-left: 12rem;
-      padding-right: 12rem;
-    }
+    @apply max-w-6xl mx-auto px-8 sm:px-24 md:px-48;
   }
 
   .notion {
     font-family: var(--font-serif) !important;
-    font-size: calc(var(--text-lg) + 0.14rem) !important;
+    font-size: var(--text-lg) !important;
     line-height: var(--line-height-relaxed) !important;
     color: var(--color-foreground) !important;
     --notion-max-width: 720px;
@@ -319,7 +301,49 @@
   .tweet-preview p {
     font-size: var(--text-lg) !important;
     margin-top: 0 !important;
-    margin-bottom: 0.5rem !important;
+  }
+
+  /* Tweet 预览模式：内容透明度效果 */
+  .tweet-preview .notion {
+    opacity: 0.8 !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  .tweet-preview:hover .notion {
+    opacity: 1 !important;
+  }
+
+  /* Tweet 预览模式：隐藏不必要的元素 */
+  .tweet-preview .notion-page-icon,
+  .tweet-preview .notion-page-title-text,
+  .tweet-preview .notion-collection-page-properties,
+  .tweet-preview .notion-asset-wrapper-video,
+  .tweet-preview .notion-asset-wrapper-embed {
+    display: none !important;
+  }
+
+  /* Moment Card 高度变化动画 */
+  .moment-card-content {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+  }
+
+  .moment-card-content.loaded {
+    min-height: auto !important;
+  }
+
+  /* Tweet 内容容器动画 */
+  .tweet-content-container {
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease !important;
+    overflow: hidden !important;
+  }
+
+  .tweet-content-container.collapsed {
+    max-height: 240px !important;
+  }
+
+  .tweet-content-container.expanded {
+    max-height: none !important;
   }
 
   .notion-code,
@@ -582,4 +606,25 @@
   --os-handle-perpendicular-size: 100%;
   --os-handle-perpendicular-size-hover: 100%;
   --os-handle-perpendicular-size-active: 100%;
+}
+
+/* Mobile Dropdown positioning fixes */
+@media (max-width: 639px) {
+  .mobile-dropdown-fix {
+    position: fixed !important;
+    bottom: 5rem !important;
+    left: 1rem !important;
+    top: auto !important;
+    right: auto !important;
+    z-index: 9999 !important;
+  }
+
+  .mobile-dropdown-fix-right {
+    position: fixed !important;
+    bottom: 5rem !important;
+    right: 1rem !important;
+    top: auto !important;
+    left: auto !important;
+    z-index: 9999 !important;
+  }
 }

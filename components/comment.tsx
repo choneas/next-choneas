@@ -23,7 +23,7 @@ export function Comment({ metadata, className, type }: { metadata?: PostMetadata
                 emitMetadata="0"
                 inputPosition="top"
                 theme={resolvedTheme}
-                loading="lazy"
+                loading={type === "article" ? "lazy" : "eager"}
                 lang={locale}
             />
         </div>

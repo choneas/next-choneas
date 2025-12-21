@@ -3,12 +3,11 @@
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { usePostMetadata } from "@/stores/post";
 import { NavbarContext } from "@/components/navbar/navbar-context";
 import { NavbarBrand } from "@/components/navbar/navbar-brand";
 import { NavbarItems } from "@/components/navbar/navbar-items";
 import { NavbarDropdown } from "@/components/navbar/navbar-dropdown";
-import { NavbarMobileMenu } from "./navbar-mobile-menu";
+import { NavbarMobileMenu } from "@/components/navbar/navbar-mobile-menu";
 
 interface NavbarProps {
     translations: Record<string, string>;
@@ -33,12 +32,9 @@ export function Navbar({ translations }: NavbarProps) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { scrollY } = useScroll();
     const pathname = usePathname();
-    const { postMetadata } = usePostMetadata();
 
-    const isArticlePage = pathname.includes('/article/');
-    const isHomePage = pathname === '/';
-    const hasCover = isArticlePage && !!postMetadata?.cover;
-    const useScrollEffect = (isHomePage || hasCover) && !isDropdownOpen && !isMobileMenuOpen;
+    // All pages use scroll effect for ocean layer (except when dropdown/menu is open)
+    const useScrollEffect = !isDropdownOpen && !isMobileMenuOpen;
 
 
 
@@ -76,8 +72,7 @@ export function Navbar({ translations }: NavbarProps) {
     const contextValue = {
         scrollY,
         navbarBlur: oceanBlur,
-        pathname,
-        hasCover
+        pathname
     };
 
     return (
@@ -118,16 +113,7 @@ export function Navbar({ translations }: NavbarProps) {
                     }}
                 />
 
-                {/* Mobile: bottom to top gradient */}
-                <motion.div
-                    className="sm:hidden absolute inset-0"
-                    style={{
-                        backdropFilter: computedOceanBackdrop,
-                        WebkitBackdropFilter: computedOceanBackdrop,
-                        maskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)",
-                        WebkitMaskImage: "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
-                    }}
-                />
+                {/* Mobile: bottom to top gradient - no blur, only color */}
                 <motion.div
                     className="sm:hidden absolute inset-0"
                     style={{
@@ -143,10 +129,10 @@ export function Navbar({ translations }: NavbarProps) {
                 className="fixed sm:top-4 bottom-4 sm:bottom-auto inset-x-0 z-40 px-4 sm:px-6 lg:px-8 pointer-events-auto"
             >
                 {/* Desktop layout */}
-                <div className="hidden sm:flex max-w-7xl mx-auto items-center justify-center gap-3 relative h-12">
+                <div className="hidden sm:flex max-w-7xl mx-auto items-center justify-center gap-3 relative h-14">
                     {/* Brand island - Left (absolute positioning) */}
                     <motion.div
-                        className="absolute left-0 flex items-center h-12 rounded-full pl-3 pr-4"
+                        className="absolute left-0 flex items-center h-14 rounded-full pl-3 pr-4"
                         style={{
                             ...islandStyle,
                             maxWidth: "calc(50vw - 200px)", // Reserve space for Items and More
@@ -162,7 +148,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* Items island - Center (absolute positioning for guaranteed centering) */}
                     <motion.div
-                        className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-12 rounded-full overflow-hidden"
+                        className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-14 rounded-full overflow-hidden"
                         style={islandStyle}
                     >
                         <NavbarItems pathname={pathname} translations={translations} />
@@ -170,7 +156,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* More dropdown island - Right (absolute positioning) */}
                     <motion.div
-                        className="absolute right-0 flex items-center justify-center h-12 w-12 rounded-full p-0"
+                        className="absolute right-0 flex items-center justify-center h-14 w-14 rounded-full p-0"
                         style={islandStyle}
                     >
                         <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />
@@ -181,7 +167,7 @@ export function Navbar({ translations }: NavbarProps) {
                 <div className="sm:hidden max-w-7xl mx-auto flex items-center justify-between gap-3">
                     {/* Mobile menu button island - Left */}
                     <motion.div
-                        className="flex items-center justify-center h-12 w-12 rounded-full p-0 shrink-0"
+                        className="flex items-center justify-center h-14 w-14 rounded-full p-0 shrink-0"
                         style={islandStyle}
                     >
                         <NavbarMobileMenu
@@ -194,7 +180,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* Brand island - Center */}
                     <motion.div
-                        className="flex items-center h-12 rounded-full pl-3 pr-4"
+                        className="flex items-center h-14 rounded-full pl-3 pr-4"
                         style={{
                             ...islandStyle,
                             maxWidth: "calc(100vw - 180px)", // Reserve space for menu button, More, and gaps
@@ -210,7 +196,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* More dropdown island - Right */}
                     <motion.div
-                        className="flex items-center justify-center h-12 w-12 rounded-full p-0 shrink-0"
+                        className="flex items-center justify-center h-14 w-14 rounded-full p-0 shrink-0"
                         style={islandStyle}
                     >
                         <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />

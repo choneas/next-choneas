@@ -4,9 +4,9 @@ async function fetchGithubRepoInfo(repo: string) {
             headers: {
                 'Accept': 'application/vnd.github.v3+json',
             },
-            next: { revalidate: 3600 } // Cache for 1 hour
+            next: { revalidate: 3600 }
         });
-        
+
         if (!response.ok) return null;
         return await response.json();
     } catch (error) {

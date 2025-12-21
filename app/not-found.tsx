@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function NotFound() {
     return (
-        <div className="flex flex-col justify-center items-center space-y-6 mt-16">
+        <div className="flex flex-col justify-center items-center space-y-6 mt-24">
             <h1>4 🫥 4</h1>
             <p>What are you looking for?</p>
 
@@ -20,7 +20,7 @@ export default function NotFound() {
             <Button variant="primary" size="lg">
                 <Link
                     href="/"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
+                    className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
                 >
                     <GoHomeFill />
                     Go Home

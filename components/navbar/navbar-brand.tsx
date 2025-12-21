@@ -8,11 +8,6 @@ import { usePostMetadata } from "@/stores/post";
 import { Avatar } from "@/components/avatar";
 import { useNavbarContext } from "./navbar-context";
 
-/**
- * NavbarBrand 客户端组件
- * 显示品牌标识和动画效果
- * 需要客户端交互和动画，因此使用 "use client"
- */
 export function NavbarBrand() {
     const tm = useTranslations("Metadata")
     const { postMetadata } = usePostMetadata();
@@ -78,10 +73,10 @@ export function NavbarBrand() {
     return (
         <Link
             href="/"
-            className="flex gap-2 font-bold text-accent items-center w-full"
+            className="flex gap-3 font-bold text-accent items-center w-full"
             underline="none"
         >
-            <Avatar isMe size="sm" className="shrink-0" />
+            <Avatar platform="notion" size="sm" className="shrink-0" />
             {isArticlePage ? (
                 <motion.div
                     className="relative h-6"

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { TextField, InputGroup, Chip } from "@heroui/react";
+import { SearchField, Chip } from "@heroui/react";
 import { motion } from "framer-motion";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { IoSearch } from "react-icons/io5";
@@ -194,19 +194,23 @@ export function ArticleFilter({
 
     return (
         <div className="flex flex-col gap-2">
-            <TextField isInvalid={hasNoResults}>
-                <InputGroup className="rounded-full pl-1 py-3 md:pl-3 md:py-6">
-                    <InputGroup.Prefix className="">
-                        <IoSearch size={20} />
-                    </InputGroup.Prefix>
-                    <InputGroup.Input
-                        value={searchValue}
+            <SearchField
+                fullWidth
+                isInvalid={hasNoResults}
+                value={searchValue}
+                onChange={setSearchValue}
+            >
+                <SearchField.Group className="rounded-full pl-1 py-3 md:pl-3 md:py-6">
+                    <SearchField.SearchIcon>
+                        <IoSearch size={24} />
+                    </SearchField.SearchIcon>
+                    <SearchField.Input
                         className="w-full md:text-[18px] backdrop-opacity-0"
-                        onChange={(e) => setSearchValue(e.target.value)}
                         placeholder={t("placeholder-search")}
                     />
-                </InputGroup>
-            </TextField>
+                    <SearchField.ClearButton className="mr-2" />
+                </SearchField.Group>
+            </SearchField>
 
             <div>
                 <div className="relative mt-2">

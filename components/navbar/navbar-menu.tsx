@@ -14,16 +14,22 @@ export function NavbarMenu({ pathname, translations }: NavbarMenuProps) {
     return (
         <div className="flex flex-col gap-2">
             {
-                navItems.map((item, index) => (
-                    <Link
-                        key={index}
-                        href={pathname.includes(item.href) && pathname !== "/" ? "/" : item.href}
-                        className={`flex justify-start gap-2 py-2 ${pathname.includes(item.href) && pathname !== "/" ? "font-bold" : ""}`}
-                    >
-                        {item.icon}
-                        {translations[item.name]}
-                    </Link>
-                ))
+                navItems.map((item, index) => {
+                    const isActive = pathname.includes(item.href) && pathname !== "/";
+                    // Use filled icon when active, outline when inactive
+                    const currentIcon = isActive ? item.icon.filled : item.icon.outline;
+
+                    return (
+                        <Link
+                            key={index}
+                            href={isActive ? "/" : item.href}
+                            className={`flex justify-start gap-2 py-2 ${isActive ? "font-bold" : ""}`}
+                        >
+                            {currentIcon}
+                            {translations[item.name]}
+                        </Link>
+                    );
+                })
             }
         </div>
     )

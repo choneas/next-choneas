@@ -10,7 +10,7 @@ import { formatReadingTime } from "@/lib/format"
  */
 export function getReadingTime(recordMap: ExtendedRecordMap, locale: string): string {
     const minutes = getReadingTimeMinutes(recordMap)
-    console.log('[getReadingTime] Calculated minutes:', minutes, 'for locale:', locale)
+    // console.log('[getReadingTime] Calculated minutes:', minutes, 'for locale:', locale)
     return formatReadingTime(minutes, locale)
 }
 
@@ -21,7 +21,7 @@ export function getReadingTime(recordMap: ExtendedRecordMap, locale: string): st
  * @returns Formatted reading time string (e.g., "5 分钟" or "5 minutes")
  */
 export function formatReadingTimeFromMinutes(minutes: number, locale: string): string {
-    console.log('[formatReadingTimeFromMinutes] Formatting', minutes, 'minutes for locale:', locale)
+    // console.log('[formatReadingTimeFromMinutes] Formatting', minutes, 'minutes for locale:', locale)
     return formatReadingTime(minutes, locale)
 }
 
@@ -32,27 +32,27 @@ export function formatReadingTimeFromMinutes(minutes: number, locale: string): s
  */
 export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
     const pageId = Object.keys(recordMap.block)[0]
-    console.log('[getReadingTimeMinutes] Processing pageId:', pageId)
+    // console.log('[getReadingTimeMinutes] Processing pageId:', pageId)
 
     const block = recordMap.block[pageId]?.value
 
     if (!block) {
-        console.warn('[getReadingTimeMinutes] No block found for pageId:', pageId)
+        // console.warn('[getReadingTimeMinutes] No block found for pageId:', pageId)
         return 1
     }
 
-    console.log('[getReadingTimeMinutes] Block type:', block.type, 'Block ID:', block.id)
+    // console.log('[getReadingTimeMinutes] Block type:', block.type, 'Block ID:', block.id)
 
     const estimate = estimatePageReadTime(block, recordMap)
     const minutes = Math.ceil(estimate.totalReadTimeInMinutes)
 
-    console.log('[getReadingTimeMinutes] Estimate:', {
-        totalReadTimeInMinutes: estimate.totalReadTimeInMinutes,
-        totalWordsReadTimeInMinutes: estimate.totalWordsReadTimeInMinutes,
-        totalImageReadTimeInMinutes: estimate.totalImageReadTimeInMinutes,
-        numImages: estimate.numImages,
-        roundedMinutes: minutes
-    })
+    // console.log('[getReadingTimeMinutes] Estimate:', {
+    //     totalReadTimeInMinutes: estimate.totalReadTimeInMinutes,
+    //     totalWordsReadTimeInMinutes: estimate.totalWordsReadTimeInMinutes,
+    //     totalImageReadTimeInMinutes: estimate.totalImageReadTimeInMinutes,
+    //     numImages: estimate.numImages,
+    //     roundedMinutes: minutes
+    // })
 
     return minutes
 }

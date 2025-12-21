@@ -100,13 +100,7 @@
       "Thursday",
       "Friday",
       "Saturday"
-    ],
-    "dateFormat": {
-      "sameYear": "MMM D",
-      "differentYear": "MMM D, YYYY",
-      "full": "MMM D, YYYY"
-    },
-    "timeFormat": "HH:mm"
+    ]
   },
   "Accessibility": {
     "skip-to-content": "Skip to content"

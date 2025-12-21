@@ -1,32 +1,14 @@
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn';
-import 'dayjs/locale/en';
-import 'dayjs/locale/es';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import duration from 'dayjs/plugin/duration';
-import isToday from 'dayjs/plugin/isToday';
-
-dayjs.extend(relativeTime);
-dayjs.extend(duration);
-dayjs.extend(isToday);
-
 export interface FormatConfig {
     today: string;
     yesterday: string;
     weekdays: string[];
-    dateFormat: {
-        sameYear: string;
-        differentYear: string;
-        full: string;
-    };
-    timeFormat: string;
 }
 
-// 配置缓存
+// Config cache for locale-specific strings
 const configCache = new Map<string, FormatConfig>();
 
 /**
- * 同步加载语言配置
+ * Load locale-specific format config synchronously
  */
 function getFormatConfig(locale: string): FormatConfig {
     if (configCache.has(locale)) {
@@ -34,7 +16,6 @@ function getFormatConfig(locale: string): FormatConfig {
     }
 
     try {
-        // 使用 require 同步加载
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const messages = require(`@/locales/${locale}.json`);
         const config: FormatConfig = messages.Format;
@@ -48,38 +29,72 @@ function getFormatConfig(locale: string): FormatConfig {
             const config: FormatConfig = fallback.Format;
             return config;
         } catch {
-            // 最终后备方案
             return {
                 today: 'Today',
                 yesterday: 'Yesterday',
-                weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                dateFormat: {
-                    sameYear: 'MMM D',
-                    differentYear: 'MMM D, YYYY',
-                    full: 'MMM D, YYYY'
-                },
-                timeFormat: 'HH:mm'
+                weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
             };
         }
     }
 }
 
 /**
- * 检查两个日期是否在同一周（周一为起始）
+ * Convert locale code to BCP 47 format for Intl API
  */
-function isSameWeek(date1: dayjs.Dayjs, date2: dayjs.Dayjs): boolean {
-    const monday1 = date1.startOf('day').subtract(date1.day() === 0 ? 6 : date1.day() - 1, 'day');
-    const monday2 = date2.startOf('day').subtract(date2.day() === 0 ? 6 : date2.day() - 1, 'day');
-    return monday1.isSame(monday2, 'day');
+function toBCP47(locale: string): string {
+    // Handle common locale mappings
+    const mapping: Record<string, string> = {
+        'zh-cn': 'zh-CN',
+        'zh-tw': 'zh-TW',
+        'en': 'en-US',
+        'es': 'es-ES'
+    };
+    return mapping[locale.toLowerCase()] || locale;
 }
 
 /**
- * 格式化日期 - 通用函数，支持服务端和客户端
- * @param date - 要格式化的日期
- * @param locale - 语言代码（如 'en', 'zh-CN', 'es'）
- * @param showTime - 是否显示时间
- * @param alias - 是否使用友好别名（如"今天"、"昨天"、星期几）
- * @returns 格式化后的日期字符串
+ * Check if date is today
+ */
+function isToday(date: Date): boolean {
+    const today = new Date();
+    return date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate();
+}
+
+/**
+ * Check if date is yesterday
+ */
+function isYesterday(date: Date): boolean {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date.getFullYear() === yesterday.getFullYear() &&
+        date.getMonth() === yesterday.getMonth() &&
+        date.getDate() === yesterday.getDate();
+}
+
+/**
+ * Check if two dates are in the same week (Monday as start)
+ */
+function isSameWeek(date1: Date, date2: Date): boolean {
+    const getMonday = (d: Date): Date => {
+        const day = d.getDay();
+        const diff = day === 0 ? 6 : day - 1; // Adjust for Monday start
+        const monday = new Date(d);
+        monday.setDate(d.getDate() - diff);
+        monday.setHours(0, 0, 0, 0);
+        return monday;
+    };
+    return getMonday(date1).getTime() === getMonday(date2).getTime();
+}
+
+/**
+ * Format date using Intl.DateTimeFormat
+ * @param date - Date to format
+ * @param locale - Locale code (e.g., 'en', 'zh-CN', 'es')
+ * @param showTime - Whether to show time
+ * @param alias - Whether to use friendly aliases (Today, Yesterday, weekday names)
+ * @returns Formatted date string
  */
 export function formatDate(
     date: Date,
@@ -88,55 +103,114 @@ export function formatDate(
     alias: boolean = true
 ): string {
     const config = getFormatConfig(locale);
-    const d = dayjs(date);
-    const now = dayjs();
+    const bcp47Locale = toBCP47(locale);
+    const now = new Date();
 
-    const dayjsLocale = locale.toLowerCase();
-    dayjs.locale(dayjsLocale);
+    // Friendly aliases
+    if (alias) {
+        if (isToday(date)) {
+            return config.today;
+        }
 
-    if (d.isToday() && alias) {
-        return config.today;
+        if (isYesterday(date)) {
+            return config.yesterday;
+        }
+
+        if (isSameWeek(date, now)) {
+            return config.weekdays[date.getDay()];
+        }
     }
 
-    if (d.isSame(now.subtract(1, 'day'), 'day') && alias) {
-        return config.yesterday;
-    }
+    // Date formatting options based on same year or not
+    const isSameYear = date.getFullYear() === now.getFullYear();
+    const dateOptions: Intl.DateTimeFormatOptions = isSameYear && alias
+        ? { month: 'short', day: 'numeric' }
+        : { year: 'numeric', month: 'short', day: 'numeric' };
 
-    if (isSameWeek(d, now) && alias) {
-        return config.weekdays[d.day()];
-    }
-
-    const isSameYear = d.year() === now.year();
-    const format = isSameYear && alias
-        ? config.dateFormat.sameYear
-        : config.dateFormat.differentYear;
-
-    let result = d.format(format);
+    let result = new Intl.DateTimeFormat(bcp47Locale, dateOptions).format(date);
 
     if (showTime) {
-        result += ' ' + d.format(config.timeFormat);
+        const timeStr = new Intl.DateTimeFormat(bcp47Locale, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        }).format(date);
+        result += ' ' + timeStr;
     }
 
     return result;
 }
 
 /**
- * 格式化相对时间（如 "2小时前"、"3天后"）
+ * Format relative time (e.g., "2 hours ago", "in 3 days")
+ * Uses Intl.RelativeTimeFormat for localized output
  */
 export function formatRelativeTime(date: Date, locale: string): string {
-    const dayjsLocale = locale.toLowerCase();
-    dayjs.locale(dayjsLocale);
-    return dayjs(date).fromNow();
+    const bcp47Locale = toBCP47(locale);
+    const rtf = new Intl.RelativeTimeFormat(bcp47Locale, { numeric: 'auto' });
+
+    const now = new Date();
+    const diffMs = date.getTime() - now.getTime();
+    const diffAbs = Math.abs(diffMs);
+
+    // Time unit constants in milliseconds
+    const SECOND = 1000;
+    const MINUTE = 60 * SECOND;
+    const HOUR = 60 * MINUTE;
+    const DAY = 24 * HOUR;
+    const WEEK = 7 * DAY;
+    const MONTH = 30 * DAY;
+    const YEAR = 365 * DAY;
+
+    // Determine appropriate unit and value
+    let value: number;
+    let unit: Intl.RelativeTimeFormatUnit;
+
+    if (diffAbs < MINUTE) {
+        value = Math.round(diffMs / SECOND);
+        unit = 'second';
+    } else if (diffAbs < HOUR) {
+        value = Math.round(diffMs / MINUTE);
+        unit = 'minute';
+    } else if (diffAbs < DAY) {
+        value = Math.round(diffMs / HOUR);
+        unit = 'hour';
+    } else if (diffAbs < WEEK) {
+        value = Math.round(diffMs / DAY);
+        unit = 'day';
+    } else if (diffAbs < MONTH) {
+        value = Math.round(diffMs / WEEK);
+        unit = 'week';
+    } else if (diffAbs < YEAR) {
+        value = Math.round(diffMs / MONTH);
+        unit = 'month';
+    } else {
+        value = Math.round(diffMs / YEAR);
+        unit = 'year';
+    }
+
+    return rtf.format(value, unit);
 }
 
 /**
- * 格式化阅读时间
- * @param minutes - 阅读时间（分钟）
- * @param locale - 语言代码
- * @returns 格式化后的阅读时间字符串（如 "5 分钟"、"5 minutes"）
+ * Format reading time duration
+ * @param minutes - Reading time in minutes
+ * @param locale - Locale code
+ * @returns Formatted reading time string (e.g., "5 minutes", "5 分钟")
  */
 export function formatReadingTime(minutes: number, locale: string): string {
-    const dayjsLocale = locale.toLowerCase();
-    dayjs.locale(dayjsLocale);
-    return dayjs.duration(minutes, 'minutes').humanize();
+    const bcp47Locale = toBCP47(locale);
+
+    // Use Intl.NumberFormat with unit for localized output
+    try {
+        const formatter = new Intl.NumberFormat(bcp47Locale, {
+            style: 'unit',
+            unit: 'minute',
+            unitDisplay: 'long'
+        });
+        return formatter.format(minutes);
+    } catch {
+        // Fallback for older browsers
+        return `${minutes} min`;
+    }
 }

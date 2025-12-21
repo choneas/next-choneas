@@ -1,33 +1,59 @@
 'use client'
 
 import { Card, Skeleton, Button } from "@heroui/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
+import { motion, AnimatePresence } from "framer-motion"
 import { LuMessageCircle, LuMessageSquare } from "react-icons/lu"
 import { FiArrowUpRight } from "react-icons/fi"
+import { FaXTwitter } from "react-icons/fa6"
+import { SiBluesky } from "react-icons/si"
 import Image from "next/image"
-import NotionPage from "@/components/notion-page"
+import dynamic from "next/dynamic"
 import { Tags } from "@/components/tags"
 import { Avatar } from "@/components/avatar"
 import { TweetModal } from "@/components/tweet-modal"
 import type { ExtendedRecordMap } from "notion-types"
-import type { PostMetadata } from "@/types/content"
+import type { PostMetadata, Platform } from "@/types/content"
 import { formatDate } from "@/lib/format"
 import { getPost } from "@/lib/content"
 
-export function MomentCard({ moment }: { moment: PostMetadata }) {
+const NotionPage = dynamic(() => import("@/components/notion-page"), {
+  loading: () => <NotionPageSkeleton />,
+  ssr: false
+})
+
+interface MomentCardProps {
+  moment: PostMetadata;
+  avatarSrc?: string;
+}
+
+function PlatformIcon({ platform, size = 20 }: { platform?: Platform; size?: number }) {
+  switch (platform) {
+    case 'x':
+      return <FaXTwitter size={size} />;
+    case 'bluesky':
+      return <SiBluesky size={size} />;
+    default:
+      return <FiArrowUpRight size={size} />;
+  }
+}
+
+export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
   const isTweet = moment.type === "Tweet"
+  const isNotionPost = moment.platform === 'notion' || !moment.platform
   const t = useTranslations('Moment')
   const router = useRouter()
   const locale = useLocale()
-  const [isLoading, setIsLoading] = useState(isTweet)
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isLoading, setIsLoading] = useState(isTweet && isNotionPost)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [recordMap, setRecordMap] = useState<ExtendedRecordMap | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  // Only fetch Notion posts, social posts have content in description
   useEffect(() => {
-    if (!isTweet || !moment.id) return
+    if (!isTweet || !isNotionPost || !moment.id) return
     const fetchPost = async () => {
       try {
         const { recordMap: data } = await getPost(moment.id as string, true)
@@ -39,19 +65,26 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
       }
     }
     fetchPost()
-  }, [moment.id, isTweet])
-
-  useEffect(() => {
-    if (!isTweet || !recordMap) return
-    if (moment.description) {
-      setIsExpanded(false)
-    }
-  }, [moment.description, isTweet, recordMap])
+  }, [moment.id, isTweet, isNotionPost])
 
   if (!moment.id) return null;
 
+  // Get external URL for social platforms
+  const getExternalUrl = () => {
+    if (moment.platform === 'x' && moment.social?.postId && moment.social?.username) {
+      return `https://x.com/${moment.social.username}/status/${moment.social.postId}`;
+    }
+    if (moment.platform === 'bluesky' && moment.social?.postId && moment.social?.username) {
+      return `https://bsky.app/profile/${moment.social.username}/post/${moment.social.postId}`;
+    }
+    return null;
+  };
+
   const handleCardClick = () => {
-    if (isTweet) {
+    const externalUrl = getExternalUrl();
+    if (externalUrl) {
+      window.open(externalUrl, '_blank', 'noopener,noreferrer');
+    } else if (isTweet) {
       setIsModalOpen(true)
     } else {
       router.push('/article/' + (moment.slug || moment.id))
@@ -59,136 +92,256 @@ export function MomentCard({ moment }: { moment: PostMetadata }) {
   }
 
   const handleOpenInNewTab = () => {
-    const url = isTweet ? `/tweet/${moment.slug || moment.id}` : `/article/${moment.slug || moment.id}`
-    router.push(url)
+    const externalUrl = getExternalUrl();
+    if (externalUrl) {
+      window.open(externalUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      const url = isTweet ? `/tweet/${moment.slug || moment.id}` : `/article/${moment.slug || moment.id}`
+      router.push(url)
+    }
   }
 
   const handleViewAllClick = () => {
-    setIsModalOpen(true)
+    if (isTweet) {
+      setIsModalOpen(true)
+    } else {
+      setIsExpanded(true)
+    }
   }
 
   return (
     <>
-      <Card
-        onClick={handleCardClick}
-        tabIndex={0}
-        role="article"
-        className="relative focus:outline-none focus:ring-2 ring-accent"
-        aria-label={`${moment.title} - ${formatDate(moment.created_time, locale, true)}`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            handleCardClick()
-          }
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.4,
+          ease: [0.4, 0, 0.2, 1],
+          layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
         }}
       >
-        <Button
-          isIconOnly
-          variant="secondary"
-          onPress={handleOpenInNewTab}
-          className="absolute top-3 right-3"
-          aria-label={t('open-in-new-tab')}
+        <Card
+          onClick={handleCardClick}
+          tabIndex={0}
+          role="article"
+          className="relative focus:outline-none focus:ring-2 ring-accent"
+          aria-label={`${moment.title} - ${formatDate(moment.created_time, locale, true)}`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleCardClick()
+            }
+          }}
         >
-          <FiArrowUpRight size={20} />
-        </Button>
-
-        {/* Header */}
-        <div className="flex gap-3 items-center">
-          <Avatar isMe size="sm" />
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Choneas</span>
-            <span className="text-xs text-content3-foreground">
-              {formatDate(moment.created_time, locale, true)}
-              {!isTweet && moment.readingTime && " · " + moment.readingTime}
-            </span>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="space-y-3">
-          <span className="text-xl font-semibold">
-            {moment.icon && <span className="mr-1" aria-hidden="true">{moment.icon}</span>}
-            {moment.title}
-          </span>
-
-          {/* Tags */}
-          {moment.tags && moment.tags.length > 0 && (
-            <Tags className="pt-1" tags={moment.tags} />
-          )}
-
-          {isTweet ? (
-            isLoading ? (
-              <TweetContentSkeleton
-                hasDescription={moment.description ? true : false}
-                images={moment.photos?.length ? Array(moment.photos.length).fill(0) : undefined}
-              />
-            ) : recordMap ? (
-              <>
-                <div className="relative">
-                  {!moment.description ? (
-                    <div
-                      inert
-                      aria-hidden
-                      tabIndex={-1}
-                      role="presentation"
-                      className="tweet-preview relative max-h-[178px] overflow-hidden pointer-events-none"
-                    >
-                      <NotionPage recordMap={recordMap} type="tweet-preview" />
-                    </div>
-                  ) : (
-                    <div className="flex items-start gap-2 text-foreground/80">
-                      <LuMessageCircle size={20} className="shrink-0 mt-0.5" aria-hidden="true" />
-                      <p>{moment.description}</p>
-                    </div>
-                  )}
-                  {!isExpanded && !moment.description && (
-                    <div
-                      className="absolute bottom-0 left-0 right-0 h-20 flex items-end justify-center pb-2"
-                      style={{
-                        background: 'linear-gradient(to top, var(--color-surface) 0%, transparent 100%)'
-                      }}
-                    >
-                      <Button
-                        onPress={handleViewAllClick}
-                        size="sm"
-                        variant="secondary"
-                        className="px-4 py-2 bg-surface-secondary/80 backdrop-blur-md"
-                      >
-                        {t('view-all')}
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                {/* Image preview */}
-                <ImagePreview images={moment.photos ?? []} />
-              </>
-            ) : null
-          ) : (
-            <p className="text-foreground/80">{moment.description}</p>
-          )}
-        </div>
-
-        {/* Footer - Comment button for Tweet */}
-        {isTweet && !isLoading && (
           <Button
-            onPress={() => setIsModalOpen(true)}
+            isIconOnly
             variant="secondary"
-            className="w-full justify-start gap-2 pl-4 py-2 transition-colors"
+            onPress={handleOpenInNewTab}
+            className="absolute top-3 right-3"
+            aria-label={t('open-in-new-tab')}
           >
-            <LuMessageSquare size={18} aria-hidden="true" />
-            <span>{t('comment-placeholder')}</span>
+            <PlatformIcon platform={moment.platform} size={20} />
           </Button>
-        )}
-      </Card>
+
+          {/* Header */}
+          <div className="flex gap-3 items-center">
+            <Avatar platform={moment.platform} src={avatarSrc} size="sm" name="Choneas" />
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">Choneas</span>
+              <span className="text-xs text-content3-foreground">
+                {/* Show handle for social platforms */}
+                {moment.platform && moment.platform !== 'notion' && moment.social?.username && (
+                  <>
+                    <span className="text-xs">@{moment.social.username}</span>
+                    <span> · </span>
+                  </>
+                )}
+                {formatDate(moment.created_time, locale, true)}
+                {/* Show specific time for social platforms */}
+                {moment.platform && moment.platform !== 'notion' && (
+                  <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
+                )}
+                {!isTweet && moment.readingTime && " · " + moment.readingTime}
+              </span>
+            </div>
+          </div>
+
+          {/* Content */}
+          <motion.div
+            className={`space-y-3 moment-card-content ${isLoading ? 'loading' : 'loaded'}`}
+            layout
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          >
+            {/* Title - only show for Notion posts or if title exists */}
+            {(isNotionPost || moment.title) && (
+              <span className="text-xl font-semibold">
+                {moment.icon && <span className="mr-1" aria-hidden="true">{moment.icon}</span>}
+                {moment.title}
+              </span>
+            )}
+
+            {/* Tags */}
+            {moment.tags && moment.tags.length > 0 && (
+              <Tags className="pt-1" tags={moment.tags} />
+            )}
+
+            <AnimatePresence mode="wait">
+              {isTweet ? (
+                !isNotionPost ? (
+                  <motion.div
+                    key="social"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  >
+                    <div className="relative">
+                      <motion.div
+                        className={`tweet-preview relative tweet-content-container ${isExpanded ? 'expanded' : 'collapsed'} pointer-events-none`}
+                        layout
+                        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                      >
+                        <p className="text-foreground/90 text-base whitespace-pre-wrap">{moment.description}</p>
+                      </motion.div>
+                      {!isExpanded && moment.description && moment.description.length > 200 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="absolute bottom-0 left-0 right-0 h-20 flex items-end justify-center pb-2"
+                          style={{
+                            background: 'linear-gradient(to top, var(--color-surface) 0%, transparent 100%)'
+                          }}
+                        >
+                          <Button
+                            onPress={() => setIsModalOpen(true)}
+                            size="sm"
+                            variant="secondary"
+                            className="px-4 py-2 bg-surface-secondary/80 backdrop-blur-md"
+                          >
+                            {t('view-all')}
+                          </Button>
+                        </motion.div>
+                      )}
+                    </div>
+                    <ImagePreview images={moment.photos ?? []} />
+                  </motion.div>
+                ) : isLoading ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <TweetContentSkeleton
+                      hasDescription={moment.description ? true : false}
+                      images={moment.photos?.length ? Array(moment.photos.length).fill(0) : undefined}
+                    />
+                  </motion.div>
+                ) : recordMap ? (
+                  <motion.div
+                    key="loaded"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  >
+                    <div className="relative">
+                      {moment.description ? (
+                        <div className="flex items-start gap-2 text-foreground/80">
+                          <LuMessageCircle size={20} className="shrink-0 mt-0.5" aria-hidden="true" />
+                          <p>{moment.description}</p>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <motion.div
+                            className={`tweet-preview relative tweet-content-container ${isExpanded ? 'expanded' : 'collapsed'
+                              } pointer-events-none`}
+                            layout
+                            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                            inert={!isExpanded}
+                            aria-hidden={!isExpanded}
+                            tabIndex={-1}
+                            role="presentation"
+                          >
+                            <Suspense fallback={<NotionPageSkeleton />}>
+                              <NotionPage recordMap={recordMap} type="tweet-preview" />
+                            </Suspense>
+                          </motion.div>
+                          {!isExpanded && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="absolute bottom-0 left-0 right-0 h-20 flex items-end justify-center pb-2"
+                              style={{
+                                background: 'linear-gradient(to top, var(--color-surface) 0%, transparent 100%)'
+                              }}
+                            >
+                              <Button
+                                onPress={handleViewAllClick}
+                                size="sm"
+                                variant="secondary"
+                                className="px-4 py-2 bg-surface-secondary/80 backdrop-blur-md"
+                              >
+                                {t('view-all')}
+                              </Button>
+                            </motion.div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {/* Image preview */}
+                    <ImagePreview images={moment.photos ?? []} />
+                  </motion.div>
+                ) : null
+              ) : (
+                <motion.p
+                  key="article"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-foreground/80"
+                >
+                  {moment.description}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Footer */}
+          {isTweet && (isNotionPost ? !isLoading : true) && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <Button
+                onPress={() => {
+                  const externalUrl = getExternalUrl();
+                  if (externalUrl) {
+                    window.open(externalUrl, '_blank', 'noopener,noreferrer');
+                  } else {
+                    setIsModalOpen(true);
+                  }
+                }}
+                variant="secondary"
+                className="w-full justify-start gap-2 pl-4 py-2 transition-colors"
+              >
+                <LuMessageSquare size={18} aria-hidden="true" />
+                <span>{t('comment-placeholder')}</span>
+              </Button>
+            </motion.div>
+          )}
+        </Card>
+      </motion.div>
 
       {/* Modal for Tweet details */}
       {isTweet && (
         <TweetModal
-          isLoading={isLoading}
+          isLoading={isLoading && isNotionPost}
           isOpen={isModalOpen}
           onOpenChange={setIsModalOpen}
-          recordMap={recordMap || undefined}
+          recordMap={isNotionPost ? (recordMap || undefined) : undefined}
           metadata={moment}
+          avatarSrc={avatarSrc}
         />
       )}
     </>
@@ -219,12 +372,22 @@ function ImagePreview({ images }: { images: string[] }) {
             src={image}
             alt=""
             fill
-            quality={50}
+            quality={75}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-[calc(var(--radius-md)*1.5)] object-cover"
           />
         </div>
       ))}
+    </div>
+  )
+}
+
+function NotionPageSkeleton() {
+  return (
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-full rounded-lg" />
+      <Skeleton className="h-4 w-3/4 rounded-lg" />
+      <Skeleton className="h-4 w-5/6 rounded-lg" />
     </div>
   )
 }
@@ -262,5 +425,70 @@ export function TweetContentSkeleton(
         <Skeleton className="rounded-lg w-full mt-2 h-10" />
       }
     </>
+  )
+}
+
+export function MomentCardSkeleton({ moment }: { moment: PostMetadata }) {
+  const isTweet = moment.type === "Tweet"
+  const locale = useLocale()
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+    >
+      <Card className="relative">
+        {/* Header */}
+        <div className="flex gap-3 items-center">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <div className="flex flex-col gap-2 flex-1">
+            <Skeleton className="h-4 w-24 rounded-lg" />
+            <span className="text-xs text-content3-foreground">
+              {/* Show handle for social platforms in skeleton */}
+              {moment.platform && moment.platform !== 'notion' && moment.social?.username && (
+                <>
+                  <span className="text-xs">@{moment.social.username}</span>
+                  <span> · </span>
+                </>
+              )}
+              {formatDate(moment.created_time, locale, true)}
+              {/* Show specific time for social platforms in skeleton */}
+              {moment.platform && moment.platform !== 'notion' && (
+                <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
+              )}
+              {!isTweet && moment.readingTime && " · " + moment.readingTime}
+            </span>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="space-y-3 moment-card-content loading">
+          <div className="flex items-center gap-1">
+            {moment.icon && <span className="mr-1" aria-hidden="true">{moment.icon}</span>}
+            <span className="text-xl font-semibold">{moment.title}</span>
+          </div>
+
+          {/* Tags */}
+          {moment.tags && moment.tags.length > 0 && (
+            <Tags className="pt-1" tags={moment.tags} />
+          )}
+
+          {isTweet ? (
+            <TweetContentSkeleton
+              hasDescription={moment.description ? true : false}
+              images={moment.photos?.length ? Array(moment.photos.length).fill(0) : undefined}
+            />
+          ) : (
+            <p className="text-foreground/80">{moment.description}</p>
+          )}
+        </div>
+
+        {/* Footer */}
+        {isTweet && (
+          <Skeleton className="h-10 w-full rounded-full" />
+        )}
+      </Card>
+    </motion.div>
   )
 }

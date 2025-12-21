@@ -29,7 +29,10 @@ const sourceCode = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-    title: "Choneas's Blog",
+    title: {
+        template: "%s - Choneas 的个人博客",
+        default: "Choneas 的个人博客",
+    },
     description: "代码、随笔、思考、分享以及生活",
 };
 
@@ -39,8 +42,9 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html suppressHydrationWarning>
+        <html suppressHydrationWarning data-overlayscrollbars-initialize>
             <body
+                data-overlayscrollbars-initialize
                 className={`${notoSerif.variable} ${sourceCode.variable} font-serif text-foreground bg-background antialiased`}
             >
                 <Suspense fallback={null}>

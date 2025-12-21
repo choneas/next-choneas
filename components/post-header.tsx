@@ -7,15 +7,38 @@ import { useTranslations, useLocale } from "next-intl"
 import { formatDate } from "@/lib/format"
 import type { PostMetadata } from "@/types/content"
 import { usePostMetadata } from "@/stores/post"
+import { Avatar } from "@/components/avatar"
 
-export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: boolean }) {
+interface PostHeaderProps {
+    post: PostMetadata;
+    isTweet?: boolean;
+    avatarSrc?: string;
+}
+
+export function PostHeader({ post, isTweet, avatarSrc }: PostHeaderProps) {
     const t = useTranslations("Post-Header")
     const locale = useLocale()
     const { setPostMetadata } = usePostMetadata()
+    const isSocialPost = post.platform === 'x' || post.platform === 'bluesky'
 
     useEffect(() => {
         setPostMetadata?.(post)
     }, [post, setPostMetadata])
+
+    if (isSocialPost) {
+        return (
+            <div className="flex gap-3 items-center py-4">
+                <Avatar platform={post.platform} src={avatarSrc} size="md" name="Choneas" />
+                <div className="flex flex-col">
+                    <span className="text-base font-medium">Choneas</span>
+                    <span className="text-sm text-content3-foreground">
+                        {formatDate(post.created_time, locale, true)}
+                    </span>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <>
             {post.cover ? (
@@ -29,7 +52,7 @@ export function PostHeader({ post, isTweet }: { post: PostMetadata, isTweet?: bo
                             className="h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent">
-                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'max-w-6xl mx-auto px-8 sm:px-24 md:px-48' : 'px-8'}`}>
+                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'max-w-6xl px-8 sm:px-24 md:px-48' : 'px-8'}`}>
                                 <Tags
                                     tags={post.tags || []}
                                     variant="soft"

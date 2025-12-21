@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+
 import { navItems } from "@/data/navbar";
 
 interface NavbarItemsProps {
@@ -15,6 +16,7 @@ interface NavbarItemsProps {
  * NavbarItems 客户端组件
  * 显示桌面端导航链接
  * 使用 HeroUI ghost 按钮，悬浮时展开显示文字
+ * 支持 filled/outline 图标状态切换
  */
 export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
     const router = useRouter();
@@ -58,6 +60,9 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
                 const isActive = pathname.includes(item.href) && pathname !== "/";
                 const isExpanded = expandedIndex === index;
 
+                // Only use filled icon when on active page, not on hover
+                const currentIcon = isActive ? item.icon.filled : item.icon.outline;
+
                 return (
                     <Button
                         key={item.href}
@@ -67,7 +72,7 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
                         onHoverEnd={handleCollapse}
                         onFocus={() => handleExpand(index)}
                         onBlur={handleCollapse}
-                        className={`navbar-ghost-btn p-3 min-h-0 min-w-0 text-accent rounded-full whitespace-nowrap outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)] ${isActive ? "font-bold" : ""}`}
+                        className={`navbar-ghost-btn h-12 p-4 min-h-0 min-w-0 text-accent rounded-full whitespace-nowrap outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)] transition-all duration-300 ${isActive ? "font-bold" : ""}`}
                     >
                         <motion.div
                             className="flex items-center justify-center"
@@ -78,9 +83,19 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
                                 ease: [0.4, 0, 0.2, 1]
                             }}
                         >
-                            <span className="shrink-0 flex items-center justify-center text-accent">
-                                {item.icon}
-                            </span>
+                            <motion.span
+                                className="shrink-0 flex items-center justify-center text-accent"
+                                initial={false}
+                                animate={{
+                                    scale: isActive ? 1.1 : 1,
+                                }}
+                                transition={{
+                                    duration: 0.2,
+                                    ease: [0.4, 0, 0.2, 1]
+                                }}
+                            >
+                                {currentIcon}
+                            </motion.span>
                             <motion.span
                                 initial={{ width: 0, opacity: 0 }}
                                 animate={{

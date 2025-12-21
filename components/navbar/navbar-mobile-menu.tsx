@@ -26,13 +26,13 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
             onOpenChange={onOpenChange}
         >
             <Dropdown.Trigger
-                className="flex h-10 w-10 items-center justify-center transition-colors relative"
+                className="flex h-14 w-14 items-center justify-center transition-colors relative"
                 aria-label="Navigation menu"
             >
                 <div className="w-5 h-5 relative flex items-center justify-center">
                     {/* Top line */}
                     <motion.span
-                        className="absolute w-5 border-t-[1.75px] border-accent"
+                        className="absolute w-5 border-t-2 border-accent"
                         style={{ borderRadius: "999px" }}
                         animate={isOpen ? {
                             rotate: 45,
@@ -45,7 +45,7 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
                     />
                     {/* Bottom line */}
                     <motion.span
-                        className="absolute w-5 border-t-[1.75px] border-accent"
+                        className="absolute w-5 border-t-2 border-accent"
                         style={{ borderRadius: "999px" }}
                         animate={isOpen ? {
                             rotate: -45,
@@ -60,8 +60,8 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
             </Dropdown.Trigger>
 
             <Dropdown.Popover
-                placement="top start"
-                className="w-64 px-4 py-4"
+                placement="bottom start"
+                className="w-64 px-4 py-4 mobile-dropdown-fix"
             >
                 <ListBox
                     aria-label="Navigation"
@@ -73,6 +73,9 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
                 >
                     {navItems.map((item) => {
                         const isActive = pathname.includes(item.href) && pathname !== "/";
+                        // Use filled icon when active, outline when inactive
+                        const currentIcon = isActive ? item.icon.filled : item.icon.outline;
+
                         return (
                             <ListBox.Item
                                 key={item.href}
@@ -80,7 +83,7 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
                                 textValue={translations[item.name]}
                                 className={`text-accent ${isActive ? "font-bold" : ""}`}
                             >
-                                <span className="text-accent">{item.icon}</span>
+                                <span className="text-accent">{currentIcon}</span>
                                 <Label className="text-accent">{translations[item.name]}</Label>
                             </ListBox.Item>
                         );

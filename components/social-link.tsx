@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { Button } from "@heroui/react";
+import { buttonVariants } from "@heroui/react";
 import type { SocialLink as SocialLinkProps } from "@/types/about";
+
+// Shared styles for both Button and Link
+const sharedClassName = "inline-flex items-center justify-center gap-2 font-medium";
 
 export function SocialLink(link: SocialLinkProps) {
     const content = (
@@ -11,22 +14,20 @@ export function SocialLink(link: SocialLinkProps) {
         </>
     );
 
+    // Use buttonVariants for consistent styling on both button and link
+    const className = buttonVariants({ variant: "secondary", className: sharedClassName });
+
     if (!link.href) {
         return (
-            <Button className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors font-medium">
+            <button type="button" className={className}>
                 {content}
-            </Button>
+            </button>
         );
     }
 
     return (
-        <Button asChild>
-            <Link
-                href={link.href}
-                className="inline-flex items-center justify-center gap-2 px-4 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors font-medium"
-            >
-                {content}
-            </Link>
-        </Button>
-    )
+        <Link href={link.href} className={className}>
+            {content}
+        </Link>
+    );
 }

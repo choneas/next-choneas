@@ -1,11 +1,9 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { ScrollShadow } from "@heroui/react";
 import { useTranslations } from "next-intl";
 import type { TableOfContentsEntry } from "notion-utils";
-
-import "overlayscrollbars/overlayscrollbars.css";
 
 interface TableOfContentsProps {
   toc: TableOfContentsEntry[];
@@ -398,49 +396,6 @@ function DOTIndicator({ indentLevel }: { indentLevel: 0 | 1 | 2 }) {
 }
 
 /**
- * Custom hook to manage scroll shadows for TOC container
- * Detects scroll position and shows/hides top and bottom shadows accordingly
- * @param scrollContainerRef - Reference to the scrollable container element
- * @returns Object containing shadow visibility states
- */
-function useScrollShadows(scrollContainerRef: React.RefObject<HTMLDivElement | null>) {
-  const [showTopShadow, setShowTopShadow] = useState(false);
-  const [showBottomShadow, setShowBottomShadow] = useState(false);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = container;
-
-      // Show top shadow if scrolled down
-      setShowTopShadow(scrollTop > 0);
-
-      // Show bottom shadow if not at bottom (with 1px tolerance)
-      setShowBottomShadow(scrollTop + clientHeight < scrollHeight - 1);
-    };
-
-    // Initial check
-    handleScroll();
-
-    // Listen to scroll events
-    container.addEventListener('scroll', handleScroll);
-
-    // Also check on resize as content height might change
-    const resizeObserver = new ResizeObserver(handleScroll);
-    resizeObserver.observe(container);
-
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-      resizeObserver.disconnect();
-    };
-  }, [scrollContainerRef]);
-
-  return { showTopShadow, showBottomShadow };
-}
-
-/**
  * TOC Item component for desktop
  * Handles individual TOC item rendering with hover and active states
  */
@@ -525,7 +480,6 @@ function DesktopTOC({
   const t = useTranslations("Table-Of-Contents");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLLIElement>(null);
-  const { showTopShadow, showBottomShadow } = useScrollShadows(scrollContainerRef);
 
   // Track article container right edge for positioning
   const [articleContainerRight, setArticleContainerRight] = useState(0);
@@ -554,38 +508,25 @@ function DesktopTOC({
     };
   }, []);
 
-  // Auto-scroll to active item when it changes - center the item in the scroll container
+  // Auto-scroll to active item when it changes
   useEffect(() => {
     if (!activeItemRef.current || !scrollContainerRef.current) return;
 
     const item = activeItemRef.current;
     const container = scrollContainerRef.current;
 
-    // Use a small delay to ensure OverlayScrollbars is initialized
     const timeoutId = setTimeout(() => {
-      // Try to find the OverlayScrollbars viewport element
-      const osViewport = container.parentElement?.querySelector('.os-viewport') as HTMLElement;
+      const containerHeight = container.clientHeight;
+      const itemTop = item.offsetTop;
+      const itemHeight = item.offsetHeight;
 
-      if (osViewport) {
-        // OverlayScrollbars is active, use its viewport
-        const containerHeight = osViewport.clientHeight;
-        const itemTop = item.offsetTop;
-        const itemHeight = item.offsetHeight;
+      // Calculate scroll position to center the item
+      const scrollCenter = itemTop - (containerHeight / 2) + (itemHeight / 2);
 
-        // Calculate scroll position to center the item
-        const scrollCenter = itemTop - (containerHeight / 2) + (itemHeight / 2);
-
-        osViewport.scrollTo({
-          top: Math.max(0, scrollCenter),
-          behavior: 'smooth'
-        });
-      } else {
-        // Fallback: use native scrollIntoView
-        item.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }
+      container.scrollTo({
+        top: Math.max(0, scrollCenter),
+        behavior: 'smooth'
+      });
     }, 100);
 
     return () => clearTimeout(timeoutId);
@@ -598,7 +539,7 @@ function DesktopTOC({
 
   // Simplified positioning: fixed at right side of content, vertically centered
   const getPositionStyles = () => {
-    const gap = 48; // 3rem gap from article container (increased from 1rem)
+    const gap = 48; // 3rem gap from article container
     const leftPosition = articleContainerRight + gap;
 
     return {
@@ -621,81 +562,43 @@ function DesktopTOC({
         setHoveredItemId(null);
       }}
     >
-      <div
-        className="text-sm w-64 relative"
-        style={{
-          // Transparent background - no surface color
-          backgroundColor: 'transparent'
-        }}
-      >
-        {/* Top shadow - gradient from background to transparent */}
-        {showTopShadow && (
-          <div
-            className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-10"
-            style={{
-              background: 'linear-gradient(to bottom, var(--color-background) 0%, transparent 100%)'
-            }}
-          />
-        )}
-
-        {/* Scrollable container with max height 40vh */}
-        <OverlayScrollbarsComponent
-          element="div"
-          options={{
-            scrollbars: {
-              autoHide: 'scroll',
-              autoHideDelay: 800
-            }
-          }}
-          defer
+      <div className="text-sm w-64">
+        <ScrollShadow
+          ref={scrollContainerRef}
+          className="max-h-[40vh]"
+          size={32}
+          hideScrollBar
         >
-          <div
-            ref={scrollContainerRef}
-            style={{
-              maxHeight: '40vh'
-            }}
-          >
-            <ul className="space-y-2 py-1">
-              {toc.map((entry) => {
-                const isActive = activeHeadingId === entry.id;
-                const isInActivePath = activeHeadingPath.includes(entry.id);
-                const isItemHovered = hoveredItemId === entry.id;
+          <ul className="space-y-2 py-1">
+            {toc.map((entry) => {
+              const isActive = activeHeadingId === entry.id;
+              const isInActivePath = activeHeadingPath.includes(entry.id);
+              const isItemHovered = hoveredItemId === entry.id;
 
-                return (
-                  <TOCItem
-                    key={entry.id}
-                    entry={entry}
-                    isActive={isActive}
-                    isInActivePath={isInActivePath}
-                    isParentHovered={isContainerHovered}
-                    isItemHovered={isItemHovered}
-                    onClick={() => handleClick(entry.id)}
-                    onMouseEnter={() => setHoveredItemId(entry.id)}
-                    onMouseLeave={() => setHoveredItemId(null)}
-                    itemRef={isActive ? activeItemRef : undefined}
-                  />
-                );
-              })}
-            </ul>
-          </div>
-        </OverlayScrollbarsComponent>
-
-        {/* Bottom shadow - gradient from transparent to background */}
-        {showBottomShadow && (
-          <div
-            className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none z-10"
-            style={{
-              background: 'linear-gradient(to top, var(--color-background) 0%, transparent 100%)'
-            }}
-          />
-        )}
+              return (
+                <TOCItem
+                  key={entry.id}
+                  entry={entry}
+                  isActive={isActive}
+                  isInActivePath={isInActivePath}
+                  isParentHovered={isContainerHovered}
+                  isItemHovered={isItemHovered}
+                  onClick={() => handleClick(entry.id)}
+                  onMouseEnter={() => setHoveredItemId(entry.id)}
+                  onMouseLeave={() => setHoveredItemId(null)}
+                  itemRef={isActive ? activeItemRef : undefined}
+                />
+              );
+            })}
+          </ul>
+        </ScrollShadow>
       </div>
     </nav>
   );
 }
 
 /**
- * Mobile Table of Contents component
+ * TODO: Mobile Table of Contents component
  * Displays TOC as an island with expand/collapse functionality
  */
 function MobileTOC({
@@ -712,6 +615,8 @@ function MobileTOC({
   const handleHeadingClick = (headingId: string) => {
     scrollToHeading(headingId);
   };
+
+  return null
 
   return (
     <nav

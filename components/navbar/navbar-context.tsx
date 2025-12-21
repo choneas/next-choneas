@@ -7,7 +7,6 @@ interface NavbarContextType {
     scrollY: MotionValue<number>;
     navbarBlur: MotionValue<number>;
     pathname: string;
-    hasCover: boolean;
 }
 
 export const NavbarContext = createContext<NavbarContextType | null>(null);

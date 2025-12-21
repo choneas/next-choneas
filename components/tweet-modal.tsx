@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Modal } from "@heroui/react";
 import type { ExtendedRecordMap } from "notion-types";
 import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import { PostHeader } from "@/components/post-header";
 import NotionPage from "@/components/notion-page";
 import { Comment } from "@/components/comment";
@@ -15,6 +16,7 @@ interface TweetModalProps {
     onOpenChange: (open: boolean) => void;
     recordMap?: ExtendedRecordMap;
     metadata: PostMetadata;
+    avatarSrc?: string;
 }
 
 export function TweetModal({
@@ -22,7 +24,8 @@ export function TweetModal({
     isOpen,
     onOpenChange,
     recordMap,
-    metadata
+    metadata,
+    avatarSrc
 }: TweetModalProps) {
     const locale = useLocale();
     const t = useTranslations("Metadata");
@@ -53,41 +56,58 @@ export function TweetModal({
     }, [isOpen, metadata, locale, t]);
 
     return (
-        <Modal.Container
+        <Modal.Backdrop
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             variant="blur"
-            placement="top"
-            scroll="outside"
         >
-            <Modal.Dialog className="container mx-auto pb-4 px-4 sm:px-8 md:px-12 md:max-w-3xl">
-                {() => (
-                    <>
-                        <Modal.CloseTrigger />
-                        <Modal.Header>
-                            {!isLoading && <PostHeader isTweet post={metadata} />}
-                        </Modal.Header>
-                        <Modal.Body className="px-6 py-4">
-                            <div className="space-y-4">
-                                {isLoading ? (
-                                    <TweetContentSkeleton
-                                        images={metadata.photos?.length ? Array(metadata.photos.length).fill(0) : undefined}
-                                    />
-                                ) : recordMap ? (
-                                    <>
-                                        <NotionPage recordMap={recordMap} type="tweet-details" />
-                                        <Comment type="tweet" metadata={metadata} />
-                                    </>
-                                ) : (
-                                    <p className="text-sm text-content3-foreground">
-                                        Detail will be available once the content finishes loading.
-                                    </p>
-                                )}
-                            </div>
-                        </Modal.Body>
-                    </>
-                )}
-            </Modal.Dialog>
-        </Modal.Container>
+            <Modal.Container
+                placement="top"
+                scroll="outside"
+            >
+                <Modal.Dialog className="container mx-auto pb-4 px-4 sm:px-8 md:px-12 md:max-w-3xl">
+                    <Modal.CloseTrigger />
+                    <Modal.Header className="px-4">
+                        {!isLoading && <PostHeader isTweet post={metadata} avatarSrc={avatarSrc} />}
+                    </Modal.Header>
+                    <Modal.Body className="px-4 pb-4 transition-transform duration-100">
+                        <div className="space-y-4">
+                            {isLoading ? (
+                                <TweetContentSkeleton
+                                    images={metadata.photos?.length ? Array(metadata.photos.length).fill(0) : undefined}
+                                />
+                            ) : metadata.platform != 'notion' ? (
+                                <>
+                                    <p className="text-foreground/90 text-base whitespace-pre-wrap">{metadata.description}</p>
+                                    {metadata.photos && metadata.photos.length > 0 && (
+                                        <div className="flex flex-col gap-2">
+                                            {metadata.photos.map((photo, i) => (
+                                                <div key={i} className="relative w-full h-64 overflow-hidden rounded-lg">
+                                                    <Image
+                                                        src={photo}
+                                                        alt=""
+                                                        fill
+                                                        className="object-cover"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </>
+                            ) : recordMap ? (
+                                <>
+                                    <NotionPage recordMap={recordMap} type="tweet-details" />
+                                    <Comment type="tweet" metadata={metadata} />
+                                </>
+                            ) : (
+                                <p className="text-md">
+                                    Detail will be available once the content finishes loading.
+                                </p>
+                            )}
+                        </div>
+                    </Modal.Body>
+                </Modal.Dialog>
+            </Modal.Container>
+        </Modal.Backdrop>
     );
 }

@@ -3,15 +3,61 @@
 import * as React from 'react'
 import { Link } from '@heroui/react'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { type ExtendedRecordMap } from 'notion-types'
 import { NotionRenderer } from 'react-notion-x'
 import { useTheme } from 'next-themes'
 import 'react-notion-x/src/styles.css'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'katex/dist/katex.min.css'
-import dynamic from 'next/dynamic'
 
-const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: "tweet-preview" | "tweet-details" }) => {
+// Optimize dynamic imports with better loading states and SSR settings
+const Code = dynamic(() =>
+    import('react-notion-x/build/third-party/code').then((m) => m.Code),
+    {
+        ssr: false,
+        loading: () => <div className="bg-content2 rounded p-2 animate-pulse h-20" />
+    }
+)
+
+const Collection = dynamic(() =>
+    import('react-notion-x/build/third-party/collection').then(
+        (m) => m.Collection
+    ),
+    {
+        ssr: false,
+        loading: () => <div className="bg-content2 rounded p-4 animate-pulse h-32" />
+    }
+)
+
+const Equation = dynamic(() =>
+    import('react-notion-x/build/third-party/equation').then((m) => m.Equation),
+    {
+        loading: () => <div className="bg-content2 rounded p-2 animate-pulse h-8 w-24" />
+    }
+)
+
+const Pdf = dynamic(
+    () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
+    {
+        ssr: false,
+        loading: () => <div className="bg-content2 rounded p-4 animate-pulse h-96" />
+    }
+)
+
+const Modal = dynamic(
+    () => import('react-notion-x/build/third-party/modal').then((m) => m.Modal),
+    {
+        ssr: false
+    }
+)
+
+interface NotionPageProps {
+    recordMap: ExtendedRecordMap;
+    type?: "tweet-preview" | "tweet-details";
+}
+
+const NotionPage = ({ recordMap, type }: NotionPageProps) => {
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
 
@@ -19,38 +65,10 @@ const NotionPage = ({ recordMap, type }: { recordMap: ExtendedRecordMap, type?: 
         setMounted(true);
     }, []);
 
-    const Code = dynamic(() =>
-        import('react-notion-x/build/third-party/code').then((m) => m.Code),
-        {
-            ssr: false
-        }
-    )
-    const Collection = dynamic(() =>
-        import('react-notion-x/build/third-party/collection').then(
-            (m) => m.Collection
-        ),
-        {
-            ssr: false
-        }
-    )
-    const Equation = dynamic(() =>
-        import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
-    )
-    const Pdf = dynamic(
-        () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
-        {
-            ssr: false
-        }
-    )
-    const Modal = dynamic(
-        () => import('react-notion-x/build/third-party/modal').then((m) => m.Modal),
-        {
-            ssr: false
-        }
-    )
+    const isPreview = type === "tweet-preview";
 
     return (
-        <div className={type === "tweet-preview" ? "notion tweet-preview" : "notion"}>
+        <div className={isPreview ? "notion tweet-preview" : "notion"}>
             <NotionRenderer
                 disableHeader
                 recordMap={recordMap}

@@ -134,6 +134,9 @@ async function generatePostMetadata(
         // 计算阅读时间
         metadata.readingTime = getReadingTime(recordMap, locale);
 
+        // Set platform to notion for all Notion posts
+        metadata.platform = 'notion';
+
         return metadata;
     } catch (error) {
         console.error('Error generating post metadata:', error);
@@ -141,7 +144,7 @@ async function generatePostMetadata(
     }
 }
 
-async function getAllPosts() {
+async function getAllPosts(includeSocial: boolean = true) {
     const rootPage = await getRootPage();
     const processedIds = new Set<string>();
     const articles: PostMetadata[] = [];
@@ -166,6 +169,13 @@ async function getAllPosts() {
                 articles.push(metadata);
             }
         }
+    }
+
+    // Include social media posts if enabled
+    if (includeSocial) {
+        const { getAllSocialPosts } = await import('@/lib/social-feeds');
+        const socialPosts = await getAllSocialPosts();
+        tweets.push(...socialPosts);
     }
 
     return { articles, tweets };
@@ -225,7 +235,7 @@ async function getPost(slugOrId: string, allowTweet?: boolean) {
 
 
     if (!targetId) {
-        throw new ArticleNotFoundError('Article not found');
+        throw new ArticleNotFoundError('Article not found' + targetId);
     }
 
     const recordMap = await getCachedPost(targetId);

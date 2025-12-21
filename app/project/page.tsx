@@ -12,15 +12,15 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-export default async function Project(){
+export default async function Project() {
     const t = await getTranslations("Project")
 
     return (
         <>
             <h1>{t('title')}</h1>
-            <span className="pt-4 text-lg py-4">{t('description')}</span>
+            <span className="my-8 text-lg">{t('description')}</span>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col space-y-4">
                 {projects.map((project, index) => (
                     <ProjectCard key={index} project={project} />
                 ))}

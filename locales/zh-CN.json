@@ -100,13 +100,7 @@
       "星期四",
       "星期五",
       "星期六"
-    ],
-    "dateFormat": {
-      "sameYear": "M月D日",
-      "differentYear": "YYYY年M月D日",
-      "full": "YYYY年M月D日"
-    },
-    "timeFormat": "HH:mm"
+    ]
   },
   "Accessibility": {
     "skip-to-content": "跳转到主要内容"

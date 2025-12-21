@@ -34,7 +34,7 @@ export default async function TweetPage({
 
     return (
       <>
-        <PostHeader post={metadata} isTweet={true} />
+        <PostHeader post={metadata} />
 
         <div className='article-container pt-8'>
           <NotionPage recordMap={recordMap} type="tweet-details" />
