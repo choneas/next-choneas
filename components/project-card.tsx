@@ -1,14 +1,20 @@
 "use client"
 
-import { Card, Link } from "@heroui/react"
-import { FaStar } from "react-icons/fa"
-import type { Project, GithubRepoInfo } from "@/types/project"
-import { formatDate } from "@/lib/format"
-import { useEffect, useState } from "react"
-import { fetchGithubRepoInfo } from "@/lib/github"
-import { useTranslations, useLocale } from "next-intl"
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useTranslations, useLocale } from "next-intl";
+import { Card, Link } from "@heroui/react";
+import { FaStar } from "react-icons/fa";
+import { motion } from "framer-motion";
+import type { Project, GithubRepoInfo } from "@/types/project";
+import { formatDate } from "@/lib/format";
+import { fetchGithubRepoInfo } from "@/lib/github";
 
-export function ProjectCard({ project }: { project: Project }) {
+interface ProjectCardProps {
+    project: Project;
+}
+
+export function ProjectCard({ project }: ProjectCardProps) {
     const [repoInfo, setRepoInfo] = useState<GithubRepoInfo | null>(null);
     const [error, setError] = useState<boolean>(false);
     const locale = useLocale();
@@ -33,59 +39,65 @@ export function ProjectCard({ project }: { project: Project }) {
     }, [project.repo, project.isGithubRepo]);
 
     return (
-        <Link
-            href={finalLink || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
         >
-            <Card className="w-full transition-shadow bg-primary-60">
-                <Card.Header className="flex flex-col items-start gap-1 pb-2 px-4 pt-4">
-                    <h3 className="text-xl font-semibold">
-                        {project.name}
-                    </h3>
-                    {project.link && (
-                        <span className="text-sm text-content2-foreground flex items-center gap-1">
-                            {project.link}
-                            <span className="i-heroicons-arrow-top-right-20-solid" />
-                        </span>
+            <Link
+                href={finalLink || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full block"
+                underline="none"
+            >
+                <Card className="w-full transition-all duration-200" variant="default">
+                    {project.cover && (
+                        <div className="relative h-48 w-full overflow-hidden">
+                            <Image
+                                src={project.cover}
+                                alt={project.name || ''}
+                                fill
+                                className="object-cover transition-transform duration-300 hover:scale-105"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
                     )}
-                </Card.Header>
 
-                <Card.Content className="flex flex-col gap-3 px-4 py-2">
-                    {error ? (
-                        <p className="text-danger">{t('error.fetch-failed')}</p>
-                    ) : (
-                        <>
-                            {project.cover && (
-                                <>
-                                    {/* TODO: Replace with next/image for better performance */}
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={project.cover}
-                                        alt={project.name || ''}
-                                        className="w-full h-48 rounded-lg object-cover"
-                                    />
-                                </>
-                            )}
-                            <p className="text-lg text-gray-600">
+                    <Card.Header className="gap-2">
+                        <Card.Title className="text-xl font-semibold">
+                            {project.name}
+                        </Card.Title>
+                        {project.link && (
+                            <div className="flex items-center gap-1 text-sm text-muted">
+                                <span>{new URL(project.link).hostname}</span>
+                                <span className="text-xs">↗</span>
+                            </div>
+                        )}
+                    </Card.Header>
+
+                    <Card.Content>
+                        {error ? (
+                            <p className="text-danger text-sm">{t('error.fetch-failed')}</p>
+                        ) : (
+                            <Card.Description className="text-base leading-relaxed">
                                 {project.isGithubRepo ? repoInfo?.description : project.description}
-                            </p>
-                        </>
-                    )}
-                </Card.Content>
+                            </Card.Description>
+                        )}
+                    </Card.Content>
 
-                {project.isGithubRepo && repoInfo && !error && (
-                    <Card.Footer className="flex items-center gap-2 text-sm text-gray-500 pt-2 pb-4 px-4">
-                        <span className="flex items-center gap-1">
-                            <FaStar className="text-yellow-400" />
-                            {repoInfo?.stargazers_count}
-                        </span>
-                        <span>·</span>
-                        <span>{formatDate(new Date(repoInfo?.updated_at || ''), locale)}</span>
-                    </Card.Footer>
-                )}
-            </Card>
-        </Link>
+                    {project.isGithubRepo && repoInfo && !error && (
+                        <Card.Footer className="flex items-center gap-3 text-sm text-muted">
+                            <div className="flex items-center gap-1">
+                                <FaStar className="text-yellow-500" size={14} />
+                                <span>{repoInfo.stargazers_count}</span>
+                            </div>
+                            <span>·</span>
+                            <span>{formatDate(new Date(repoInfo.updated_at || ''), locale)}</span>
+                        </Card.Footer>
+                    )}
+                </Card>
+            </Link>
+        </motion.div>
     )
 }

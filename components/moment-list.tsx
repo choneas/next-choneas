@@ -1,39 +1,34 @@
-"use cache: private";
-
 import { Suspense } from "react";
-import { cacheLife, cacheTag } from "next/cache";
 import { Card, Skeleton } from "@heroui/react";
+import { getTranslations, getLocale } from "next-intl/server";
 import { MomentCard, MomentCardSkeleton } from "@/components/moment-card";
 import { getAllPosts } from "@/lib/content";
-import { getSocialAvatars } from "@/lib/social-feeds";
 
-export async function MomentList({ sortOrder }: { sortOrder?: 'asc' | 'desc' }) {
-    cacheLife("minutes");
-    cacheTag("moments", "homepage");
+interface MomentListProps {
+    sortOrder?: 'asc' | 'desc';
+}
 
-    const order = sortOrder || 'desc';
-    const [{ tweets, articles }, avatars] = await Promise.all([
-        getAllPosts(),
-        getSocialAvatars()
-    ]);
+export async function MomentList({ sortOrder = 'desc' }: MomentListProps) {
+    const t = await getTranslations("Tag");
+    const locale = await getLocale();
+
+    // Pass translator and locale to getAllPosts (data is cached internally)
+    const { tweets, articles } = await getAllPosts(
+        (key: string) => t(key),
+        locale
+    );
+
     const moments = [...tweets, ...articles];
     moments.sort((a, b) => {
         const comparison = new Date(b.created_time).getTime() - new Date(a.created_time).getTime();
-        return order === 'desc' ? comparison : -comparison;
+        return sortOrder === 'desc' ? comparison : -comparison;
     });
-
-    // Get avatar URL based on platform
-    const getAvatarSrc = (platform?: string) => {
-        if (platform === 'x') return avatars.xAvatar || undefined;
-        if (platform === 'bluesky') return avatars.blueskyAvatar || undefined;
-        return undefined;
-    };
 
     return (
         <div className="flex flex-col gap-4">
             {moments.map((moment) => (
-                <Suspense key={moment.id} fallback={<MomentCardSkeleton moment={moment} />}>
-                    <MomentCard moment={moment} avatarSrc={getAvatarSrc(moment.platform)} />
+                <Suspense key={moment.id} fallback={<MomentCardSkeleton moment={moment} locale={locale} />}>
+                    <MomentCard moment={moment} />
                 </Suspense>
             ))}
         </div>

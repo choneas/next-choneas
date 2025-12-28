@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 
 export function Footer() {
     const t = useTranslations("Footer");
@@ -25,7 +26,11 @@ export function Footer() {
     }
 
     return (
-        <div className="max-w-screen w-full h-30 px-5 pt-5 mb-16 lg:mb-5 text-center opacity-80">
+        <motion.footer
+            layout
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="max-w-screen w-full h-30 px-5 mb-16 lg:mb-5 text-center opacity-80"
+        >
             <p>{t("copyright", { startYear, currentYear })}</p>
             <p>
                 {t("license")}{' '}
@@ -33,6 +38,6 @@ export function Footer() {
                     {t("licenseLink")}
                 </Link>
             </p>
-        </div>
+        </motion.footer>
     )
 }

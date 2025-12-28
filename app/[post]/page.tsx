@@ -1,5 +1,6 @@
-import { getPost, ArticleNotFoundError } from "@/lib/content";
 import { redirect } from "next/navigation";
+import { getTranslations, getLocale } from "next-intl/server";
+import { getPost, ArticleNotFoundError } from "@/lib/content";
 
 export default async function SmartRoute({
     params,
@@ -7,9 +8,16 @@ export default async function SmartRoute({
     params: Promise<{ post: string }>,
 }) {
     const post = (await params).post;
+    const tagT = await getTranslations("Tag");
+    const locale = await getLocale();
 
     try {
-        const { metadata } = await getPost(post, true);
+        const { metadata } = await getPost(
+            post,
+            (key: string) => tagT(key),
+            locale,
+            true
+        );
 
         if (metadata.type === "Tweet") {
             redirect(`/tweet/${metadata.slug || metadata.id}`);

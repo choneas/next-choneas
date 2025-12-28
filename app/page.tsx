@@ -1,45 +1,238 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import Image from "next/image";
+import { connection } from "next/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import { cn } from "@heroui/react";
 import { MomentList, MomentListSkeleton } from "@/components/moment-list";
+import { LiveCounter } from "@/components/home/live-counter";
+import { MeshBackground } from "@/components/home/mesh-background";
+import { SecondParagraphWithModal } from "@/components/home/culture-modal";
+import { socialLinks, techStacks } from "@/data/about";
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("Metadata");
-
     return {
-        title: {
-            absolute: t("title"),
-        },
+        title: t("title"),
         description: t("description"),
     }
 }
 
+// ============================================================================
+// Grid System
+// ============================================================================
+
+const GRID = {
+    thickness: 2,
+    color: "bg-accent/10",
+} as const;
+
+/** Vertical grid line */
+function VLine({ position }: { position: "left" | "right" }) {
+    const pos = position === "left"
+        ? "left-4 md:left-16 lg:left-20"
+        : "right-4 md:right-16 lg:right-20";
+    return (
+        <div
+            className={cn("fixed top-0 bottom-0 z-39 pointer-events-none", pos, GRID.color)}
+            style={{ width: GRID.thickness }}
+        />
+    );
+}
+
+/** Fixed horizontal line for navbar area - desktop only */
+function HLineFixed({ className = "" }: { className?: string }) {
+    return (
+        <div
+            className={cn("fixed left-0 w-screen z-39 pointer-events-none hidden md:block", GRID.color, className)}
+            style={{ height: GRID.thickness }}
+        />
+    );
+}
+
+/** Horizontal grid line - spans full viewport width */
+function HLine({ className = "" }: { className?: string }) {
+    return (
+        <div
+            className={cn(
+                "absolute w-screen z-39 pointer-events-none",
+                "-left-6 md:-left-16 lg:-left-20",
+                GRID.color,
+                className,
+            )}
+            style={{ height: GRID.thickness }}
+        />
+    );
+}
+
+/** Glass panel */
+function GlassPanel({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+    return (
+        <div className={cn("backdrop-blur-sm backdrop-saturate-150 bg-surface/60", className)}>
+            {children}
+        </div>
+    );
+}
+
+// ============================================================================
+// Components
+// ============================================================================
+
+/** Icon links - social & tech stack */
+function IconLinks() {
+    const allLinks = [
+        ...socialLinks.filter(l => l.href),
+        ...techStacks.filter(s => s.href),
+    ];
+
+    return (
+        <div className="flex flex-wrap gap-3 md:gap-5 justify-center">
+            {allLinks.map((item) => (
+                <a
+                    key={item.href}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground/40 hover:text-foreground/80 transition-colors text-lg md:text-xl lg:text-2xl"
+                >
+                    {item.icon}
+                </a>
+            ))}
+        </div>
+    );
+}
+
+async function DynamicLiveCounter() {
+    await connection();
+    const locale = await getLocale();
+    const t = await getTranslations("LiveCounter");
+
+    const birthDate = process.env.BIRTH_DATE || "2010-01-01";
+
+    // Random offset ±4 years for privacy
+    const randomOffset = Math.floor(Math.random() * 2921) - 1460;
+    const date = new Date(birthDate);
+    date.setDate(date.getDate() + randomOffset);
+
+    return <LiveCounter birthDate={date.toISOString().split("T")[0]} locale={locale} title={t("title")} />;
+}
+
+// ============================================================================
+// Page
+// ============================================================================
+
 export default async function Home() {
+    const t = await getTranslations("Home");
+
     return (
         <>
-            <header className="relative h-screen max-w-screen">
-                <Image
-                    fill
-                    role="presentation"
-                    src="/pictures/landscape.jpg"
-                    alt="Background"
-                    className="-z-10 object-cover"
-                    priority
-                />
-                <div className="absolute inset-0 bg-black/50 -z-10 hidden dark:block" />
-                <div className="flex flex-col justify-end gap-4 md:flex-row md:items-end h-full px-8 md:px-12 pb-16 pt-(--navbar-height)">
-                    <div role="heading" className="md:grow">
-                        <span className="font-thin text-6xl md:text-8xl text-accent/55">Live with</span><br />
-                        <span className="font-light text-7xl md:text-8xl text-accent">Culture.</span>
+            {/* Background */}
+            <MeshBackground />
+
+            {/* Grid lines */}
+            <VLine position="left" />
+            <VLine position="right" />
+
+            {/* Fixed navbar grid lines - desktop only */}
+            <HLineFixed className="top-5 z-40" />
+            <HLineFixed className="top-24 hideen md:block" />
+
+            {/* Hero Section */}
+            <section className="relative min-h-screen flex flex-col px-6 md:px-16 lg:px-20">
+                {/* First paragraph + counter */}
+                <div className="relative pt-[15vh] md:pt-[30vh] min-h-[80vh] md:min-h-[85vh]">
+                    <HLine className="top-[14vh] md:top-0" />
+
+                    <p className="text-2xl lg:text-3xl text-foreground/85 leading-relaxed max-w-[75vw] md:max-w-4xl pt-2 pl-2 md:pl-6">
+                        {t.rich("intro.paragraph1", {
+                            i: (chunks) => <em className="italic">{chunks}</em>,
+                            b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                        })}
+                    </p>
+
+                    <div className="pl-2 md:pl-6 mt-6">
+                        <Suspense fallback={<p className="text-accent/60">...</p>}>
+                            <DynamicLiveCounter />
+                        </Suspense>
                     </div>
+
                 </div>
-            </header>
-            <main className="container my-10 md:my-16 mx-auto px-8 md:px-12 max-w-6xl">
-                <Suspense fallback={<MomentListSkeleton />}>
-                    <MomentList sortOrder="desc" />
-                </Suspense>
-            </main>
+
+                {/* Icons */}
+                <div className="relative">
+                    <HLine className="top-0" />
+                    <GlassPanel className="-mx-2 md:mx-0 px-4 py-4 md:py-8">
+                        <IconLinks />
+                    </GlassPanel>
+                    <HLine className="bottom-0" />
+                </div>
+
+                {/* Second paragraph */}
+                <div className="relative my-24 md:my-16">
+                    <SecondParagraphWithModal
+                        beforeCulture={t.rich("intro.paragraph2.before", {
+                            i: (chunks) => <em className="italic">{chunks}</em>,
+                        })}
+                        cultureText={t("intro.paragraph2.culture")}
+                        betweenCultureAndLink={t("intro.paragraph2.middle")}
+                        linkText={t("intro.paragraph2.link")}
+                        afterLink={t("intro.paragraph2.after")}
+                        modal={{
+                            title: t("modal.title"),
+                            paragraphs: [
+                                t.rich("modal.paragraph1", {
+                                    b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                                    br: () => <br />,
+                                    i: (chunks) => <em className="italic">{chunks}</em>,
+                                }),
+                                t.rich("modal.paragraph2", {
+                                    b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                                    br: () => <br />,
+                                    i: (chunks) => <em className="italic">{chunks}</em>,
+                                }),
+                                t.rich("modal.paragraph3", {
+                                    b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                                    br: () => <br />,
+                                    i: (chunks) => <em className="italic">{chunks}</em>,
+                                }),
+                            ],
+                        }}
+                    />
+                </div>
+            </section>
+
+            {/* Section separator line */}
+            <HLine className="relative left-0 md:left-0 lg:left-0" />
+
+            {/* Moments Section */}
+            <section className="relative">
+                {/* On mobile: z-40 to cover VLine (z-39), below navbar (z-41) */}
+                <div className="relative z-40 md:z-auto md:px-16 lg:px-20">
+                    <GlassPanel className="p-4 md:p-6 lg:p-8">
+                        <Suspense fallback={<MomentListSkeleton />}>
+                            <MomentList sortOrder="desc" />
+                        </Suspense>
+                    </GlassPanel>
+                </div>
+            </section>
+
+            <HLine className="relative left-0 md:left-0 lg:left-0" />
+
+            {/* Third paragraph - moved after moments */}
+            <section className="relative px-6 md:px-16 lg:px-20 py-16 md:py-24">
+                <div className="relative">
+                    <p className="text-xl lg:text-2xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl px-2 md:px-6">
+                        {t.rich("intro.paragraph3", {
+                            i: (chunks) => <em className="italic">{chunks}</em>,
+                            b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                        })}
+                    </p>
+                </div>
+            </section>
+
+            <HLine className="relative left-0 md:left-0 lg:left-0" />
+
+            {/* Footer spacer */}
+            <div className="h-16" />
         </>
     );
 }

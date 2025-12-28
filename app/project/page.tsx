@@ -6,9 +6,10 @@ import { ProjectCard } from "@/components/project-card"
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations('Project')
     const tm = await getTranslations('Metadata')
+
     return {
         title: t('title') + tm('suffix'),
-        description: t('description') + projects.forEach(project => project.name),
+        description: t('description'),
     }
 }
 
@@ -16,15 +17,17 @@ export default async function Project() {
     const t = await getTranslations("Project")
 
     return (
-        <>
+        <main className="container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
             <h1>{t('title')}</h1>
-            <span className="my-8 text-lg">{t('description')}</span>
+            <p>{t('description')}</p>
 
-            <div className="flex flex-col space-y-4">
-                {projects.map((project, index) => (
-                    <ProjectCard key={index} project={project} />
-                ))}
+            <div className="mt-8">
+                <div className="flex flex-col gap-6">
+                    {projects.map((project, index) => (
+                        <ProjectCard key={project.name || index} project={project} />
+                    ))}
+                </div>
             </div>
-        </>
+        </main>
     )
 }

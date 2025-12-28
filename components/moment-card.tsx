@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, Skeleton, Button } from "@heroui/react"
+import { Card, Skeleton, Button, Tooltip } from "@heroui/react"
 import { useState, useEffect, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
@@ -17,7 +17,7 @@ import { TweetModal } from "@/components/tweet-modal"
 import type { ExtendedRecordMap } from "notion-types"
 import type { PostMetadata, Platform } from "@/types/content"
 import { formatDate } from "@/lib/format"
-import { getPost } from "@/lib/content"
+import { getPostRecordMap } from "@/lib/content"
 
 const NotionPage = dynamic(() => import("@/components/notion-page"), {
   loading: () => <NotionPageSkeleton />,
@@ -26,7 +26,6 @@ const NotionPage = dynamic(() => import("@/components/notion-page"), {
 
 interface MomentCardProps {
   moment: PostMetadata;
-  avatarSrc?: string;
 }
 
 function PlatformIcon({ platform, size = 20 }: { platform?: Platform; size?: number }) {
@@ -40,7 +39,7 @@ function PlatformIcon({ platform, size = 20 }: { platform?: Platform; size?: num
   }
 }
 
-export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
+export function MomentCard({ moment }: MomentCardProps) {
   const isTweet = moment.type === "Tweet"
   const isNotionPost = moment.platform === 'notion' || !moment.platform
   const t = useTranslations('Moment')
@@ -56,7 +55,8 @@ export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
     if (!isTweet || !isNotionPost || !moment.id) return
     const fetchPost = async () => {
       try {
-        const { recordMap: data } = await getPost(moment.id as string, true)
+        // Use getPostRecordMap for client-side fetching (no translation needed)
+        const { recordMap: data } = await getPostRecordMap(moment.id as string, true)
         setRecordMap(data)
       } catch (error) {
         console.error('Error fetching post:', error)
@@ -68,6 +68,17 @@ export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
   }, [moment.id, isTweet, isNotionPost])
 
   if (!moment.id) return null;
+
+  // Get tooltip text based on platform
+  const getTooltipText = () => {
+    if (moment.platform === 'x') {
+      return t('view-on-x');
+    }
+    if (moment.platform === 'bluesky') {
+      return t('view-on-bluesky');
+    }
+    return t('open-in-new-tab'); // For notion posts
+  };
 
   // Get external URL for social platforms
   const getExternalUrl = () => {
@@ -134,34 +145,41 @@ export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
             }
           }}
         >
-          <Button
-            isIconOnly
-            variant="secondary"
-            onPress={handleOpenInNewTab}
-            className="absolute top-3 right-3"
-            aria-label={t('open-in-new-tab')}
-          >
-            <PlatformIcon platform={moment.platform} size={20} />
-          </Button>
+          <Tooltip delay={0}>
+            <Button
+              isIconOnly
+              variant="secondary"
+              onPress={handleOpenInNewTab}
+              className="absolute top-3 right-3"
+              aria-label={getTooltipText()}
+            >
+              <PlatformIcon platform={moment.platform} size={20} />
+            </Button>
+            <Tooltip.Content offset={7} placement="right">
+              <p>{getTooltipText()}</p>
+            </Tooltip.Content>
+          </Tooltip>
 
           {/* Header */}
           <div className="flex gap-3 items-center">
-            <Avatar platform={moment.platform} src={avatarSrc} size="sm" name="Choneas" />
+            <Avatar size="sm" name="Choneas" />
             <div className="flex flex-col">
               <span className="text-sm font-medium">Choneas</span>
               <span className="text-xs text-content3-foreground">
-                {/* Show handle for social platforms */}
+                {/* Handle */}
                 {moment.platform && moment.platform !== 'notion' && moment.social?.username && (
                   <>
                     <span className="text-xs">@{moment.social.username}</span>
                     <span> · </span>
                   </>
                 )}
-                {formatDate(moment.created_time, locale, true)}
-                {/* Show specific time for social platforms */}
-                {moment.platform && moment.platform !== 'notion' && (
+                {/* Time */}
+                {moment.platform && moment.platform !== 'notion' ? (
                   <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                )}
+                ) :
+                  <span> {formatDate(moment.created_time, locale, true)} </span>
+                }
+                {/* Reading Time */}
                 {!isTweet && moment.readingTime && " · " + moment.readingTime}
               </span>
             </div>
@@ -173,7 +191,7 @@ export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
             layout
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
-            {/* Title - only show for Notion posts or if title exists */}
+            {/* Title */}
             {(isNotionPost || moment.title) && (
               <span className="text-xl font-semibold">
                 {moment.icon && <span className="mr-1" aria-hidden="true">{moment.icon}</span>}
@@ -341,7 +359,6 @@ export function MomentCard({ moment, avatarSrc }: MomentCardProps) {
           onOpenChange={setIsModalOpen}
           recordMap={isNotionPost ? (recordMap || undefined) : undefined}
           metadata={moment}
-          avatarSrc={avatarSrc}
         />
       )}
     </>
@@ -428,9 +445,16 @@ export function TweetContentSkeleton(
   )
 }
 
-export function MomentCardSkeleton({ moment }: { moment: PostMetadata }) {
+interface MomentCardSkeletonProps {
+  moment: PostMetadata;
+  locale?: string; // Optional locale prop for SSR fallback
+}
+
+export function MomentCardSkeleton({ moment, locale: propLocale }: MomentCardSkeletonProps) {
   const isTweet = moment.type === "Tweet"
-  const locale = useLocale()
+  // Use prop locale if provided (for Suspense fallback), otherwise use hook
+  const hookLocale = useLocale()
+  const locale = propLocale || hookLocale
 
   return (
     <motion.div
@@ -441,7 +465,7 @@ export function MomentCardSkeleton({ moment }: { moment: PostMetadata }) {
       <Card className="relative">
         {/* Header */}
         <div className="flex gap-3 items-center">
-          <Skeleton className="w-10 h-10 rounded-full" />
+          <Avatar size="sm" name="Choneas" />
           <div className="flex flex-col gap-2 flex-1">
             <Skeleton className="h-4 w-24 rounded-lg" />
             <span className="text-xs text-content3-foreground">

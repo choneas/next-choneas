@@ -11,9 +11,10 @@ import type { PostMetadata } from "@/types/content";
 interface ArticleFilterProps {
     articles: PostMetadata[];
     sortOrder?: "asc" | "desc";
-    onFilteredArticlesChange: (articles: PostMetadata[]) => void;
+    onFilterChange: (filtered: PostMetadata[], hasNoResults: boolean) => void;
 }
 
+/** Extract unique tags from articles */
 function parseTags(articles: PostMetadata[]): string[] {
     const tagSet = new Set<string>();
     articles.forEach((article) => {
@@ -22,10 +23,45 @@ function parseTags(articles: PostMetadata[]): string[] {
     return Array.from(tagSet);
 }
 
+/** Filter and sort articles based on tags and search value */
+function filterArticles(
+    articles: PostMetadata[],
+    selectedTags: string[],
+    searchValue: string,
+    sortOrder: "asc" | "desc"
+): PostMetadata[] {
+    return articles
+        .filter((article) => {
+            // Tag filter
+            if (selectedTags.length > 0) {
+                if (!article.tags || !selectedTags.some((t) => article.tags?.includes(t))) {
+                    return false;
+                }
+            }
+            // Search filter
+            if (searchValue) {
+                const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => term.length > 0);
+                const titleLower = article.title.toLowerCase();
+                const descriptionLower = article.description?.toLowerCase() || "";
+                const tocContent = article.toc?.map((item) => item.text.toLowerCase()).join(" ") || "";
+
+                return searchTerms.every(
+                    (term) => titleLower.includes(term) || descriptionLower.includes(term) || tocContent.includes(term)
+                );
+            }
+            return true;
+        })
+        .sort((a, b) => {
+            const timeA = a.created_time ? new Date(a.created_time).getTime() : 0;
+            const timeB = b.created_time ? new Date(b.created_time).getTime() : 0;
+            return sortOrder === "desc" ? timeB - timeA : timeA - timeB;
+        });
+}
+
 export function ArticleFilter({
     articles,
     sortOrder = "desc",
-    onFilteredArticlesChange,
+    onFilterChange,
 }: ArticleFilterProps) {
     const t = useTranslations("Article-Filter");
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,38 +83,20 @@ export function ArticleFilter({
         return [...selectedFirst, ...remaining];
     }, [selectedTags, tags]);
 
-    const filteredArticles = useMemo(() => {
-        return articles
-            .filter((article) => {
-                if (selectedTags.length > 0) {
-                    if (!article.tags || !selectedTags.some((t) => article.tags?.includes(t))) {
-                        return false;
-                    }
-                }
-
-                if (searchValue) {
-                    const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => term.length > 0);
-                    const titleLower = article.title.toLowerCase();
-                    const descriptionLower = article.description?.toLowerCase() || "";
-                    const tocContent = article.toc?.map((item) => item.text.toLowerCase()).join(" ") || "";
-
-                    return searchTerms.every(
-                        (term) => titleLower.includes(term) || descriptionLower.includes(term) || tocContent.includes(term)
-                    );
-                }
-
-                return true;
-            })
-            .sort((a, b) => {
-                const timeA = a.created_time ? new Date(a.created_time).getTime() : 0;
-                const timeB = b.created_time ? new Date(b.created_time).getTime() : 0;
-                return sortOrder === "desc" ? timeB - timeA : timeA - timeB;
-            });
+    // Compute filtered articles and hasNoResults together
+    const { filteredArticles, hasNoResults } = useMemo(() => {
+        const filtered = filterArticles(articles, selectedTags, searchValue, sortOrder);
+        const isFiltering = selectedTags.length > 0 || searchValue.length > 0;
+        return {
+            filteredArticles: filtered,
+            hasNoResults: filtered.length === 0 && isFiltering,
+        };
     }, [articles, selectedTags, searchValue, sortOrder]);
 
+    // Sync filter results to parent - pass both filtered articles and hasNoResults
     useEffect(() => {
-        onFilteredArticlesChange(filteredArticles);
-    }, [filteredArticles, onFilteredArticlesChange]);
+        onFilterChange(filteredArticles, hasNoResults);
+    }, [filteredArticles, hasNoResults, onFilterChange]);
 
     const updateScrollAvailability = useCallback(() => {
         const container = scrollRef.current;
@@ -105,12 +123,9 @@ export function ArticleFilter({
     }, [orderedTags, updateScrollAvailability]);
 
     const handleTagToggle = (tag: string) => {
-        const isSelected = selectedTags.includes(tag);
-        if (isSelected) {
-            setSelectedTags(selectedTags.filter((t) => t !== tag));
-        } else {
-            setSelectedTags([...selectedTags, tag]);
-        }
+        setSelectedTags((prev) =>
+            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+        );
     };
 
     const scrollBy = (direction: number) => {
@@ -119,9 +134,6 @@ export function ArticleFilter({
             behavior: "smooth",
         });
     };
-
-    const hasNoResults =
-        filteredArticles.length === 0 && (selectedTags.length > 0 || searchValue.length > 0);
 
     const scrollActiveIntoView = (index: number) => {
         const el = scrollRef.current?.querySelector<HTMLElement>(`[data-tag-index="${index}"]`);

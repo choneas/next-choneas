@@ -2,8 +2,8 @@
   "Metadata": {
     "name": "Choneas",
     "title": "Choneas 的个人博客",
-    "description": "代码、随笔、思考、分享以及生活",
-    "suffix": " - Choneas 的个人博客"
+    "description": "Choneas 仅就定义而言是名学生。祂的想法总是和身边的人不一样，所以祂希望在某些时候能够在一群人中被别人记住。这里有祂的代码、生活、随笔和思考。",
+    "suffix": " – Choneas 的个人博客"
   },
   "Navbar": {
     "moments": "动态",
@@ -12,12 +12,23 @@
     "about": "关于"
   },
   "Home": {
-    "hello-iam": "👋 很高兴认识你，我是",
-    "choneas": "Choneas",
-    "name-desc": "又或是 符华大人的小赤鸢 🪶",
-    "description": "全栈程序鸢，算法研究，UI / UX 设计，",
-    "description-line2": "喜欢 ACGN、摄影、动画",
-    "goto-articles": "不是您要找的内容？前往目录"
+    "intro": {
+      "paragraph1": "Choneas 仅就定义而言是名学生。祂的想法总是和身边的人不一样，所以祂希望在某些时候能够在一群人中<b>被别人记住</b>。目前祂正在参与基于 React 的项目开发。祂想成为一名教师和软件工程师。",
+      "paragraph2": {
+        "before": "祂最爱吃全熟的牛排了。祂很喜欢音乐，甚至在周围没有设备时，祂能戴上祂的 <i>BrainPods</i> 以继续播放。他很擅长把",
+        "culture": "文化",
+        "middle": "融入祂的事物里，例如用户界面和代码，直到感觉恰到好处。所以如果你想了解更多关于他的信息或随便逛逛，你可以看看祂的",
+        "link": "文章",
+        "after": "或想法"
+      },
+      "paragraph3": "你已达到页面底部。或者，这其实是一个新的开始？不管怎样，谢谢你多停留了一会儿，<i>哪怕本来没这个必要</i>"
+    },
+    "modal": {
+      "title": "You've got this.",
+      "paragraph1": "这是 Choneas 的网站之前的封面，在 Adobe Fresco 完成。因为它拖慢了首屏加载并且本来就没有认真设计过首页，所以祂才决定做出这样的更改。",
+      "paragraph2": "我很喜欢传统文化。最容易想到的例子就是《罗小黑战记》（<i>The Legend of Hei</i>），它既融合了现代元素，又藏着以“妖精”为载体的中国古代文化内核。“无限”和“老君”是我最喜欢也最有代表性的两个角色，其中“无限”是主角“罗小黑”的师父。从角色的服装设计，到动画和电影里的音乐、艺术设计，都让我产生了强烈共鸣。尤其是里面的传统文化元素，总给我一种缓慢、老旧、带着些沉重的感觉。却又很奇妙。<br></br><br></br> 所以我很享受这种与文化共鸣的感觉。所以在能表达自己的地方 比如这里，我想以最贴合自己的方式展现这份喜爱。所以我从一开始就决定用红棕色作为主题色，同时使用 Material Theme Builder 生成主题。我坚定地说",
+      "paragraph3": "<i>我很高兴我能够尽自己的努力去传播我们的传统文化。</i>"
+    }
   },
   "Article": {
     "title": "目录",
@@ -57,7 +68,10 @@
     "collapse": "收起",
     "details": "动态详情",
     "comment-placeholder": "评论 ...",
-    "open-in-new-tab": "在新标签页打开"
+    "open-in-new-tab": "在新标签页打开",
+    "view-on-x": "在 X 上查看",
+    "view-on-bluesky": "在 Bluesky 上查看",
+    "view-details": "查看详情"
   },
   "Article-Filter": {
     "placeholder-tags": "标签",
@@ -101,6 +115,9 @@
       "星期五",
       "星期六"
     ]
+  },
+  "LiveCounter": {
+    "title": "Time on Earth"
   },
   "Accessibility": {
     "skip-to-content": "跳转到主要内容"

@@ -12,10 +12,9 @@ import { Avatar } from "@/components/avatar"
 interface PostHeaderProps {
     post: PostMetadata;
     isTweet?: boolean;
-    avatarSrc?: string;
 }
 
-export function PostHeader({ post, isTweet, avatarSrc }: PostHeaderProps) {
+export function PostHeader({ post, isTweet }: PostHeaderProps) {
     const t = useTranslations("Post-Header")
     const locale = useLocale()
     const { setPostMetadata } = usePostMetadata()
@@ -28,7 +27,7 @@ export function PostHeader({ post, isTweet, avatarSrc }: PostHeaderProps) {
     if (isSocialPost) {
         return (
             <div className="flex gap-3 items-center py-4">
-                <Avatar platform={post.platform} src={avatarSrc} size="md" name="Choneas" />
+                <Avatar size="md" name="Choneas" />
                 <div className="flex flex-col">
                     <span className="text-base font-medium">Choneas</span>
                     <span className="text-sm text-content3-foreground">

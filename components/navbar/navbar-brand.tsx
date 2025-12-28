@@ -3,17 +3,30 @@
 import { Link } from "@heroui/react";
 import { motion, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+import { triggerNavigationLoading } from "@/components/navigation-loader";
 import { usePostMetadata } from "@/stores/post";
 import { Avatar } from "@/components/avatar";
 import { useNavbarContext } from "./navbar-context";
 
 export function NavbarBrand() {
     const tm = useTranslations("Metadata")
+    const router = useRouter();
+    const currentPathname = usePathname();
     const { postMetadata } = usePostMetadata();
     const { scrollY, pathname } = useNavbarContext();
 
     const isArticlePage = pathname.includes("article/");
+
+    // Handle navigation with loading trigger
+    const handleNavigation = () => {
+        if (currentPathname !== "/") {
+            triggerNavigationLoading("/");
+        }
+        router.push("/");
+    };
 
     // Text animation values
     const headTextY = useTransform(scrollY, [0, 200], [-6, -15]);
@@ -72,11 +85,11 @@ export function NavbarBrand() {
 
     return (
         <Link
-            href="/"
-            className="flex gap-3 font-bold text-accent items-center w-full"
+            onPress={handleNavigation}
+            className="flex gap-3 font-bold text-accent items-center w-full cursor-pointer"
             underline="none"
         >
-            <Avatar platform="notion" size="sm" className="shrink-0" />
+            <Avatar size="sm" className="shrink-0" />
             {isArticlePage ? (
                 <motion.div
                     className="relative h-6"

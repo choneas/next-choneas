@@ -1,3 +1,5 @@
+"use client";
+
 import NextLink from "next/link";
 import Image from "next/image";
 import { useLocale } from "next-intl";
@@ -5,6 +7,7 @@ import { uuidToId } from "notion-utils";
 import { Card } from "@heroui/react";
 import { Avatar } from "@/components/avatar";
 import { Tags } from "@/components/tags";
+import { triggerNavigationLoading } from "@/components/navigation-loader";
 import type { PostMetadata } from "@/types/content";
 import { formatDate } from "@/lib/format";
 
@@ -31,8 +34,6 @@ export function ArticleCard({
                 <>
                     {article.author[0].avatar && (
                         <Avatar
-                            src={article.author[0].avatar}
-                            alt={article.author[0].name}
                             size="sm"
                         />
                     )}
@@ -52,6 +53,11 @@ export function ArticleCard({
     const focusClass =
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset";
 
+    // Trigger loading overlay on navigation
+    const handleNavigate = () => {
+        triggerNavigationLoading(href);
+    };
+
     if (article.cover) {
         return (
             <NextLink
@@ -59,6 +65,7 @@ export function ArticleCard({
                 tabIndex={0}
                 className={`${focusClass} block`}
                 aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+                onNavigate={handleNavigate}
             >
                 <Card className="bg-content2 shadow border-none">
                     <div className="lg:hidden">
@@ -105,6 +112,7 @@ export function ArticleCard({
             tabIndex={0}
             className={`${focusClass} block`}
             aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+            onNavigate={handleNavigate}
         >
             <Card className="bg-content2 shadow border-none">
                 <Card.Content className="p-3">

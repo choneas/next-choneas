@@ -3,28 +3,42 @@
 import { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-
+import { useRouter, usePathname } from "next/navigation";
+import { triggerNavigationLoading } from "@/components/navigation-loader";
 import { navItems } from "@/data/navbar";
 
 interface NavbarItemsProps {
+    /** Current active path (may be pending navigation target) */
     pathname: string;
     translations: Record<string, string>;
+    /** Callback when user initiates navigation (before it completes) */
+    onPendingNavigation?: (path: string) => void;
 }
 
 /**
- * NavbarItems 客户端组件
- * 显示桌面端导航链接
- * 使用 HeroUI ghost 按钮，悬浮时展开显示文字
- * 支持 filled/outline 图标状态切换
+ * NavbarItems client component
+ * Displays desktop navigation links with hover expansion
+ * Uses pending navigation to update active state immediately
  */
-export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
+export function NavbarItems({ pathname, translations, onPendingNavigation }: NavbarItemsProps) {
     const router = useRouter();
+    const currentPathname = usePathname();
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const [collapseTimeout, setCollapseTimeout] = useState<NodeJS.Timeout | null>(null);
 
+    const handleNavigation = (href: string) => {
+        // Notify parent of pending navigation immediately
+        // This allows navbar layout to update before navigation completes
+        onPendingNavigation?.(href);
+
+        // Only trigger loading if navigating to a different page
+        if (currentPathname !== href) {
+            triggerNavigationLoading(href);
+        }
+        router.push(href);
+    };
+
     const handleExpand = (index: number) => {
-        // Clear any pending timeout to allow smooth interruption
         if (collapseTimeout) {
             clearTimeout(collapseTimeout);
             setCollapseTimeout(null);
@@ -33,11 +47,9 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
     };
 
     const handleCollapse = () => {
-        // Clear any existing timeout first
         if (collapseTimeout) {
             clearTimeout(collapseTimeout);
         }
-        // Delay collapse to allow smooth transition between items
         const timeout = setTimeout(() => {
             setExpandedIndex(null);
             setCollapseTimeout(null);
@@ -45,7 +57,6 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
         setCollapseTimeout(timeout);
     };
 
-    // Cleanup timeout on component unmount
     useEffect(() => {
         return () => {
             if (collapseTimeout) {
@@ -55,24 +66,27 @@ export function NavbarItems({ pathname, translations }: NavbarItemsProps) {
     }, [collapseTimeout]);
 
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 px-0.5">
             {navItems.map((item, index) => {
-                const isActive = pathname.includes(item.href) && pathname !== "/";
+                // Check if this item matches the active path (including pending navigation)
+                const isActive = pathname === "/"
+                    ? false  // No item is active on Home
+                    : pathname.includes(item.href);
                 const isExpanded = expandedIndex === index;
 
-                // Only use filled icon when on active page, not on hover
+                // Use filled icon only when on active page
                 const currentIcon = isActive ? item.icon.filled : item.icon.outline;
 
                 return (
                     <Button
                         key={item.href}
                         variant="ghost"
-                        onPress={() => router.push(item.href)}
+                        onPress={() => handleNavigation(item.href)}
                         onHoverStart={() => handleExpand(index)}
                         onHoverEnd={handleCollapse}
                         onFocus={() => handleExpand(index)}
                         onBlur={handleCollapse}
-                        className={`navbar-ghost-btn h-12 p-4 min-h-0 min-w-0 text-accent rounded-full whitespace-nowrap outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)] transition-all duration-300 ${isActive ? "font-bold" : ""}`}
+                        className={`h-11 p-4 min-h-0 min-w-0 text-accent rounded-full whitespace-nowrap outline-none focus-visible:shadow-[0_0_0_3px_var(--color-accent)] transition-all duration-300 hover:bg-[color-mix(in_srgb,var(--color-accent)_8%,transparent_92%)] ${isActive ? "font-bold" : ""}`}
                     >
                         <motion.div
                             className="flex items-center justify-center"

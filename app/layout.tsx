@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -27,14 +26,6 @@ const sourceCode = Source_Code_Pro({
     subsets: ["latin"],
     fallback: ["Source Code Pro", "monospace"],
 });
-
-export const metadata: Metadata = {
-    title: {
-        template: "%s - Choneas 的个人博客",
-        default: "Choneas 的个人博客",
-    },
-    description: "代码、随笔、思考、分享以及生活",
-};
 
 export default async function RootLayout({
     children,
@@ -66,7 +57,9 @@ async function LayoutContent({ children }: { children: React.ReactNode }) {
             <Providers>
                 <SkipToContent />
                 <NavbarWrapper />
-                {children}
+                <div className="min-h-[calc(100svh+1px)]">
+                    {children}
+                </div>
                 <Footer />
             </Providers>
         </NextIntlClientProvider>

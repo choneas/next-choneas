@@ -1,9 +1,9 @@
 {
   "Metadata": {
     "name": "Choneas",
-    "title": "Choneas's Blog",
-    "description": "Coding, Recording and life shares.",
-    "suffix": " - Choneas's Blog"
+    "title": "Choneas",
+    "description": "Choneas is a student only by definition. He thinks differently from people like him. Coding, Recording and life shares.",
+    "suffix": " – Choneas"
   },
   "Navbar": {
     "articles": "Articles",
@@ -12,12 +12,23 @@
     "moments": "Moments"
   },
   "Home": {
-    "hello-iam": "👋 Nice to meet you, I am",
-    "choneas": "Choneas",
-    "name-desc": "or ( The Master Fuhua's ) Little Phoenix",
-    "description": "Full stack programmer, C++ algorithm developer, UI/UX designer, and ",
-    "description-line2": "ACGN.",
-    "goto-articles": "Not what you looking for? Go to Contents"
+    "intro": {
+      "paragraph1": "Choneas is a student only by definition. He thinks in a completely different lane from his peers. He is working at projects that using React. He has a clear ambition and he will be a teacher and a software engineer. ",
+      "paragraph2": {
+        "before": "His favourite food is steak and he prefers it fully cooked. He loves music and he can even activates <i>BrainPods</i> to keep the music looping in his head. He is good at mixing ",
+        "culture": "culture",
+        "middle": " into code until it just feels right. So if you want to discover more about him or do something else, just read his ",
+        "link": "articles",
+        "after": " or thoughts."
+      },
+      "paragraph3": "You've reached the end of the page. Or maybe the <i>beginning</i>. Either way, thanks for staying a little longer than necessary. Feel free to linger."
+    },
+    "modal": {
+      "title": "You've got this.",
+      "paragraph1": "This was the previous cover of Choneas' website, created in Adobe Fresco. It slowed down the first-screen loading speed, and since the homepage wasn't designed with much care in the first place, I decided to make this change.",
+      "paragraph2": "I have a deep fondness for traditional culture. The first example that comes to mind is <i>The Legend of Hei</i>. It not only integrates modern elements but also embodies the essence of ancient Chinese culture through the depiction of mythical creatures. Infinity and Lord Lao are my two favorite and most representative characters; Infinity is the mentor of the protagonist Luo Xiaohei. From the costume designs of the characters to the music and artistic styles featured in the animation and film, everything resonates deeply with me. In particular, the traditional cultural elements in it give me a slow, vintage and somewhat profound vibe, yet it feels incredibly fascinating.<br></br><br></br>I truly enjoy this sense of resonance with traditional culture. So in places where I can express myself, like here, I want to show this fondness in my own truest way. That's why I decided from the very start to use reddish brown as the theme color and generate the theme with Material Theme Builder. This is my quiet way of blending what I love into what I create.",
+      "paragraph3": "So here's to the creators who dare to blend the old with the new, the technical with the artistic, the logical with the emotional. <b>You've got this.</b>"
+    }
   },
   "Article": {
     "title": "Contents",
@@ -57,7 +68,10 @@
     "collapse": "Collapse",
     "details": "Tweet Details",
     "comment-placeholder": "Leave a comment...",
-    "open-in-new-tab": "Open in new tab"
+    "open-in-new-tab": "Open in new tab",
+    "view-on-x": "View on X",
+    "view-on-bluesky": "View on Bluesky",
+    "view-details": "View details"
   },
   "Post-Header": {
     "created_at": "Posted at ",
@@ -101,6 +115,9 @@
       "Friday",
       "Saturday"
     ]
+  },
+  "LiveCounter": {
+    "title": "Time on Earth"
   },
   "Accessibility": {
     "skip-to-content": "Skip to content"

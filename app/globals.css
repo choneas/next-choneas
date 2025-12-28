@@ -59,6 +59,13 @@
     --overlay-shadow: 0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
     --field-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 0 1px 0 rgba(0, 0, 0, 0.06);
 
+    /* Landing Page Colors - for light mesh gradient background */
+    --landing-text-primary: rgba(35, 25, 24, 0.85);
+    --landing-text-secondary: rgba(35, 25, 24, 0.6);
+    --landing-text-accent: rgba(144, 75, 64, 0.7);
+    --landing-text-highlight: #904B40;
+    --landing-grid: rgba(144, 75, 64, 0.08);
+
     /* Layout */
     --radius: 0.5rem;
     --radius-sm: calc(var(--radius) * 0.75);
@@ -254,6 +261,7 @@
 }
 
 @layer components {
+
   .article-container {
     @apply max-w-6xl mx-auto px-8 sm:px-24 md:px-48;
   }
@@ -579,14 +587,7 @@
   }
 }
 
-/* Navbar ghost button custom styles */
-.navbar-ghost-btn[data-variant="ghost"] {
-  background-color: transparent !important;
-}
 
-.navbar-ghost-btn[data-variant="ghost"]:hover {
-  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent 92%) !important;
-}
 
 /* OverlayScrollbars custom theme */
 .os-theme-custom {
@@ -616,7 +617,7 @@
     left: 1rem !important;
     top: auto !important;
     right: auto !important;
-    z-index: 9999 !important;
+    z-index: 50 !important;
   }
 
   .mobile-dropdown-fix-right {
@@ -625,6 +626,6 @@
     right: 1rem !important;
     top: auto !important;
     left: auto !important;
-    z-index: 9999 !important;
+    z-index: 50 !important;
   }
 }

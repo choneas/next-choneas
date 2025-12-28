@@ -16,7 +16,6 @@ interface TweetModalProps {
     onOpenChange: (open: boolean) => void;
     recordMap?: ExtendedRecordMap;
     metadata: PostMetadata;
-    avatarSrc?: string;
 }
 
 export function TweetModal({
@@ -24,8 +23,7 @@ export function TweetModal({
     isOpen,
     onOpenChange,
     recordMap,
-    metadata,
-    avatarSrc
+    metadata
 }: TweetModalProps) {
     const locale = useLocale();
     const t = useTranslations("Metadata");
@@ -33,8 +31,12 @@ export function TweetModal({
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
+        // Only update title for Notion posts, not for social platform posts
+        const isNotionPost = metadata.platform === 'notion' || !metadata.platform;
+        if (!isNotionPost) return;
 
         if (isOpen) {
+            // Save original title when opening modal
             originalTitleRef.current = document.title;
             document.title = (metadata.title || formatDate(metadata.created_time, locale, true)) + t("suffix");
 
@@ -50,7 +52,8 @@ export function TweetModal({
                 document.head.appendChild(metaBacklink);
             }
             metaBacklink.setAttribute("content", `https://choneas.com/tweet/${metadata.slug || metadata.id}`);
-        } else {
+        } else if (originalTitleRef.current) {
+            // Only restore title if we have a saved original title
             document.title = originalTitleRef.current;
         }
     }, [isOpen, metadata, locale, t]);
@@ -68,7 +71,7 @@ export function TweetModal({
                 <Modal.Dialog className="container mx-auto pb-4 px-4 sm:px-8 md:px-12 md:max-w-3xl">
                     <Modal.CloseTrigger />
                     <Modal.Header className="px-4">
-                        {!isLoading && <PostHeader isTweet post={metadata} avatarSrc={avatarSrc} />}
+                        {!isLoading && <PostHeader isTweet post={metadata} />}
                     </Modal.Header>
                     <Modal.Body className="px-4 pb-4 transition-transform duration-100">
                         <div className="space-y-4">

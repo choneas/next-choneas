@@ -2,7 +2,9 @@
 
 import { Dropdown, Label, ListBox } from "@heroui/react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+
+import { triggerNavigationLoading } from "@/components/navigation-loader";
 import { navItems } from "@/data/navbar";
 
 interface NavbarMobileMenuProps {
@@ -19,6 +21,15 @@ interface NavbarMobileMenuProps {
  */
 export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations }: NavbarMobileMenuProps) {
     const router = useRouter();
+    const currentPathname = usePathname();
+
+    const handleNavigation = (href: string) => {
+        if (currentPathname !== href) {
+            triggerNavigationLoading(href);
+        }
+        router.push(href);
+        onOpenChange(false);
+    };
 
     return (
         <Dropdown
@@ -66,10 +77,7 @@ export function NavbarMobileMenu({ isOpen, onOpenChange, pathname, translations 
                 <ListBox
                     aria-label="Navigation"
                     selectionMode="single"
-                    onAction={(key) => {
-                        router.push(String(key));
-                        onOpenChange(false);
-                    }}
+                    onAction={(key) => handleNavigation(String(key))}
                 >
                     {navItems.map((item) => {
                         const isActive = pathname.includes(item.href) && pathname !== "/";
