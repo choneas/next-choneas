@@ -62,8 +62,9 @@ export function SecondParagraphWithModal({
                                         src={imageSrc}
                                         alt={imageAlt}
                                         fill
+                                        loading="lazy"
                                         className="object-cover"
-                                        priority
+                                        quality={75}
                                     />
                                     {/* Gradient overlay */}
                                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />

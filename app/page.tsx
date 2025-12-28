@@ -134,15 +134,17 @@ export default async function Home() {
 
             {/* Fixed navbar grid lines - desktop only */}
             <HLineFixed className="top-5 z-40" />
-            <HLineFixed className="top-24 hideen md:block" />
+            <HLineFixed className="top-24" />
+
+            <HLine className="left-0 mt-4 md:hidden" />
 
             {/* Hero Section */}
             <section className="relative min-h-screen flex flex-col px-6 md:px-16 lg:px-20">
                 {/* First paragraph + counter */}
-                <div className="relative pt-[15vh] md:pt-[30vh] min-h-[80vh] md:min-h-[85vh]">
-                    <HLine className="top-[14vh] md:top-0" />
+                <div className="relative flex-1 flex flex-col justify-center pt-[25vh] pb-10 md:pb-0 md:flex-none md:pt-[10vh] md:min-h-[85vh]">
+                    <HLine className="top-[24vh] md:top-0" />
 
-                    <p className="text-2xl lg:text-3xl text-foreground/85 leading-relaxed max-w-[75vw] md:max-w-4xl pt-2 pl-2 md:pl-6">
+                    <p className="text-2xl lg:text-3xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl pt-2 pl-2 md:pl-6">
                         {t.rich("intro.paragraph1", {
                             i: (chunks) => <em className="italic">{chunks}</em>,
                             b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
@@ -155,10 +157,12 @@ export default async function Home() {
                         </Suspense>
                     </div>
 
+                    {/* Mobile only: bottom HLine after counter */}
+                    <HLine className="-bottom-4 md:hidden" />
                 </div>
 
-                {/* Icons */}
-                <div className="relative">
+                {/* Icons - mobile: mt-8 closer to counter; desktop: normal flow */}
+                <div className="relative mt-8 mb-6 md:mt-0 md:mb-0">
                     <HLine className="top-0" />
                     <GlassPanel className="-mx-2 md:mx-0 px-4 py-4 md:py-8">
                         <IconLinks />
@@ -166,8 +170,8 @@ export default async function Home() {
                     <HLine className="bottom-0" />
                 </div>
 
-                {/* Second paragraph */}
-                <div className="relative my-24 md:my-16">
+                {/* Second paragraph - inside hero section on desktop */}
+                <div className="relative my-16 md:my-16">
                     <SecondParagraphWithModal
                         beforeCulture={t.rich("intro.paragraph2.before", {
                             i: (chunks) => <em className="italic">{chunks}</em>,

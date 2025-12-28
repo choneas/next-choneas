@@ -12,12 +12,23 @@
     "moments": "Momentos"
   },
   "Home": {
-    "hello-iam": "👋 Encantado de conocerte, soy",
-    "choneas": "Choneas",
-    "name-desc": "o ( Del Maestro Fuhua ) Pequeño Fénix",
-    "description": "Programador full stack, desarrollador de algoritmos C++, diseñador UI/UX, y ",
-    "description-line2": "ACGN.",
-    "goto-articles": "¿No es lo que buscas? Ir a Contenidos"
+    "intro": {
+      "paragraph1": "Choneas es estudiante solo por definición. Piensa en un carril completamente diferente al de sus compañeros. Está trabajando en proyectos que usan React. Tiene una ambición clara y será profesor e ingeniero de software. ",
+      "paragraph2": {
+        "before": "Su comida favorita es el bistec y lo prefiere bien cocido. Ama la música e incluso puede activar <i>BrainPods</i> para mantener la música en bucle en su cabeza. Es bueno mezclando ",
+        "culture": "cultura",
+        "middle": " en el código hasta que simplemente se siente bien. Así que si quieres descubrir más sobre él o hacer algo más, solo lee sus ",
+        "link": "artículos",
+        "after": " o pensamientos."
+      },
+      "paragraph3": "Has llegado al final de la página. O quizás al <i>comienzo</i>. De cualquier manera, gracias por quedarte un poco más de lo necesario. Siéntete libre de quedarte."
+    },
+    "modal": {
+      "title": "Tú puedes.",
+      "paragraph1": "Esta era la portada anterior del sitio web de Choneas, creada en Adobe Fresco. Ralentizaba la velocidad de carga de la primera pantalla, y como la página de inicio no fue diseñada con mucho cuidado en primer lugar, decidí hacer este cambio.",
+      "paragraph2": "Tengo un profundo cariño por la cultura tradicional. El primer ejemplo que me viene a la mente es <i>La Leyenda de Hei</i>. No solo integra elementos modernos sino que también encarna la esencia de la antigua cultura china a través de la representación de criaturas míticas. Infinity y Lord Lao son mis dos personajes favoritos y más representativos; Infinity es el mentor del protagonista Luo Xiaohei. Desde los diseños de vestuario de los personajes hasta la música y los estilos artísticos presentados en la animación y la película, todo resuena profundamente conmigo. En particular, los elementos culturales tradicionales me dan una vibra lenta, vintage y algo profunda, pero se siente increíblemente fascinante.<br></br><br></br>Realmente disfruto esta sensación de resonancia con la cultura tradicional. Así que en lugares donde puedo expresarme, como aquí, quiero mostrar este cariño de mi manera más auténtica. Por eso decidí desde el principio usar marrón rojizo como color temático y generar el tema con Material Theme Builder. Esta es mi forma silenciosa de mezclar lo que amo en lo que creo.",
+      "paragraph3": "Así que brindo por los creadores que se atreven a mezclar lo antiguo con lo nuevo, lo técnico con lo artístico, lo lógico con lo emocional. <b>Tú puedes.</b>"
+    }
   },
   "Article": {
     "title": "Contenidos",
@@ -47,7 +58,9 @@
     "view-on": "Ver en"
   },
   "Table-Of-Contents": {
-    "toc": "Tabla de Contenidos"
+    "toc": "Tabla de Contenidos",
+    "in-this-article": "En este artículo",
+    "intro": "Intro"
   },
   "Moment": {
     "article-publish": "Publicó un artículo",
@@ -55,7 +68,10 @@
     "collapse": "Colapsar",
     "details": "Detalles del Tweet",
     "comment-placeholder": "Deja un comentario...",
-    "open-in-new-tab": "Abrir en nueva pestaña"
+    "open-in-new-tab": "Abrir en nueva pestaña",
+    "view-on-x": "Ver en X",
+    "view-on-bluesky": "Ver en Bluesky",
+    "view-details": "Ver detalles"
   },
   "Post-Header": {
     "created_at": "Publicado el ",
@@ -86,6 +102,9 @@
     "copyright": "© {startYear}-{currentYear} Choneas. Todos los derechos reservados.",
     "license": "Este trabajo está licenciado bajo una",
     "licenseLink": "CC BY-NC-SA 4.0"
+  },
+  "LiveCounter": {
+    "title": "Tiempo en la Tierra"
   },
   "Format": {
     "today": "Hoy",

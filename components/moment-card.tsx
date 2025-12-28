@@ -166,19 +166,18 @@ export function MomentCard({ moment }: MomentCardProps) {
             <div className="flex flex-col">
               <span className="text-sm font-medium">Choneas</span>
               <span className="text-xs text-content3-foreground">
-                {/* Handle */}
+                {/* Handle for social platforms */}
                 {moment.platform && moment.platform !== 'notion' && moment.social?.username && (
                   <>
                     <span className="text-xs">@{moment.social.username}</span>
                     <span> · </span>
                   </>
                 )}
-                {/* Time */}
-                {moment.platform && moment.platform !== 'notion' ? (
+                <span>{formatDate(moment.created_time, locale, true)}</span>
+                {/* Time for social platforms */}
+                {moment.platform && moment.platform !== 'notion' && (
                   <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                ) :
-                  <span> {formatDate(moment.created_time, locale, true)} </span>
-                }
+                )}
                 {/* Reading Time */}
                 {!isTweet && moment.readingTime && " · " + moment.readingTime}
               </span>
@@ -469,15 +468,16 @@ export function MomentCardSkeleton({ moment, locale: propLocale }: MomentCardSke
           <div className="flex flex-col gap-2 flex-1">
             <Skeleton className="h-4 w-24 rounded-lg" />
             <span className="text-xs text-content3-foreground">
-              {/* Show handle for social platforms in skeleton */}
+              {/* Handle for social platforms in skeleton */}
               {moment.platform && moment.platform !== 'notion' && moment.social?.username && (
                 <>
                   <span className="text-xs">@{moment.social.username}</span>
                   <span> · </span>
                 </>
               )}
+              {/* Date (unified) */}
               {formatDate(moment.created_time, locale, true)}
-              {/* Show specific time for social platforms in skeleton */}
+              {/* Time for social platforms */}
               {moment.platform && moment.platform !== 'notion' && (
                 <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
               )}

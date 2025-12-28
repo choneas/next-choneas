@@ -50,7 +50,25 @@ const TRANSITIONS = {
         damping: 25,
         mass: 1,
     },
+    // Mobile: no position animation, instant
+    mobileIsland: {
+        type: "spring" as const,
+        stiffness: 400,
+        damping: 30,
+    },
     overlay: { duration: 0.2 },
+} as const;
+
+// Refined tap animation configuration
+// Uses precise spring physics for tactile feedback on both press and release
+const TAP_CONFIG = {
+    scale: 0.97,
+    transition: {
+        type: "spring" as const,
+        stiffness: 500,
+        damping: 20,
+        mass: 0.6,
+    },
 } as const;
 
 // ============================================================================
@@ -63,9 +81,10 @@ function getIslandStyle(isMenuOpen: boolean) {
     const bg = isMenuOpen
         ? "color-mix(in srgb, var(--color-background) 96%, transparent 4%)"
         : "color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 55%, transparent 45%)";
+    // Removed outermost light shadow layer
     const shadow = isMenuOpen
-        ? "inset 0 0 0 1.5px rgba(255, 255, 255, 0.15), 0 0 0 1.5px rgba(255, 255, 255, 0.08)"
-        : "inset 0 0 0 1.5px rgba(255, 255, 255, 0.12), 0 0 0 1.5px rgba(255, 255, 255, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)";
+        ? "inset 0 0 0 1.5px rgba(255, 255, 255, 0.15)"
+        : "inset 0 0 0 1.5px rgba(255, 255, 255, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)";
 
     return {
         backdropFilter: blur,
@@ -244,6 +263,7 @@ export function Navbar({ translations }: NavbarProps) {
                         }}
                         initial={false}
                         animate={{ left: sideInset }}
+                        whileTap={{ scale: TAP_CONFIG.scale }}
                         transition={TRANSITIONS.island}
                     >
                         <NavbarBrand />
@@ -255,6 +275,7 @@ export function Navbar({ translations }: NavbarProps) {
                         style={islandStyle}
                         initial={false}
                         layout
+                        whileTap={{ scale: TAP_CONFIG.scale }}
                         transition={TRANSITIONS.island}
                     >
                         <NavbarItems
@@ -270,6 +291,7 @@ export function Navbar({ translations }: NavbarProps) {
                         style={islandStyle}
                         initial={false}
                         animate={{ right: sideInset }}
+                        whileTap={{ scale: TAP_CONFIG.scale }}
                         transition={TRANSITIONS.island}
                     >
                         <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />
@@ -289,9 +311,8 @@ export function Navbar({ translations }: NavbarProps) {
                     <motion.div
                         className="flex items-center justify-center h-14 w-14 rounded-full p-0 shrink-0"
                         style={islandStyle}
-                        initial={false}
-                        layout
-                        transition={TRANSITIONS.island}
+                        whileTap={{ scale: TAP_CONFIG.scale }}
+                        transition={TAP_CONFIG.transition}
                     >
                         <NavbarMobileMenu
                             isOpen={isMobileMenuOpen}
@@ -308,9 +329,8 @@ export function Navbar({ translations }: NavbarProps) {
                             maxWidth: "calc(100vw - 180px)",
                             overflow: "hidden",
                         }}
-                        initial={false}
-                        layout
-                        transition={TRANSITIONS.island}
+                        whileTap={{ scale: TAP_CONFIG.scale }}
+                        transition={TAP_CONFIG.transition}
                     >
                         <NavbarBrand />
                     </motion.div>
@@ -318,9 +338,8 @@ export function Navbar({ translations }: NavbarProps) {
                     <motion.div
                         className="flex items-center justify-center h-14 w-14 rounded-full p-0 shrink-0"
                         style={islandStyle}
-                        initial={false}
-                        layout
-                        transition={TRANSITIONS.island}
+                        whileTap={{ scale: TAP_CONFIG.scale }}
+                        transition={TAP_CONFIG.transition}
                     >
                         <NavbarDropdown onVisibilityChange={setIsDropdownOpen} />
                     </motion.div>
