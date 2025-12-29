@@ -12,25 +12,18 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
     if (!locale) {
         const supportedLocales = await getSupportedLocales();
+        const cookieStore = await cookies();
+        const headersList = await headers();
 
-        try {
-            const cookieStore = await cookies();
-            const headersList = await headers();
-
-            // 1. Check user preferred language (cookie)
-            const prefLocale = cookieStore.get('NEXT_LOCALE')?.value;
-            if (prefLocale && supportedLocales.includes(prefLocale)) {
-                locale = prefLocale;
-            } else {
-                // 2. Check Accept-Language
-                const acceptLanguage = headersList.get('Accept-Language') || '';
-                const preferredLocales = parseAcceptLanguage(acceptLanguage);
-                locale = findBestMatch(preferredLocales, supportedLocales);
-            }
-        } catch (error) {
-            // Fallback to first supported locale if error occurs
-            console.warn('Error detecting locale:', error);
-            locale = supportedLocales[0];
+        // 1. Check user preferred language (cookie)
+        const prefLocale = cookieStore.get('NEXT_LOCALE')?.value;
+        if (prefLocale && supportedLocales.includes(prefLocale)) {
+            locale = prefLocale;
+        } else {
+            // 2. Check Accept-Language
+            const acceptLanguage = headersList.get('Accept-Language') || '';
+            const preferredLocales = parseAcceptLanguage(acceptLanguage);
+            locale = findBestMatch(preferredLocales, supportedLocales);
         }
     }
 
@@ -42,6 +35,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
     return {
         locale,
-        messages: (await import(`../messages/${locale}.json`)).default
+        messages: (await import(`./${locale}.json`)).default
     };
 });
