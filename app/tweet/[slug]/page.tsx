@@ -47,14 +47,14 @@ export default async function TweetPage({ params }: PageProps) {
     );
 
     return (
-      <>
+      <main id="main-content">
         <PostHeader post={metadata} />
 
         <div className='article-container pt-8'>
           <NotionPage recordMap={recordMap} type="tweet-details" />
           <Comment type='tweet' metadata={metadata} className='mt-8' />
         </div>
-      </>
+      </main>
     );
   } catch (error) {
     if (error instanceof ArticleNotFoundError) {

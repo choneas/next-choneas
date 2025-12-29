@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { getTranslations, getLocale } from "next-intl/server";
 import { cn } from "@heroui/react";
+
 import { MomentList, MomentListSkeleton } from "@/components/moment-list";
 import { LiveCounter } from "@/components/home/live-counter";
 import { MeshBackground } from "@/components/home/mesh-background";
@@ -88,6 +89,7 @@ function IconLinks() {
         <div className="flex flex-wrap gap-3 md:gap-5 justify-center">
             {allLinks.map((item) => (
                 <a
+                    aria-label={item.name}
                     key={item.href}
                     href={item.href}
                     target="_blank"
@@ -139,7 +141,7 @@ export default async function Home() {
             <HLine className="left-0 mt-4 md:hidden" />
 
             {/* Hero Section */}
-            <section className="relative min-h-screen flex flex-col px-6 md:px-16 lg:px-20">
+            <section id="main-content" className="main-content relative min-h-screen flex flex-col px-6 md:px-16 lg:px-20">
                 {/* First paragraph + counter */}
                 <div className="relative flex-1 flex flex-col justify-center pt-[25vh] pb-10 md:pb-0 md:flex-none md:pt-[10vh] md:min-h-[85vh]">
                     <HLine className="top-[24vh] md:top-0" />

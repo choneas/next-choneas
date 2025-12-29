@@ -14,18 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Contents() {
     const t = await getTranslations("Article")
-    const tagT = await getTranslations("Tag")
+    const tt = await getTranslations("Tag")
     const locale = await getLocale()
 
-    // Data is cached internally, translation happens here
     const { articles } = await getAllPosts(
-        (key: string) => tagT(key),
+        (key: string) => tt(key),
         locale,
-        false // Don't include social posts for article page
+        false
     )
 
     return (
-        <main className="container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
+        <main id="main-content" className="main-content container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
             <h1>{t('title')}</h1>
             <p>{t('description')}</p>
 

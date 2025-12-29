@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { getTranslations } from "next-intl/server";
 
 export async function Footer() {
+    await connection();
+
     const t = await getTranslations("Footer");
     const currentYear = new Date().getFullYear();
     const startYear = 2024;

@@ -68,7 +68,7 @@ const NotionPage = ({ recordMap, type }: NotionPageProps) => {
     const isPreview = type === "tweet-preview";
 
     return (
-        <div className={isPreview ? "notion tweet-preview" : "notion"}>
+        <div className={isPreview ? "notion tweet-preview" : "notion main-content"}>
             <NotionRenderer
                 disableHeader
                 recordMap={recordMap}

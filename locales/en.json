@@ -96,7 +96,8 @@
     "placeholder-search": "Search title or description",
     "label-search": "",
     "not-found": "No result.",
-    "placeholder-tags": "Tag"
+    "placeholder-tags": "Tag",
+    "filter-tags": "Filter tags"
   },
   "Footer": {
     "copyright": "© {startYear}-{currentYear} Choneas. All rights reserved.",

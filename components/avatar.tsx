@@ -6,7 +6,7 @@ interface AvatarProps {
     name?: string;
 }
 
-const AVATAR_SRC = "/avatars/choneas.png";
+const AVATAR_SRC = "/avatars/choneas.webp";
 
 export function Avatar({ size = 'md', className, name = "Choneas" }: AvatarProps) {
     return (

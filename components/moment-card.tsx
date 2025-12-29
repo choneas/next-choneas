@@ -174,10 +174,6 @@ export function MomentCard({ moment }: MomentCardProps) {
                   </>
                 )}
                 <span>{formatDate(moment.created_time, locale, true)}</span>
-                {/* Time for social platforms */}
-                {moment.platform && moment.platform !== 'notion' && (
-                  <span> {moment.created_time.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
-                )}
                 {/* Reading Time */}
                 {!isTweet && moment.readingTime && " · " + moment.readingTime}
               </span>

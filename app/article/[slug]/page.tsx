@@ -46,7 +46,7 @@ export default async function Article({ params }: PageProps) {
         );
 
         return (
-            <main>
+            <main id="main-content">
                 <PostHeader post={metadata} isTweet={false} />
 
                 <div className="max-w-6xl mx-auto px-8 sm:px-24 md:px-48">

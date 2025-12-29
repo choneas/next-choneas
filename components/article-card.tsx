@@ -51,7 +51,7 @@ export function ArticleCard({
     );
 
     const focusClass =
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-inset";
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
     // Trigger loading overlay on navigation
     const handleNavigate = () => {
@@ -63,11 +63,11 @@ export function ArticleCard({
             <NextLink
                 href={href}
                 tabIndex={0}
-                className={`${focusClass} block`}
+                className={` block`}
                 aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
                 onNavigate={handleNavigate}
             >
-                <Card className="bg-content2 shadow border-none">
+                <Card className={`${focusClass} bg-content2 shadow border-none`}>
                     <div className="lg:hidden">
                         <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
                             <Image

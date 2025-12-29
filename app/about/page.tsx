@@ -18,7 +18,7 @@ export default async function About() {
     const t = await getTranslations("About")
 
     return (
-        <div className="flex flex-col gap-6">
+        <main id="main-content" className="flex flex-col gap-6">
             <div className="space-y-4">
                 <h1>{t("title")}</h1>
                 <span className="text-lg">{t("description")}</span>
@@ -48,6 +48,6 @@ export default async function About() {
                     ))}
                 </div>
             </div>
-        </div>
+        </main>
     )
 }

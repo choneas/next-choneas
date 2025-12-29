@@ -1,14 +1,12 @@
-"use client"
+import { getTranslations } from "next-intl/server"
 
-import { useTranslations } from "next-intl"
-
-export function SkipToContent() {
-    const t = useTranslations("Accessibility")
+export async function SkipToContent() {
+    const t = await getTranslations("Accessibility")
 
     return (
         <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded-lg focus:shadow-lg"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:rounded-lg focus:shadow-lg focus:outline-none"
         >
             {t("skip-to-content")}
         </a>

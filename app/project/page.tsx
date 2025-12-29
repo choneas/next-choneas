@@ -17,7 +17,7 @@ export default async function Project() {
     const t = await getTranslations("Project")
 
     return (
-        <main className="container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
+        <main id="main-content" className="main-content container mx-auto px-8 sm:mt-20 sm:px-24 pt-8">
             <h1>{t('title')}</h1>
             <p>{t('description')}</p>
 

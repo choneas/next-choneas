@@ -4,8 +4,8 @@ import type { SocialLink, TechStack } from "@/types/about";
 import { FaBilibili, FaBluesky, FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
 
 // Teach Stack
-import { FaReact, FaFigma, FaNodeJs, FaPython } from "react-icons/fa6";
-import { SiNextdotjs, SiTypescript, SiMongodb, SiTailwindcss, SiShadcnui, SiNextui } from "react-icons/si";
+import { FaReact, FaNodeJs, FaPython } from "react-icons/fa6";
+import { SiNextdotjs, SiTypescript, SiMongodb, SiTailwindcss, SiNextui } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
 
 export const socialLinks: SocialLink[] = [
@@ -72,16 +72,6 @@ export const techStacks: TechStack[] = [
         name: "MongoDB",
         icon: <SiMongodb />,
         href: "https://www.mongodb.com/"
-    },
-    {
-        name: "Figma",
-        icon: <FaFigma />,
-        href: "https://figma.com"
-    },
-    {
-        name: "ShadcnUI",
-        icon: <SiShadcnui />,
-        href: "https://ui.shadcn.com/"
     },
     {
         name: "NextUI",

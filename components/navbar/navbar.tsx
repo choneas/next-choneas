@@ -255,7 +255,7 @@ export function Navbar({ translations }: NavbarProps) {
                 <div className="flex items-center justify-center gap-3 relative h-14 w-full">
                     {/* Brand island - Left */}
                     <motion.div
-                        className="absolute flex items-center h-14 rounded-full pl-3 pr-4"
+                        className="absolute flex items-center h-14 rounded-full pl-3 pr-4 focus-within:shadow-[0_0_0_3px_var(--color-accent)]"
                         style={{
                             ...islandStyle,
                             maxWidth: "calc(50vw - 200px)",
@@ -271,7 +271,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* Items island - Center */}
                     <motion.div
-                        className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-14 rounded-full overflow-hidden"
+                        className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-14 rounded-full overflow-hidden focus-within:shadow-[0_0_0_3px_var(--color-accent)]"
                         style={islandStyle}
                         initial={false}
                         layout
@@ -287,7 +287,7 @@ export function Navbar({ translations }: NavbarProps) {
 
                     {/* Dropdown island - Right */}
                     <motion.div
-                        className="absolute flex items-center justify-center h-14 w-14 rounded-full p-0"
+                        className="absolute flex items-center justify-center h-14 w-14 rounded-full p-0 has-focus-visible:shadow-[0_0_0_3px_var(--color-accent)]"
                         style={islandStyle}
                         initial={false}
                         animate={{ right: sideInset }}

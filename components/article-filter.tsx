@@ -263,6 +263,7 @@ export function ArticleFilter({
                         }}
                         tabIndex={0}
                         role="listbox"
+                        aria-label={t("filter-tags")}
                         aria-activedescendant={activeId}
                         onKeyDown={(e) => {
                             if (["ArrowRight", "ArrowLeft", "Right", "Left", "Home", "End", "Enter", " "].includes(e.key)) {
