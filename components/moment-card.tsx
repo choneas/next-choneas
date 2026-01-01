@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, Skeleton, Button, Tooltip } from "@heroui/react"
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { motion, AnimatePresence } from "framer-motion"
@@ -49,6 +49,19 @@ export function MomentCard({ moment }: MomentCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [recordMap, setRecordMap] = useState<ExtendedRecordMap | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [needsExpansion, setNeedsExpansion] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // Check if content needs expansion after loading
+  useEffect(() => {
+    if (!contentRef.current || isLoading) return
+
+    const contentHeight = contentRef.current.scrollHeight
+    const visibleHeight = contentRef.current.clientHeight
+    const maxHeight = 200 // Maximum height before showing expand button
+
+    setNeedsExpansion(contentHeight > maxHeight)
+  }, [recordMap, isLoading, moment.description])
 
   // Only fetch Notion posts, social posts have content in description
   useEffect(() => {
@@ -208,33 +221,14 @@ export function MomentCard({ moment }: MomentCardProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
                   >
-                    <div className="relative">
+                    <div className="relative min-h-16">
                       <motion.div
-                        className={`tweet-preview relative tweet-content-container ${isExpanded ? 'expanded' : 'collapsed'} pointer-events-none`}
+                        className="tweet-preview relative pointer-events-none"
                         layout
                         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
                       >
                         <p className="text-foreground/90 text-base whitespace-pre-wrap">{moment.description}</p>
                       </motion.div>
-                      {!isExpanded && moment.description && moment.description.length > 200 && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="absolute bottom-0 left-0 right-0 h-20 flex items-end justify-center pb-2"
-                          style={{
-                            background: 'linear-gradient(to top, var(--color-surface) 0%, transparent 100%)'
-                          }}
-                        >
-                          <Button
-                            onPress={() => setIsModalOpen(true)}
-                            size="sm"
-                            variant="secondary"
-                            className="px-4 py-2 bg-surface-secondary/80 backdrop-blur-md"
-                          >
-                            {t('view-all')}
-                          </Button>
-                        </motion.div>
-                      )}
                     </div>
                     <ImagePreview images={moment.photos ?? []} />
                   </motion.div>
@@ -265,9 +259,12 @@ export function MomentCard({ moment }: MomentCardProps) {
                           <p>{moment.description}</p>
                         </div>
                       ) : (
-                        <div className="relative">
+                        <div className="relative min-h-16">
                           <motion.div
-                            className={`tweet-preview relative tweet-content-container ${isExpanded ? 'expanded' : 'collapsed'
+                            ref={contentRef}
+                            className={`tweet-preview relative ${needsExpansion && !isExpanded
+                              ? 'max-h-[200px] overflow-hidden'
+                              : ''
                               } pointer-events-none`}
                             layout
                             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
@@ -280,7 +277,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                               <NotionPage recordMap={recordMap} type="tweet-preview" />
                             </Suspense>
                           </motion.div>
-                          {!isExpanded && (
+                          {needsExpansion && !isExpanded && (
                             <motion.div
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}

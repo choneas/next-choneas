@@ -124,6 +124,7 @@ async function DynamicLiveCounter() {
 
 export default async function Home() {
     const t = await getTranslations("Home");
+    const locale = await getLocale();
 
     return (
         <>
@@ -195,11 +196,14 @@ export default async function Home() {
                                     br: () => <br />,
                                     i: (chunks) => <em className="italic">{chunks}</em>,
                                 }),
-                                t.rich("modal.paragraph3", {
-                                    b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
-                                    br: () => <br />,
-                                    i: (chunks) => <em className="italic">{chunks}</em>,
-                                }),
+                                // Use env variable for zh-CN, fallback to translation
+                                locale === "zh-CN" && process.env.MODAL_CLOSING
+                                    ? <span dangerouslySetInnerHTML={{ __html: process.env.MODAL_CLOSING }} />
+                                    : t.rich("modal.paragraph3", {
+                                        b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
+                                        br: () => <br />,
+                                        i: (chunks) => <em className="italic">{chunks}</em>,
+                                    }),
                             ],
                         }}
                     />
