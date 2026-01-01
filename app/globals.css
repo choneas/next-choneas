@@ -267,10 +267,30 @@
   }
 
   .notion {
-    font-family: var(--font-serif) !important;
+    --notion-font: var(--font-serif) !important;
+    --fg-color: var(--color-foreground) !important;
+    --fg-color-0: color-mix(in srgb, var(--color-foreground) 9%, transparent) !important;
+    --fg-color-1: color-mix(in srgb, var(--color-foreground) 16%, transparent) !important;
+    --fg-color-2: color-mix(in srgb, var(--color-foreground) 40%, transparent) !important;
+    --fg-color-3: color-mix(in srgb, var(--color-foreground) 60%, transparent) !important;
+    --fg-color-4: var(--color-foreground) !important;
+    --fg-color-5: color-mix(in srgb, var(--color-foreground) 2.4%, transparent) !important;
+    --fg-color-6: color-mix(in srgb, var(--color-foreground) 80%, transparent) !important;
+    --fg-color-7: color-mix(in srgb, var(--color-foreground) 50%, transparent) !important;
+    --fg-color-icon: var(--color-foreground) !important;
+
+    --bg-color: var(--color-surface) !important;
+    --bg-color-0: var(--color-surface-secondary) !important;
+    --bg-color-1: var(--color-surface-secondary) !important;
+    --bg-color-2: var(--color-surface-tertiary) !important;
+
+    --select-color-0: var(--color-accent) !important;
+    --select-color-1: color-mix(in srgb, var(--color-accent) 30%, transparent) !important;
+    --select-color-2: color-mix(in srgb, var(--color-accent) 12%, var(--color-background) 88%) !important;
+
+    color: var(--color-foreground) !important;
     font-size: var(--text-lg) !important;
     line-height: var(--line-height-relaxed) !important;
-    color: var(--color-foreground) !important;
     --notion-max-width: 720px;
   }
 
@@ -364,13 +384,33 @@
   }
 
   .notion-callout {
-    background: var(--color-surface-secondary) !important;
-    border-color: var(--color-border) !important;
+    border: none !important;
+    box-shadow: 0 0 0 1px var(--color-divider) inset !important;
+  }
+
+  .notion-callout:not([class*="_background"]),
+  .notion-callout.notion-gray_background,
+  .notion-callout.notion-gray_background_co {
+    background-color: color-mix(in srgb, var(--color-accent-soft) 12%, var(--color-surface) 88%) !important;
+  }
+
+  .notion .notion-callout .notion-page-icon-inline {
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    font-size: 1.15em !important;
   }
 
   /* Notion 文件图标颜色 */
   .notion-file-icon {
     color: var(--color-foreground) !important;
+  }
+
+  .notion .notion-file-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 0 !important;
+    flex: 0 0 auto !important;
   }
 
   .notion-file-icon svg {
@@ -382,13 +422,19 @@
     fill: currentColor !important;
   }
 
-  /* Notion 链接样式 */
-  .notion a:not(.notion-hash-link, .notion-external, .notion-link-mention-link) {
-    color: var(--color-accent) !important;
+  .notion .notion-link {
+    color: var(--color-foreground) !important;
     text-decoration: none !important;
-    border-bottom: 1px solid var(--color-accent) !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-foreground) 25%, transparent) !important;
+    opacity: 0.85 !important;
+    transition:
+      border-color 100ms ease-in,
+      opacity 100ms ease-in;
+  }
+
+  .notion .notion-link:hover {
+    border-color: var(--color-accent) !important;
     opacity: 1 !important;
-    transition: opacity 0.2s ease !important;
   }
 
   .notion .notion-hash-link {
@@ -397,6 +443,7 @@
 
   .notion .notion-external-mention,
   .notion .notion-link-mention-link {
+    color: var(--color-foreground) !important;
     text-decoration: none !important;
     border-bottom: none !important;
   }
@@ -418,9 +465,24 @@
     border-bottom: none !important;
   }
 
+  .notion .notion-file-link {
+    color: var(--color-foreground) !important;
+    text-decoration: none !important;
+    border-bottom: none !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 12%, var(--color-surface) 88%) !important;
+    box-shadow: 0 0 0 1px var(--color-divider) inset !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 16px 16px 16px 12px !important;
+    gap: 0.5rem !important;
+  }
+
   .notion .notion-file-link:hover {
-    opacity: 0.7 !important;
-    background-color: transparent !important;
+    opacity: 1 !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 18%, var(--color-surface) 82%) !important;
+  }
+
+  .notion .notion-file-size {
+    color: var(--color-muted) !important;
   }
 
   .notion-page-section-gray {
@@ -436,8 +498,10 @@
     color: color-mix(in srgb, var(--color-foreground) 70%, transparent) !important;
   }
 
-  .dark .notion-callout {
-    background: var(--color-surface-tertiary) !important;
+  .dark .notion-callout:not([class*="_background"]),
+  .dark .notion-callout.notion-gray_background,
+  .dark .notion-callout.notion-gray_background_co {
+    background-color: color-mix(in srgb, var(--color-accent-soft) 14%, var(--color-surface) 86%) !important;
   }
 
   /* Notion Table 样式覆盖 */

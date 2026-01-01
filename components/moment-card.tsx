@@ -57,7 +57,6 @@ export function MomentCard({ moment }: MomentCardProps) {
     if (!contentRef.current || isLoading) return
 
     const contentHeight = contentRef.current.scrollHeight
-    const visibleHeight = contentRef.current.clientHeight
     const maxHeight = 200 // Maximum height before showing expand button
 
     setNeedsExpansion(contentHeight > maxHeight)
