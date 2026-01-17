@@ -4,7 +4,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import NotionPage from "@/components/notion-page";
 import { PostHeader } from "@/components/post-header";
 import { Comment } from '@/components/comment';
-import { getPost, ArticleNotFoundError } from "@/lib/content";
+import ArticleNotFoundError, { getPost } from "@/lib/content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

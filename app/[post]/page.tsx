@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getPost, ArticleNotFoundError } from "@/lib/content";
+import ArticleNotFoundError, { getPost } from "@/lib/content";
 
 export default async function SmartRoute({
     params,

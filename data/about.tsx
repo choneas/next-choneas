@@ -6,7 +6,6 @@ import { FaBilibili, FaBluesky, FaXTwitter, FaGithub, FaDiscord } from "react-ic
 // Teach Stack
 import { FaReact, FaNodeJs, FaPython } from "react-icons/fa6";
 import { SiNextdotjs, SiTypescript, SiMongodb, SiTailwindcss, SiNextui } from "react-icons/si";
-import { VscVscode } from "react-icons/vsc";
 
 export const socialLinks: SocialLink[] = [
     {
@@ -62,11 +61,6 @@ export const techStacks: TechStack[] = [
         name: "Node.js",
         icon: <FaNodeJs />,
         href: "https://nodejs.org/"
-    },
-    {
-        name: "VSCode",
-        icon: <VscVscode />,
-        href: "https://code.visualstudio.com"
     },
     {
         name: "MongoDB",

@@ -144,10 +144,10 @@ export default async function Home() {
             {/* Hero Section */}
             <section id="main-content" className="main-content relative min-h-screen flex flex-col px-6 md:px-16 lg:px-20">
                 {/* First paragraph + counter */}
-                <div className="relative flex-1 flex flex-col justify-center pt-[25vh] pb-10 md:pb-0 md:flex-none md:pt-[10vh] md:min-h-[85vh]">
-                    <HLine className="top-[24vh] md:top-0" />
+                <div className="relative flex-1 flex flex-col justify-center pt-[20vh] pb-10 md:pb-0 md:flex-none md:pt-[10vh] md:min-h-[85vh]">
+                    <HLine className="top-[16vh] md:top-0" />
 
-                    <p className="text-2xl lg:text-3xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl pt-2 pl-2 md:pl-6">
+                    <p className="text-[1.65rem] lg:text-3xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl pt-2 pl-2 md:pl-6">
                         {t.rich("intro.paragraph1", {
                             i: (chunks) => <em className="italic">{chunks}</em>,
                             b: (chunks) => <strong className="font-semibold">{chunks}</strong>,
@@ -159,15 +159,12 @@ export default async function Home() {
                             <DynamicLiveCounter />
                         </Suspense>
                     </div>
-
-                    {/* Mobile only: bottom HLine after counter */}
-                    <HLine className="-bottom-4 md:hidden" />
                 </div>
 
-                {/* Icons - mobile: mt-8 closer to counter; desktop: normal flow */}
-                <div className="relative mt-8 mb-6 md:mt-0 md:mb-0">
+                {/* Icons */}
+                <div className="relative mt-4 mb-6 md:mt-0 md:mb-0">
                     <HLine className="top-0" />
-                    <GlassPanel className="-mx-2 md:mx-0 px-4 py-4 md:py-8">
+                    <GlassPanel className="-mx-2 md:mx-0 px-4 py-8">
                         <IconLinks />
                     </GlassPanel>
                     <HLine className="bottom-0" />

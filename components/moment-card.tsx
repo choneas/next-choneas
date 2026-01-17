@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, Skeleton, Button, Tooltip } from "@heroui/react"
-import { useState, useEffect, useRef, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
 import { motion, AnimatePresence } from "framer-motion"
@@ -50,17 +50,26 @@ export function MomentCard({ moment }: MomentCardProps) {
   const [recordMap, setRecordMap] = useState<ExtendedRecordMap | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [needsExpansion, setNeedsExpansion] = useState(false)
-  const contentRef = useRef<HTMLDivElement>(null)
+  
+  const observerRef = useRef<ResizeObserver | null>(null)
 
-  // Check if content needs expansion after loading
-  useEffect(() => {
-    if (!contentRef.current || isLoading) return
+  const measureRef = useCallback((node: HTMLDivElement | null) => {
+    if (observerRef.current) {
+      observerRef.current.disconnect()
+      observerRef.current = null
+    }
 
-    const contentHeight = contentRef.current.scrollHeight
-    const maxHeight = 200 // Maximum height before showing expand button
-
-    setNeedsExpansion(contentHeight > maxHeight)
-  }, [recordMap, isLoading, moment.description])
+    if (node) {
+      observerRef.current = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const element = entry.target as HTMLElement
+          const isTooTall = element.scrollHeight > 200
+          setNeedsExpansion(prev => prev === isTooTall ? prev : isTooTall)
+        }
+      })
+      observerRef.current.observe(node)
+    }
+  }, [])
 
   // Only fetch Notion posts, social posts have content in description
   useEffect(() => {
@@ -145,7 +154,9 @@ export function MomentCard({ moment }: MomentCardProps) {
         }}
       >
         <Card
-          onClick={handleCardClick}
+          onClick={() => {
+            if (isNotionPost) handleCardClick()
+          }}
           tabIndex={0}
           role="article"
           className="relative focus:outline-none focus:ring-2 ring-accent"
@@ -226,7 +237,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                         layout
                         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
                       >
-                        <p className="text-foreground/90 text-base whitespace-pre-wrap">{moment.description}</p>
+                        <p className="text-foreground/90 text-base! whitespace-pre-wrap">{moment.description}</p>
                       </motion.div>
                     </div>
                     <ImagePreview images={moment.photos ?? []} />
@@ -260,7 +271,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                       ) : (
                         <div className="relative min-h-16">
                           <motion.div
-                            ref={contentRef}
+                            ref={measureRef}
                             className={`tweet-preview relative ${needsExpansion && !isExpanded
                               ? 'max-h-[200px] overflow-hidden'
                               : ''
@@ -300,6 +311,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                     </div>
                     {/* Image preview */}
                     <ImagePreview images={moment.photos ?? []} />
+                    <code>{moment.photos?.toString()}</code>
                   </motion.div>
                 ) : null
               ) : (

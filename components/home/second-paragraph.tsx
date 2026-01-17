@@ -24,7 +24,7 @@ export function SecondParagraph({
     onCultureClick,
 }: SecondParagraphProps) {
     return (
-        <span className="text-2xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl px-2 md:px-6 block">
+        <span className="text-[1.4rem] lg:text-2xl text-foreground/85 leading-relaxed max-w-[85vw] md:max-w-4xl px-2 md:px-6 block">
             {beforeCulture}
             <button
                 onClick={onCultureClick}

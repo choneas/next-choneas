@@ -5,7 +5,7 @@ import NotionPage from "@/components/notion-page";
 import { PostHeader } from "@/components/post-header";
 import { Comment } from '@/components/comment';
 import { TableOfContents } from '@/components/table-of-contents';
-import { getPost, ArticleNotFoundError } from "@/lib/content";
+import ArticleNotFoundError, { getPost } from "@/lib/content";
 
 interface PageProps {
     params: Promise<{ slug: string }>;

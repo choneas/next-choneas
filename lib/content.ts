@@ -349,6 +349,6 @@ export {
     getPost,
     getPostRecordMap,
     getAllPosts,
-    getCachedAllPostsData as getAllPostsRaw, // For sitemap/robots (no translation needed)
-    ArticleNotFoundError
+    getCachedAllPostsData as getAllPostsRaw
 }
+export default ArticleNotFoundError

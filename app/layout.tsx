@@ -69,9 +69,9 @@ async function LocalizedContent({ children }: { children: React.ReactNode }) {
                     </Providers>
                 </NextIntlClientProvider>
                 <Analytics />
+                <SpeedInsights />
             </body>
-            <GoogleAnalytics gaId={process.env.GA_ID!} />
-            <SpeedInsights />
+            {process.env.GA_ID && <GoogleAnalytics gaId={process.env.GA_ID} />}
         </html>
     );
 }
