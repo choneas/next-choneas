@@ -151,21 +151,62 @@ interface CachedPostsData {
 }
 
 /**
+ * Get all page IDs from the Notion collection
+ * Uses getCollectionData to fetch pages from the collection
+ */
+async function getCollectionPageIds(): Promise<string[]> {
+    const rootPage = await getCachedRootPage();
+    const collectionId = process.env.NOTION_ROOT_COLLECTION_ID;
+
+    if (!collectionId) {
+        console.error('NOTION_ROOT_COLLECTION_ID is not set');
+        return [];
+    }
+
+    // Convert collection ID to UUID format (with hyphens)
+    const normalizedCollectionId = idToUuid(collectionId);
+
+    // Find the first available collection view
+    const collectionView = Object.entries(rootPage.collection_view || {})[0];
+    if (!collectionView) {
+        console.error('No collection views found');
+        return [];
+    }
+
+    const [viewId] = collectionView;
+
+    try {
+        // Fetch collection data using the NotionAPI
+        const collectionData = await notion.getCollectionData(
+            normalizedCollectionId,
+            viewId,
+            {}, // query
+            { limit: 1000 } // Get all pages
+        );
+
+        // Extract page IDs from the result
+        return collectionData.result?.reducerResults?.collection_group_results?.blockIds || [];
+    } catch (error) {
+        console.error('Failed to fetch collection data:', error);
+        return [];
+    }
+}
+
+/**
  * Get all posts data (cached, no translation)
  * Translation happens at component level with locale passed in
  */
 const getCachedAllPostsData = unstable_cache(
     async (locale: string): Promise<CachedPostsData> => {
-        const rootPage = await getCachedRootPage();
+        const pageIds = await getCollectionPageIds();
         const processedIds = new Set<string>();
         const articles: RawPostMetadata[] = [];
         const tweets: RawPostMetadata[] = [];
 
-        for (const [id, block] of Object.entries(rootPage.block)) {
-            if (block?.value?.type === 'page' &&
-                block?.value?.parent_id === idToUuid(process.env.NOTION_ROOT_COLLECTION_ID)) {
-                if (processedIds.has(id)) continue;
+        for (const id of pageIds) {
+            if (processedIds.has(id)) continue;
 
+            try {
                 const postRecordMap = await getCachedPost(id);
                 const metadata = generateRawPostMetadata(postRecordMap, id, locale);
 
@@ -180,6 +221,8 @@ const getCachedAllPostsData = unstable_cache(
                     processedIds.add(id);
                     articles.push(metadata);
                 }
+            } catch (error) {
+                console.error(`Failed to process post ${id}:`, error);
             }
         }
 
@@ -248,51 +291,53 @@ class ArticleNotFoundError extends Error {
     }
 }
 
-interface NotionBlock {
-    value: {
-        type: string;
-        parent_table: string;
-        properties: {
-            'XwwZ'?: [[string]];  // ID property
-            '}YdW'?: [[string]];  // Slug property
-            [key: string]: [[string]] | undefined;
-        };
-    };
-}
+
 
 /**
  * Find target page ID from slug or ID
  */
 async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
-    const rootPage = await getCachedRootPage();
-
-    // UUID format
+    // UUID format - try to fetch directly
     if (slugOrId.length === 32) {
-        return slugOrId;
+        try {
+            await notion.getPage(slugOrId);
+            return slugOrId;
+        } catch {
+            return undefined;
+        }
     }
 
-    // Numeric ID
-    if (/^\d+$/.test(slugOrId)) {
-        for (const [id, block] of Object.entries(rootPage.block)) {
-            const typedBlock = block as NotionBlock;
-            if (typedBlock?.value?.type === 'page' &&
-                typedBlock?.value?.parent_table === 'collection' &&
-                typedBlock?.value?.properties?.['XwwZ']?.[0]?.[0] === slugOrId) {
-                return id;
+    // Get all pages from collection
+    const pageIds = await getCollectionPageIds();
+
+    // Numeric ID or Slug - need to check each page
+    for (const id of pageIds) {
+        try {
+            const recordMap = await getCachedPost(id);
+            const block = recordMap.block?.[id]?.value;
+
+            if (!block) {
+                continue;
             }
+
+            if (/^\d+$/.test(slugOrId)) {
+                // Numeric ID lookup
+                const pageId = getPageProperty('ID', block, recordMap);
+                if (pageId === slugOrId) {
+                    return id;
+                }
+            } else {
+                // Slug lookup
+                const pageSlug = getPageProperty('Slug', block, recordMap);
+                if (pageSlug === slugOrId) {
+                    return id;
+                }
+            }
+        } catch (error) {
+            console.error(`Failed to check page ${id}:`, error);
         }
-        return undefined;
     }
 
-    // Slug
-    for (const [id, block] of Object.entries(rootPage.block)) {
-        const typedBlock = block as NotionBlock;
-        if (typedBlock?.value?.type === 'page' &&
-            typedBlock?.value?.parent_table === 'collection' &&
-            typedBlock?.value?.properties?.['}YdW']?.[0]?.[0] === slugOrId) {
-            return id;
-        }
-    }
     return undefined;
 }
 
