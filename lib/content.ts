@@ -8,8 +8,9 @@ import type { PostMetadata } from "@/types/content";
 import { getReadingTime } from "@/utils/read-time";
 
 // Note: The custom Notion proxy is disabled, so we rely on the official SDK directly.
+// Auth token is optional at build time - only required when actually fetching data
 const notion = new NotionAPI({
-    authToken: process.env.NOTION_AUTH_TOKEN,
+    authToken: process.env.NOTION_AUTH_TOKEN || undefined,
     apiBaseUrl: process.env.NOTION_API_BASE_URL
 });
 
@@ -20,8 +21,11 @@ const notion = new NotionAPI({
 /** Cache root page for 5 minutes */
 const getCachedRootPage = unstable_cache(
     async () => {
+        if (!process.env.NOTION_ROOT_PAGE_ID) {
+            throw new Error('NOTION_ROOT_PAGE_ID is not configured');
+        }
         try {
-            return await notion.getPage(process.env.NOTION_ROOT_PAGE_ID!);
+            return await notion.getPage(process.env.NOTION_ROOT_PAGE_ID);
         } catch (error) {
             console.error('Failed to fetch root page:', error);
             throw error;
