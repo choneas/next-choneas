@@ -14,6 +14,35 @@ const notion = new NotionAPI({
 });
 
 // ============================================================================
+// Retry utility for handling transient network failures on Vercel
+// ============================================================================
+
+async function withRetry<T>(
+    fn: () => Promise<T>,
+    retries: number = 3,
+    delay: number = 1000
+): Promise<T> {
+    let lastError: Error | undefined;
+    
+    for (let i = 0; i < retries; i++) {
+        try {
+            return await fn();
+        } catch (error) {
+            lastError = error as Error;
+            console.warn(`Retry ${i + 1}/${retries} failed:`, (error as Error).message);
+            
+            if (i < retries - 1) {
+                // Exponential backoff with jitter
+                const waitTime = delay * Math.pow(2, i) + Math.random() * 500;
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+            }
+        }
+    }
+    
+    throw lastError;
+}
+
+// ============================================================================
 // Cached Notion API calls (no cookies/headers dependency)
 // ============================================================================
 
@@ -23,12 +52,11 @@ const getCachedRootPage = unstable_cache(
         if (!process.env.NOTION_ROOT_PAGE_ID) {
             throw new Error('NOTION_ROOT_PAGE_ID is not configured');
         }
-        try {
-            return await notion.getPage(process.env.NOTION_ROOT_PAGE_ID);
-        } catch (error) {
-            console.error('Failed to fetch root page:', error);
-            throw error;
-        }
+        return await withRetry(
+            () => notion.getPage(process.env.NOTION_ROOT_PAGE_ID!),
+            3,
+            1000
+        );
     },
     ['notion-root-page'],
     { revalidate: 300, tags: ['notion-root'] }
@@ -37,12 +65,11 @@ const getCachedRootPage = unstable_cache(
 /** Cache individual post for 1 minute */
 const getCachedPost = unstable_cache(
     async (pageId: string) => {
-        try {
-            return await notion.getPage(pageId);
-        } catch (error) {
-            console.error('Failed to fetch post:', error);
-            throw error;
-        }
+        return await withRetry(
+            () => notion.getPage(pageId),
+            3,
+            1000
+        );
     },
     ['notion-post'],
     { revalidate: 60, tags: ['notion-post'] }
@@ -179,12 +206,16 @@ async function getCollectionPageIds(): Promise<string[]> {
     const [viewId] = collectionView;
 
     try {
-        // Fetch collection data using the NotionAPI
-        const collectionData = await notion.getCollectionData(
-            normalizedCollectionId,
-            viewId,
-            {}, // query
-            { limit: 1000 } // Get all pages
+        // Fetch collection data using the NotionAPI with retry
+        const collectionData = await withRetry(
+            () => notion.getCollectionData(
+                normalizedCollectionId,
+                viewId,
+                {}, // query
+                { limit: 1000 } // Get all pages
+            ),
+            3,
+            1000
         );
 
         // Extract page IDs from the result
