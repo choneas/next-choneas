@@ -86,8 +86,7 @@ export function NavbarBrand() {
     return (
         <Link
             onPress={handleNavigation}
-            className="flex gap-3 font-bold text-accent items-center w-full cursor-pointer"
-            underline="none"
+            className="flex gap-3 font-bold text-accent items-center w-full cursor-pointer no-underline"
         >
             <Avatar size="sm" className="shrink-0" />
             {isArticlePage ? (

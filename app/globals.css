@@ -1,11 +1,11 @@
 @import "tailwindcss";
-@config "../tailwind.config.ts";
-
 @import "@heroui/styles";
+
+@config "../tailwind.config.ts";
 
 @layer base {
 
-  /* Vicissitude Light Theme (默认) */
+  /* Vicissitude Light Theme */
   :root,
   [data-theme="light"] {
     color-scheme: light;
@@ -16,7 +16,7 @@
     --snow: oklch(0.9911 0 0);
     --eclipse: oklch(0.2103 0.0059 285.89);
 
-    /* Background & Surface - MD3 映射 */
+    /* Background & Surface */
     --background: #FFF8F6;
     --foreground: #231918;
     --surface: #FCEAE7;
@@ -24,11 +24,11 @@
     --overlay: #FFF0EE;
     --overlay-foreground: #231918;
 
-    /* Primary Colors - MD3 映射 */
+    /* Primary Colors */
     --accent: #904B40;
     --accent-foreground: #FFFFFF;
     --accent-soft: #775651;
-    --accent-soft-foreground: #FFFFFF;
+    --accent-soft-foreground: #F1DFDB;
 
     /* Status Colors */
     --success: oklch(0.7329 0.1935 150.81);
@@ -38,8 +38,8 @@
     --danger: #BA1A1A;
     --danger-foreground: #FFFFFF;
 
-    /* Form Field Colors - MD3 映射 */
-    --field-background: #F1DFDB;
+    /* Form Field Colors */
+    --field-background: color-mix(in srgb, var(--surface) 90%, transparent);
     --field-foreground: #231918;
     --field-placeholder: #534341;
     --field-border: transparent;
@@ -88,7 +88,7 @@
   [data-theme="dark"] {
     color-scheme: dark;
 
-    /* Background & Surface - MD3 映射 */
+    /* Background & Surface */
     --background: #1A1110;
     --foreground: #F1DFDB;
     --surface: #271D1C;
@@ -96,7 +96,7 @@
     --overlay: #231918;
     --overlay-foreground: #F1DFDB;
 
-    /* Primary Colors - MD3 映射 */
+    /* Primary Colors */
     --accent: #FFB4A8;
     --accent-foreground: #561E16;
     --accent-soft: #E7BDB6;
@@ -110,8 +110,8 @@
     --danger: #FFB4AB;
     --danger-foreground: #690005;
 
-    /* Form Field Colors - MD3 映射 */
-    --field-background: #3D3230;
+    /* Form Field Colors */
+    --field-background: color-mix(in srgb, var(--surface) 90%, transparent);
     --field-foreground: #F1DFDB;
     --field-placeholder: #D8C2BE;
     --field-border: transparent;
@@ -133,9 +133,8 @@
   }
 }
 
-/* 4. Tailwind 主题扩展 */
+/* 4. Tailwind Theme Extension */
 @theme inline {
-  /* 映射所有颜色变量到 Tailwind */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -168,7 +167,6 @@
   --shadow-overlay: var(--overlay-shadow);
   --shadow-field: var(--field-shadow);
 
-  /* 自动计算 hover 状态 */
   --color-accent-hover: color-mix(in oklab, var(--color-accent) 90%, var(--color-accent-foreground) 10%);
   --color-accent-soft-hover: color-mix(in oklab, var(--color-accent-soft) 90%, var(--color-accent-soft-foreground) 10%);
   --color-success-hover: color-mix(in oklab, var(--color-success) 90%, var(--color-success-foreground) 10%);
@@ -176,12 +174,10 @@
   --color-danger-hover: color-mix(in oklab, var(--color-danger) 90%, var(--color-danger-foreground) 10%);
   --color-field-hover: color-mix(in oklab, var(--color-field) 90%, var(--color-field-foreground) 2%);
 
-  /* 自动计算 surface 层级 */
   --color-surface-secondary: color-mix(in oklab, var(--surface) 94%, var(--surface-foreground) 6%);
   --color-surface-tertiary: color-mix(in oklab, var(--surface) 92%, var(--surface-foreground) 8%);
   --color-surface-quaternary: color-mix(in oklab, var(--surface) 86%, var(--surface-foreground) 14%);
 
-  /* 自动计算 background 层级 */
   --color-background-secondary: color-mix(in oklab, var(--color-background) 96%, var(--color-foreground) 4%);
   --color-background-tertiary: color-mix(in oklab, var(--color-background) 92%, var(--color-foreground) 8%);
   --color-background-quaternary: color-mix(in oklab, var(--color-background) 86%, var(--color-foreground) 14%);
@@ -197,7 +193,6 @@
   --text-3xl: 1.875rem;
   --text-4xl: 2.55rem;
   
-  /* 行高定义 */
   --line-height-tight: 1.25;
   --line-height-snug: 1.375;
   --line-height-normal: 1.5;
@@ -268,6 +263,11 @@
 }
 
 @layer components {
+
+  /* HeroUI Button secondary variant - restore accent text color */
+  .button--secondary {
+    --button-fg: var(--color-accent) !important;
+  }
 
   .article-container {
     @apply max-w-6xl mx-auto px-8 sm:px-24 md:px-48;
@@ -666,7 +666,7 @@
 
 /* OverlayScrollbars custom theme */
 .os-theme-custom {
-  --os-size: 8px;
+  --os-size: 12px;
   --os-padding-perpendicular: 2px;
   --os-padding-axis: 2px;
   --os-track-border-radius: 4px;
@@ -674,9 +674,9 @@
   --os-track-bg-hover: transparent;
   --os-track-bg-active: transparent;
   --os-handle-border-radius: 4px;
-  --os-handle-bg: var(--color-scrollbar);
-  --os-handle-bg-hover: color-mix(in srgb, var(--color-scrollbar) 80%, var(--color-foreground) 20%);
-  --os-handle-bg-active: color-mix(in srgb, var(--color-scrollbar) 70%, var(--color-foreground) 30%);
+  --os-handle-bg: color-mix(in srgb, var(--color-surface-secondary) 92%, var(--color-foreground) 8%);
+  --os-handle-bg-hover: color-mix(in srgb, var(--color-surface-secondary) 85%, var(--color-foreground) 15%);
+  --os-handle-bg-active: color-mix(in srgb, var(--color-surface-secondary) 75%, var(--color-foreground) 25%);
   --os-handle-min-size: 40px;
   --os-handle-max-size: none;
   --os-handle-perpendicular-size: 100%;

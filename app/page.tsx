@@ -7,7 +7,7 @@ import { cn } from "@heroui/react";
 import { MomentList, MomentListSkeleton } from "@/components/moment-list";
 import { LiveCounter } from "@/components/home/live-counter";
 import { MeshBackground } from "@/components/home/mesh-background";
-import { SecondParagraphWithModal } from "@/components/home/culture-modal";
+import { SecondParagraphWithModal } from "@/components/home/second-paragraph-modal";
 import { socialLinks, techStacks } from "@/data/about";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -110,8 +110,7 @@ async function DynamicLiveCounter() {
 
     const birthDate = process.env.BIRTH_DATE || "2010-01-01";
 
-    // Random offset ±4 years for privacy
-    const randomOffset = Math.floor(Math.random() * 2921) - 1460;
+    const randomOffset = Math.floor(Math.random() * 1760) - 880;
     const date = new Date(birthDate);
     date.setDate(date.getDate() + randomOffset);
 
@@ -239,7 +238,7 @@ export default async function Home() {
             <HLine className="relative left-0 md:left-0 lg:left-0" />
 
             {/* Footer spacer */}
-            <div className="h-16" />
+            <div className="h-5" />
         </>
     );
 }

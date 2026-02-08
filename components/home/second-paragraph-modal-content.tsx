@@ -24,7 +24,7 @@ interface CultureModalContentProps {
  * Culture modal content - client component for interaction
  * Dynamically loaded to optimize initial page load
  */
-export function CultureModalContent({
+export function SecondParagraphModalContent({
     isOpen,
     onOpenChange,
     modal,

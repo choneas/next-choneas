@@ -50,8 +50,9 @@ export function ArticleCard({
         </div>
     );
 
+    // Consistent focus ring styles that match Card's border-radius
     const focusClass =
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-[calc(var(--radius-xl)+2px)]";
 
     // Trigger loading overlay on navigation
     const handleNavigate = () => {
@@ -62,12 +63,12 @@ export function ArticleCard({
         return (
             <NextLink
                 href={href}
-                tabIndex={0}
-                className={` block`}
-                aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+                className={`${focusClass} block`}
+                aria-label={`${article.title}, ${formatDate(article.created_time, locale, showTime)}${article.readingTime ? `, ${article.readingTime}` : ""}${article.tags && article.tags.length > 0 ? `, : ${article.tags.join(", ")}` : ""}`}
                 onNavigate={handleNavigate}
             >
-                <Card className={`${focusClass} bg-content2 shadow border-none`}>
+                <article>
+                    <Card className="bg-content2 shadow border-none">
                     <div className="lg:hidden">
                         <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
                             <Image
@@ -101,7 +102,8 @@ export function ArticleCard({
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                         </div>
                     </Card.Content>
-                </Card>
+                    </Card>
+                </article>
             </NextLink>
         );
     }
@@ -109,20 +111,21 @@ export function ArticleCard({
     return (
         <NextLink
             href={href}
-            tabIndex={0}
             className={`${focusClass} block`}
-            aria-label={`${article.title} - ${formatDate(article.created_time, locale, showTime)}`}
+            aria-label={`阅读文章: ${article.title}，发布于 ${formatDate(article.created_time, locale, showTime)}${article.readingTime ? `，预计阅读时间 ${article.readingTime}` : ""}${article.tags && article.tags.length > 0 ? `，标签: ${article.tags.join(", ")}` : ""}`}
             onNavigate={handleNavigate}
         >
-            <Card className="bg-content2 shadow border-none">
-                <Card.Content className="p-3">
-                    <div className="flex flex-col gap-3">
-                        <AuthorAndDate />
-                        <span className="text-2xl font-semibold">{article.title}</span>
-                        {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
-                    </div>
-                </Card.Content>
-            </Card>
+            <article>
+                <Card className="bg-content2 shadow border-none">
+                    <Card.Content className="p-3">
+                        <div className="flex flex-col gap-3">
+                            <AuthorAndDate />
+                            <span className="text-2xl font-semibold">{article.title}</span>
+                            {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
+                        </div>
+                    </Card.Content>
+                </Card>
+            </article>
         </NextLink>
     );
 }

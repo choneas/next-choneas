@@ -131,11 +131,11 @@ interface OceanLayerProps {
 
 /** Gradient blur layer at top (desktop) and bottom (mobile) */
 function OceanLayer({ backdropFilter, background }: OceanLayerProps) {
-    const maskTop = "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)";
+    const maskTop = "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)";
     const maskBottom = "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)";
 
     return (
-        <div className="fixed sm:top-0 bottom-0 sm:bottom-auto inset-x-0 z-39 pointer-events-none h-40 sm:h-64">
+        <div className="fixed sm:top-0 bottom-0 sm:bottom-auto inset-x-0 z-39 pointer-events-none h-32 md:h-32">
             {/* Desktop: top gradient */}
             <motion.div
                 className="hidden sm:block absolute inset-0"

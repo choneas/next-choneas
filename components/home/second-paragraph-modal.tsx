@@ -7,7 +7,7 @@ import { SecondParagraph } from "@/components/home/second-paragraph";
 
 // Dynamic import for modal content - only loads when needed
 const CultureModalContent = dynamic(
-    () => import("@/components/home/culture-modal-content").then(mod => ({ default: mod.CultureModalContent })),
+    () => import("@/components/home/second-paragraph-modal-content").then(mod => ({ default: mod.SecondParagraphModalContent })),
     {
         ssr: false,
         loading: () => null, // No loading state needed for modal

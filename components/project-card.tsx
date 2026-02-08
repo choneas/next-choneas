@@ -48,8 +48,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 href={finalLink || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full block"
-                underline="none"
+                className="w-full block no-underline"
             >
                 <Card className="w-full transition-all duration-200" variant="default">
                     {project.cover && (

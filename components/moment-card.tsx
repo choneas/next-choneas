@@ -168,7 +168,7 @@ export function MomentCard({ moment }: MomentCardProps) {
             }
           }}
         >
-          <Tooltip delay={0}>
+            <Tooltip delay={0}>
             <Button
               isIconOnly
               variant="secondary"

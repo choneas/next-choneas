@@ -151,8 +151,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                                 href={`https://github.com/${process.env.NEXT_PUBLIC_REPO ?? ""}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                underline="none"
-                                className="mt-2 flex w-full items-center gap-2 rounded-full justify-center px-3 py-2 text-sm transition-colors bg-accent/10 hover:bg-accent/20 text-accent"
+                                className="mt-2 flex w-full items-center gap-2 rounded-full justify-center px-3 py-2 text-sm transition-colors bg-accent/10 hover:bg-accent/20 text-accent no-underline"
                             >
                                 <FiGithub className="text-accent" />
                                 Github
@@ -264,8 +263,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                             href={`https://github.com/${process.env.NEXT_PUBLIC_REPO ?? ""}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            underline="none"
-                            className="mt-2 flex w-full items-center gap-2 rounded-full justify-center px-3 py-2 text-sm transition-colors bg-accent/10 hover:bg-accent/20 text-accent"
+                            className="mt-2 flex w-full items-center gap-2 rounded-full justify-center px-3 py-2 text-sm transition-colors bg-accent/10 hover:bg-accent/20 text-accent no-underline"
                         >
                             <FiGithub className="text-accent" />
                             Github

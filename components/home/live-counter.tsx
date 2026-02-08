@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 interface LiveCounterProps {
-    /** Birth date in format YYYY-MM-DD */
+    /** Birthdate in format YYYY-MM-DD */
     birthDate: string;
     /** Locale for formatting */
     locale: string;
@@ -95,6 +95,47 @@ export function LiveCounter({ birthDate, locale, title }: LiveCounterProps) {
     // Format number with locale-specific separators
     const fmt = (n: number) => new Intl.NumberFormat(toBCP47(locale)).format(n);
 
+    const timeParts = [];
+    
+    if (elapsed.days > 0) {
+        timeParts.push(
+            <span key="days">
+                <span className="font-bold text-accent">{fmt(elapsed.days)}</span>
+                <span className="text-accent/70"> {formatUnitLabel(elapsed.days, "day", locale)}</span>
+            </span>
+        );
+    }
+    
+    if (elapsed.hours > 0) {
+        timeParts.push(
+            <span key="hours">
+                <span className="font-bold text-accent">{elapsed.hours}</span>
+                <span className="text-accent/70"> {formatUnitLabel(elapsed.hours, "hour", locale)}</span>
+            </span>
+        );
+    }
+    
+    if (elapsed.minutes > 0) {
+        timeParts.push(
+            <span key="minutes">
+                <span className="font-bold text-accent">{elapsed.minutes}</span>
+                <span className="text-accent/70"> {formatUnitLabel(elapsed.minutes, "minute", locale)}</span>
+            </span>
+        );
+    }
+    
+    timeParts.push(
+        <span key="seconds">
+            <span className="font-bold text-accent">{elapsed.seconds}</span>
+            <span className="text-accent/70"> {formatUnitLabel(elapsed.seconds, "second", locale)}</span>
+        </span>
+    );
+
+    const formattedTime = timeParts.reduce((acc, part, index) => {
+        if (index === 0) return [part];
+        return [...acc, <span key={`comma-${index}`} className="text-accent/70">, </span>, part];
+    }, [] as React.ReactNode[]);
+
     return (
         <div className="text-left">
             {/* Title */}
@@ -103,14 +144,7 @@ export function LiveCounter({ birthDate, locale, title }: LiveCounterProps) {
             </p>
             {/* Counter - bold numbers with different color */}
             <p className="text-sm md:text-lg text-accent/90 font-serif">
-                <span className="font-bold text-accent">{fmt(elapsed.days)}</span>
-                <span className="text-accent/70"> {formatUnitLabel(elapsed.days, "day", locale)}, </span>
-                <span className="font-bold text-accent">{elapsed.hours}</span>
-                <span className="text-accent/70"> {formatUnitLabel(elapsed.hours, "hour", locale)}, </span>
-                <span className="font-bold text-accent">{elapsed.minutes}</span>
-                <span className="text-accent/70"> {formatUnitLabel(elapsed.minutes, "minute", locale)}, </span>
-                <span className="font-bold text-accent">{elapsed.seconds}</span>
-                <span className="text-accent/70"> {formatUnitLabel(elapsed.seconds, "second", locale)}</span>
+                {formattedTime}
             </p>
         </div>
     );
