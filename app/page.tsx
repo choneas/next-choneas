@@ -8,7 +8,7 @@ import { MomentList, MomentListSkeleton } from "@/components/moment-list";
 import { LiveCounter } from "@/components/home/live-counter";
 import { MeshBackground } from "@/components/home/mesh-background";
 import { SecondParagraphWithModal } from "@/components/home/second-paragraph-modal";
-import { socialLinks, techStacks } from "@/data/about";
+import { techStacks } from "@/data/about";
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("Metadata");
@@ -81,7 +81,7 @@ function GlassPanel({ children, className = "" }: { children: React.ReactNode; c
 /** Icon links - social & tech stack */
 function IconLinks() {
     const allLinks = [
-        ...socialLinks.filter(l => l.href),
+        // ...socialLinks.filter(l => l.href),
         ...techStacks.filter(s => s.href),
     ];
 
@@ -176,7 +176,9 @@ export default async function Home() {
                             i: (chunks) => <em className="italic">{chunks}</em>,
                         })}
                         cultureText={t("intro.paragraph2.culture")}
-                        betweenCultureAndLink={t("intro.paragraph2.middle")}
+                        betweenCultureAndLink={t.rich("intro.paragraph2.middle", {
+                            i: (chunks) => <em className="italic">{chunks}</em>,
+                        })}
                         linkText={t("intro.paragraph2.link")}
                         afterLink={t("intro.paragraph2.after")}
                         modal={{
@@ -237,8 +239,7 @@ export default async function Home() {
 
             <HLine className="relative left-0 md:left-0 lg:left-0" />
 
-            {/* Footer spacer */}
-            <div className="h-5" />
+            <div className="h-6" />
         </>
     );
 }

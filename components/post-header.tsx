@@ -41,7 +41,7 @@ export function PostHeader({ post, isTweet }: PostHeaderProps) {
     return (
         <>
             {post.cover ? (
-                <div className="post-header relative -mt-[72px] max-w-screen overflow-hidden mb-3">
+                <div className="relative -mt-[72px] max-w-screen overflow-hidden mb-3">
                     <div className="relative md:h-[50vh] h-[80vh]">
                         <Image
                             fill
@@ -51,7 +51,7 @@ export function PostHeader({ post, isTweet }: PostHeaderProps) {
                             className="h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent">
-                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'max-w-6xl px-8 sm:px-24 md:px-48' : 'px-8'}`}>
+                            <div className={`h-full flex flex-col justify-end pb-8 ${!isTweet ? 'max-w-6xl mx-auto px-8 sm:px-24 md:px-48' : 'px-8'}`}>
                                 <Tags
                                     tags={post.tags || []}
                                     variant="soft"
@@ -60,14 +60,14 @@ export function PostHeader({ post, isTweet }: PostHeaderProps) {
                                 <span className="text-5xl font-bold my-2">
                                     {post.icon}
                                 </span>
-                                <h1 role="heading" className="text-4xl text-white font-bold my-4">
+                                <h1 role="heading" className="text-4xl font-bold">
                                     {post.title.length !== 0 ?
                                         post.title
                                         :
                                         t('tweet-details')
                                     }
                                 </h1>
-                                <p className="text-gray-300 text-sm mt-4">
+                                <p className="backdrop-opacity-50 bg-blend-overlay text-sm mt-4">
                                     {t('created_at') + (post.created_time ? formatDate(post.created_time, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                                 </p>
                             </div>
@@ -75,7 +75,7 @@ export function PostHeader({ post, isTweet }: PostHeaderProps) {
                     </div>
                 </div>
             ) : (
-                <div className={isTweet ? 'pt-6 pb-4' : 'post-header max-w-6xl mx-auto px-8 sm:mt-20 sm:px-24 md:px-48 pt-8'}>
+                <div className={isTweet ? 'pt-6 pb-4' : 'max-w-6xl mx-auto px-8 sm:mt-20 sm:px-24 md:px-48 pt-8 pb-4'}>
                     <Tags
                         tags={post.tags || []}
                         variant="soft"

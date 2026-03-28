@@ -70,7 +70,7 @@ export function ArticleCard({
                 <article>
                     <Card className="bg-content2 shadow border-none">
                     <div className="lg:hidden">
-                        <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*3)]">
+                        <div className="relative w-full aspect-video overflow-hidden rounded-b-md rounded-t-[calc(var(--radius-md)*2)]">
                             <Image
                                 alt={article.title}
                                 src={article.cover}
@@ -89,7 +89,7 @@ export function ArticleCard({
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
                         </div>
 
-                        <div className="relative w-full h-[200px] overflow-hidden rounded-[calc(var(--radius-md)*3)]">
+                        <div className="relative w-full h-[200px] overflow-hidden rounded-[calc(var(--radius-md)*2)]">
                             <Image alt={article.title} src={article.cover} fill className="object-cover" />
                         </div>
                     </div>
@@ -100,6 +100,9 @@ export function ArticleCard({
                             <AuthorAndDate />
                             <span className="text-2xl font-semibold">{article.title}</span>
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
+                            {article.description && article.description.length <= 200 && (
+                                <span className="text-sm text-foreground/60">{article.description}</span>
+                            )}
                         </div>
                     </Card.Content>
                     </Card>
@@ -112,7 +115,7 @@ export function ArticleCard({
         <NextLink
             href={href}
             className={`${focusClass} block`}
-            aria-label={`阅读文章: ${article.title}，发布于 ${formatDate(article.created_time, locale, showTime)}${article.readingTime ? `，预计阅读时间 ${article.readingTime}` : ""}${article.tags && article.tags.length > 0 ? `，标签: ${article.tags.join(", ")}` : ""}`}
+            aria-label={`${article.title}，${formatDate(article.created_time, locale, showTime)}${article.readingTime ? `，ETA ${article.readingTime}` : ""}${article.tags && article.tags.length > 0 ? `，${article.tags.join(", ")}` : ""}`}
             onNavigate={handleNavigate}
         >
             <article>

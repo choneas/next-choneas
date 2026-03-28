@@ -29,7 +29,7 @@ export function SecondParagraphModalContent({
     onOpenChange,
     modal,
 }: CultureModalContentProps) {
-    const { title, paragraphs, imageSrc = "/pictures/landscape.webp", imageAlt = "Landscape" } = modal;
+    const { title, paragraphs, imageSrc = "/images/landscape.webp", imageAlt = "Landscape" } = modal;
 
     return (
         <Modal.Backdrop

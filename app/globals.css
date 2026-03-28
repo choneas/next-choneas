@@ -47,7 +47,7 @@
     /* Other Colors */
     --default: #F1DFDB;
     --default-foreground: var(--eclipse);
-    --muted: oklch(0.5517 0.0138 285.94);
+    --muted: color-mix(in srgb, var(--foreground) 60%, transparent);
     --scrollbar: oklch(87.1% 0.006 286.286);
     --border: #FFF0EE;
     --divider: #D8C2BE;
@@ -234,6 +234,20 @@
     font-size: var(--text-base);
   }
 
+  p {
+    @apply font-normal
+  }
+
+  code,
+  pre {
+    font-family: var(--font-code) !important;
+  }
+
+  /* HeroUI ListBox Label with font-code */
+  .font-code {
+    font-family: var(--font-code) !important;
+  }
+
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-accent-foreground);
@@ -264,9 +278,18 @@
 
 @layer components {
 
-  /* HeroUI Button secondary variant - restore accent text color */
   .button--secondary {
     --button-fg: var(--color-accent) !important;
+  }
+
+  [class*="ListBoxItem"] .font-code,
+  [data-slot="label"] .font-code,
+  .font-code {
+    font-family: var(--font-code) !important;
+  }
+
+  .dropdown__popover {
+    max-width: unset;
   }
 
   .article-container {
@@ -386,8 +409,20 @@
   }
 
   .notion-code,
-  .notion-callout {
-    border-radius: var(--radius-lg) !important;
+  .notion-code * {
+    font-family: var(--font-code) !important;
+  }
+
+  .notion .notion-inline-code,
+  .notion-code .notion-code-block code {
+    font-family: var(--font-code) !important;
+  }
+
+  /* Override prismjs code font */
+  .notion-code[class*='language-'],
+  .notion-code code[class*='language-'],
+  .notion-code pre[class*='language-'] {
+    font-family: var(--font-code) !important;
   }
 
   .notion-quote {
@@ -397,12 +432,13 @@
   .notion-callout {
     border: none !important;
     box-shadow: 0 0 0 1px var(--color-divider) inset !important;
+    border-radius: var(--radius-lg) !important;
   }
 
   .notion-callout:not([class*="_background"]),
   .notion-callout.notion-gray_background,
   .notion-callout.notion-gray_background_co {
-    background-color: color-mix(in srgb, var(--color-accent-soft) 12%, var(--color-surface) 88%) !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 5%, var(--color-surface) 95%) !important;
   }
 
   .notion .notion-callout .notion-page-icon-inline {
@@ -412,14 +448,22 @@
     font-size: 1.15em !important;
   }
 
-  /* Notion 文件图标颜色 */
+  .notion .notion-callout .notion-page-icon-span {
+    padding-top: 6px !important;
+  }
+
+  .notion-file-info {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
   .notion-file-icon {
     color: var(--color-foreground) !important;
   }
 
   .notion .notion-file-icon {
-    width: 20px !important;
-    height: 20px !important;
+    width: 22px !important;
+    height: 22px !important;
     margin-right: 0 !important;
     flex: 0 0 auto !important;
   }
@@ -431,6 +475,16 @@
 
   .notion-file-icon path {
     fill: currentColor !important;
+  }
+
+  .notion-file-title {
+    @apply font-code text-base
+  }
+
+  .notion-file-size {
+    font-size: var(--text-base) !important;
+    color: var(--muted) !important;
+    @apply font-code
   }
 
   .notion .notion-link {
@@ -480,16 +534,16 @@
     color: var(--color-foreground) !important;
     text-decoration: none !important;
     border-bottom: none !important;
-    background-color: color-mix(in srgb, var(--color-accent-soft) 12%, var(--color-surface) 88%) !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 5%, var(--color-surface) 95%) !important;
     box-shadow: 0 0 0 1px var(--color-divider) inset !important;
     border-radius: var(--radius-lg) !important;
-    padding: 16px 16px 16px 12px !important;
+    padding: 16px 16px 16px 16px !important;
     gap: 0.5rem !important;
   }
 
   .notion .notion-file-link:hover {
     opacity: 1 !important;
-    background-color: color-mix(in srgb, var(--color-accent-soft) 18%, var(--color-surface) 82%) !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 8%, var(--color-surface) 92%) !important;
   }
 
   .notion .notion-file-size {
@@ -512,7 +566,7 @@
   .dark .notion-callout:not([class*="_background"]),
   .dark .notion-callout.notion-gray_background,
   .dark .notion-callout.notion-gray_background_co {
-    background-color: color-mix(in srgb, var(--color-accent-soft) 14%, var(--color-surface) 86%) !important;
+    background-color: color-mix(in srgb, var(--color-accent-soft) 7%, var(--color-surface) 93%) !important;
   }
 
   /* Notion Table 样式覆盖 */
@@ -648,11 +702,10 @@
     transition: transform 0.2s ease;
   }
 
-  /* Island effect - shared by Navbar and TOC */
   .island-base {
     backdrop-filter: blur(18px) saturate(160%);
     -webkit-backdrop-filter: blur(18px) saturate(160%);
-    background-color: color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 55%, transparent 45%);
+    background-color: color-mix(in srgb, color-mix(in srgb, var(--color-background) 60%, var(--color-accent) 40%) 75%, transparent 25%);
   }
 
   .island-active {

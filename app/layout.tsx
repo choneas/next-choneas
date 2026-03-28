@@ -3,11 +3,12 @@ import { getLocale, getMessages } from 'next-intl/server';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Noto_Serif_SC, Source_Code_Pro } from "next/font/google";
+import { Noto_Serif_SC, Google_Sans_Code } from "next/font/google";
 import { NavbarWrapper } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 import { SkipToContent } from "@/components/skip-to-content";
+import { CopyrightToast } from "@/components/copyright-toast";
 import { Suspense } from "react";
 import "overlayscrollbars/overlayscrollbars.css";
 import "./globals.css";
@@ -20,7 +21,7 @@ const notoSerif = Noto_Serif_SC({
     fallback: ["Noto Serif SC", "Noto Serif", "serif", "Times New Roman", "system-ui"],
 });
 
-const sourceCode = Source_Code_Pro({
+const googleSansCode = Google_Sans_Code({
     variable: "--font-code",
     display: "swap",
     subsets: ["latin"],
@@ -35,7 +36,7 @@ export default async function RootLayout({
     return (
         <Suspense fallback={
             <html suppressHydrationWarning data-overlayscrollbars-initialize>
-                <body className={`${notoSerif.variable} ${sourceCode.variable} font-serif text-foreground bg-background antialiased`}>
+                <body className={`${notoSerif.variable} ${googleSansCode.variable} font-serif text-foreground bg-background antialiased md:subpixel-antialiased`}>
                 </body>
             </html>
         }>
@@ -61,11 +62,12 @@ async function LocalizedContent({ children }: { children: React.ReactNode }) {
         <html lang={lang} suppressHydrationWarning data-overlayscrollbars-initialize>
             <body
                 data-overlayscrollbars-initialize
-                className={`${notoSerif.variable} ${sourceCode.variable} font-serif text-foreground bg-background antialiased`}
+                className={`${notoSerif.variable} ${googleSansCode.variable} font-serif text-foreground bg-background antialiased`}
             >
                 <NextIntlClientProvider messages={messages}>
                     <Providers>
                         {children}
+                        <CopyrightToast />
                     </Providers>
                 </NextIntlClientProvider>
                 <Analytics />

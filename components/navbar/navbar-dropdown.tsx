@@ -71,7 +71,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                 </Dropdown.Trigger>
                 <Dropdown.Popover
                     placement="bottom end"
-                    className="w-72 px-4 py-5 mobile-dropdown-fix-right"
+                    className="w-auto px-4 py-5 mobile-dropdown-fix-right"
                 >
                     <div className="flex flex-col gap-4">
                         <div>
@@ -93,7 +93,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                                         className={selectedLang === locale ? "bg-accent/10" : ""}
                                     >
                                         {loadingLang === locale && <Spinner size="sm" />}
-                                        <Label className="font-mono text-sm">{locale}</Label>
+                                        <Label className="font-code text-sm">{locale}</Label>
                                         <ListBox.ItemIndicator />
                                     </ListBox.Item>
                                 ))}
@@ -103,7 +103,7 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                                     className={selectedLang === "Accept-Language" ? "bg-accent/10" : ""}
                                 >
                                     {loadingLang === "Accept-Language" && <Spinner size="sm" />}
-                                    <Label className="font-mono text-sm">Accept-Language</Label>
+                                    <Label className="font-code text-sm">Accept-Language</Label>
                                     <ListBox.ItemIndicator />
                                 </ListBox.Item>
                             </ListBox>
@@ -198,9 +198,9 @@ export function NavbarDropdown({ onVisibilityChange }: NavbarDropdownProps) {
                                     textValue={locale}
                                     className={selectedLang === locale ? "bg-accent/10" : ""}
                                 >
-                                    {loadingLang === locale && <Spinner size="sm" />}
-                                    <Label className="font-mono text-sm">{locale}</Label>
-                                    <ListBox.ItemIndicator />
+                                {loadingLang === locale && <Spinner size="sm" />}
+                                <Label className="font-code text-sm">{locale}</Label>
+                                <ListBox.ItemIndicator />
                                 </ListBox.Item>
                             ))}
                             <ListBox.Item

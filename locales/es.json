@@ -13,11 +13,11 @@
   },
   "Home": {
     "intro": {
-      "paragraph1": "Choneas es estudiante solo por definición. Piensa en un carril completamente diferente al de sus compañeros. Está trabajando en proyectos que usan React. Tiene una ambición clara y será profesor e ingeniero de software. ",
+      "paragraph1": "Choneas tiende, casi sin quererlo, a <b>volverse diferente</b>. Distante de sus pares, se dedica al código y a las sutilezas. Quizá, algún día, simplemente aparezca en un aula o frente a una pantalla.",
       "paragraph2": {
-        "before": "Su comida favorita es el bistec y lo prefiere bien cocido. Ama la música e incluso puede activar <i>BrainPods</i> para mantener la música en bucle en su cabeza. Es bueno mezclando ",
+        "before": "Cuando las palabras se vuelven tediosas, decide transformarlas para preservar su sentido original. Se inclina hacia la ",
         "culture": "cultura",
-        "middle": " en el código hasta que simplemente se siente bien. Así que si quieres descubrir más sobre él o hacer algo más, solo lee sus ",
+        "middle": " como algo sutil y esencial. Si buscas algún <i>valor</i>, ya sea conocimiento o recreo, puedes explorar sus ",
         "link": "artículos",
         "after": " o pensamientos."
       },
@@ -102,7 +102,9 @@
   "Footer": {
     "copyright": "© 2024-2026 Choneas. Todos los derechos reservados.",
     "license": "Este trabajo está licenciado bajo una",
-    "licenseLink": "CC BY-NC-SA 4.0"
+    "licenseLink": "Licencia CC BY-NC-SA 4.0",
+    "copyLicenseTitle": "Aviso de Derechos de Autor",
+    "copyLicense": "Esta obra está bajo una Licencia CC BY-NC-SA 4.0. Asegúrese de cumplir con los términos de la licencia al redistribuir o citar."
   },
   "LiveCounter": {
     "title": "Tiempo en la Tierra"

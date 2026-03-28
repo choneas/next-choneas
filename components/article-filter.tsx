@@ -293,7 +293,7 @@ export function ArticleFilter({
                                         aria-selected={isSelected}
                                         id={`tag-${tag}`}
                                         data-tag-index={idx}
-                                        className={`px-3 py-2 rounded-full text-base font-medium justify-center cursor-pointer
+                                        className={`px-3 py-2 rounded-full text-base font-medium justify-center cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis
                                                     ${isListFocused && isKeyboardNavigation && activeIndex === idx ? "ring-inset ring-2 ring-accent" : ""}`}
                                         style={{
                                             backgroundColor: isSelected
@@ -302,6 +302,7 @@ export function ArticleFilter({
                                             color: isSelected
                                                 ? "var(--color-accent-foreground)"
                                                 : "var(--color-foreground)",
+                                            flexShrink: 0,
                                         }}
                                         onClick={(event) => {
                                             event.stopPropagation();

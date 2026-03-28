@@ -80,7 +80,7 @@ function getIslandStyle(isMenuOpen: boolean) {
     const blur = isMenuOpen ? "blur(20px) saturate(180%)" : "blur(18px) saturate(160%)";
     const bg = isMenuOpen
         ? "color-mix(in srgb, var(--color-background) 96%, transparent 4%)"
-        : "color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 55%, transparent 45%)";
+        : "color-mix(in srgb, color-mix(in srgb, var(--color-background) 90%, var(--color-accent) 10%) 80%, transparent 20%)";
     // Removed outermost light shadow layer
     const shadow = isMenuOpen
         ? "inset 0 0 0 1.5px rgba(255, 255, 255, 0.15)"
@@ -258,7 +258,7 @@ export function Navbar({ translations }: NavbarProps) {
                         className="absolute flex items-center h-14 rounded-full pl-3 pr-4 focus-within:shadow-[0_0_0_3px_var(--color-accent)]"
                         style={{
                             ...islandStyle,
-                            maxWidth: "calc(50vw - 200px)",
+                            maxWidth: "calc(40vw - 180px)",
                             overflow: "hidden",
                         }}
                         initial={false}

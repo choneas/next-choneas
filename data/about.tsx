@@ -1,6 +1,7 @@
 import type { SocialLink, TechStack } from "@/types/about";
 
 // Social
+import { MdMail } from "react-icons/md";
 import { FaBilibili, FaBluesky, FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
 
 // Teach Stack
@@ -34,6 +35,11 @@ export const socialLinks: SocialLink[] = [
         icon: <FaXTwitter />,
         href: "https://x.com/littlephoenixxx"
     },
+    {
+        platform: "Mail",
+        icon: <MdMail size={30} />,
+        href: "mailto:me@choneas.com"
+    }
 ]
 
 export const techStacks: TechStack[] = [

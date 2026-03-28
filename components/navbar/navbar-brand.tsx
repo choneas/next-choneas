@@ -50,7 +50,7 @@ export function NavbarBrand() {
         const measureWidth = () => {
             if (titleRef.current) {
                 const width = titleRef.current.scrollWidth;
-                const maxWidth = Math.min(width + 16, 400); // Add padding, cap at 400px
+                const maxWidth = Math.min(width + 16, 400);
                 setMeasuredWidth(maxWidth);
             }
         };
@@ -98,7 +98,7 @@ export function NavbarBrand() {
                 >
                     {/* Name text - moves up and scales down */}
                     <motion.div
-                        className="absolute left-0 top-2 origin-left whitespace-nowrap overflow-visible"
+                        className="absolute left-0 top-2 origin-left whitespace-nowrap overflow-visible font-bold!"
                         translate="no"
                         style={{
                             y: headTextY,
@@ -123,7 +123,7 @@ export function NavbarBrand() {
             ) : (
                 <p
                     translate="no"
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap font-bold!"
                 >
                     {tm('name')}
                 </p>

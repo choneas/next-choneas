@@ -13,11 +13,11 @@
   },
   "Home": {
     "intro": {
-      "paragraph1": "Choneas is a student only by definition. He thinks in a completely different lane from his peers. He is working at projects that using React. He has a clear ambition and he will be a teacher and a software engineer. ",
+      "paragraph1": "Choneas tends, almost unwittingly, to <b>become different</b>. Apart from his peers, he dwells on code and finer subtleties. Perhaps, one day, he may simply appear in a classroom or before a screen.",
       "paragraph2": {
-        "before": "His favourite food is steak and he prefers it fully cooked. He loves music and he can even activates <i>BrainPods</i> to keep the music looping in his head. He is good at mixing ",
+        "before": "When words grow wearisome, he chooses to reshape them, so their original sense may still be felt. He leans toward ",
         "culture": "culture",
-        "middle": " into code until it just feels right. So if you want to discover more about him or do something else, just read his ",
+        "middle": " as something subtle and essential. If you seek any <i>value</i> here, whether knowledge or diversion, you may explore his ",
         "link": "articles",
         "after": " or thoughts."
       },
@@ -50,8 +50,8 @@
   },
   "Navbar-Dropdown": {
     "preferences": "Preferences",
-    "prefer-language": "Prefer Language",
-    "prefer-color-scheme": "Prefer Color Scheme",
+    "prefer-language": "Language",
+    "prefer-color-scheme": "Color Scheme",
     "light": "Light",
     "dark": "Dark",
     "system": "Follow System",
@@ -63,7 +63,7 @@
     "intro": "Intro"
   },
   "Moment": {
-    "article-publish": "Published an article",
+    "article-publish": "Posted an article",
     "view-all": "View all",
     "collapse": "Collapse",
     "details": "Tweet Details",
@@ -102,7 +102,9 @@
   "Footer": {
     "copyright": "© 2024-2026 Choneas. All rights reserved.",
     "license": "This work is licensed under a",
-    "licenseLink": "CC BY-NC-SA 4.0 License"
+    "licenseLink": "CC BY-NC-SA 4.0 License",
+    "copyLicenseTitle": "Copyright License",
+    "copyLicense": "This work is licensed under a CC BY-NC-SA 4.0 License. Please ensure compliance with the license terms when redistributing or quoting."
   },
   "Format": {
     "today": "Today",
