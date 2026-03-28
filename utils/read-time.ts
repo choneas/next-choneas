@@ -34,7 +34,13 @@ export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
     const pageId = Object.keys(recordMap.block)[0]
     // console.log('[getReadingTimeMinutes] Processing pageId:', pageId)
 
-    const block = recordMap.block[pageId]?.value
+    const blockBox = recordMap.block[pageId]
+    if (!blockBox) return 1
+
+    let block = blockBox.value
+    if (block && 'value' in block && typeof (block as any).value === 'object') {
+        block = (block as any).value
+    }
 
     if (!block) {
         // console.warn('[getReadingTimeMinutes] No block found for pageId:', pageId)
@@ -43,7 +49,7 @@ export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
 
     // console.log('[getReadingTimeMinutes] Block type:', block.type, 'Block ID:', block.id)
 
-    const estimate = estimatePageReadTime(block, recordMap)
+    const estimate = estimatePageReadTime(block as any, recordMap)
     const minutes = Math.ceil(estimate.totalReadTimeInMinutes)
 
     // console.log('[getReadingTimeMinutes] Estimate:', {

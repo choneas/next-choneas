@@ -79,14 +79,25 @@ const getCachedPost = unstable_cache(
 // Helper functions
 // ============================================================================
 
+function getBlockValue(recordMap: ExtendedRecordMap, id: string): any {
+    const box = recordMap.block[id];
+    if (!box) return null;
+    let value = box.value;
+    // Handle double-nested blocks: { role, value: { role, value: T } }
+    if (value && 'value' in value && typeof (value as any).value === 'object') {
+        value = (value as any).value;
+    }
+    return value;
+}
+
 function getTweetImageUrls(recordMap: ExtendedRecordMap, blockId: string): string[] {
     try {
-        const block = recordMap.block[blockId]?.value;
+        const block = getBlockValue(recordMap, blockId);
         if (!block?.content) return [];
 
         const images: string[] = [];
         for (const childId of block.content) {
-            const child = recordMap.block[childId]?.value;
+            const child = getBlockValue(recordMap, childId);
             if (child?.type === 'image') {
                 const source = recordMap.signed_urls?.[child.id] || child.properties?.source?.[0]?.[0];
                 if (source && !source.includes('file.notion.so')) {
@@ -120,7 +131,7 @@ function generateRawPostMetadata(
     locale: string
 ): RawPostMetadata {
     const resolvedPageId = pageId.length === 32 ? idToUuid(pageId) : pageId;
-    const block = recordMap.block[resolvedPageId].value;
+    const block = getBlockValue(recordMap, resolvedPageId);
 
     const metadata: RawPostMetadata = {
         notionid: pageId,
@@ -348,7 +359,7 @@ async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
     for (const id of pageIds) {
         try {
             const recordMap = await getCachedPost(id);
-            const block = recordMap.block?.[id]?.value;
+            const block = getBlockValue(recordMap, id);
 
             if (!block) {
                 continue;
@@ -414,7 +425,7 @@ async function getPostRecordMap(slugOrId: string, allowTweet?: boolean) {
 
     const recordMap = await getCachedPost(targetId);
     const resolvedPageId = targetId.length === 32 ? idToUuid(targetId) : targetId;
-    const block = recordMap.block[resolvedPageId].value;
+    const block = getBlockValue(recordMap, resolvedPageId);
     const type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
 
     if (!allowTweet && type === 'Tweet') {
