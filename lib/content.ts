@@ -133,6 +133,10 @@ function generateRawPostMetadata(
     const resolvedPageId = pageId.length === 32 ? idToUuid(pageId) : pageId;
     const block = getBlockValue(recordMap, resolvedPageId);
 
+    if (!block) {
+        throw new ArticleNotFoundError(`Block not found for pageId: ${pageId}`);
+    }
+
     const metadata: RawPostMetadata = {
         notionid: pageId,
         title: getPageProperty('title', block, recordMap) || '',
@@ -486,6 +490,11 @@ async function getPostRecordMap(slugOrId: string, allowTweet?: boolean, locale?:
     const recordMap = await getCachedPost(targetId);
     const resolvedPageId = targetId.length === 32 ? idToUuid(targetId) : targetId;
     const block = getBlockValue(recordMap, resolvedPageId);
+
+    if (!block) {
+        throw new ArticleNotFoundError(`Block not found for pageId: ${targetId}`);
+    }
+
     const type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
 
     if (!allowTweet && type === 'Tweet') {
