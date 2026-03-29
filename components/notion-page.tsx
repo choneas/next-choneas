@@ -26,7 +26,6 @@ const Collection = dynamic(() =>
     ),
     {
         ssr: false,
-        loading: () => <div className="bg-content2 rounded p-4 animate-pulse h-32" />
     }
 )
 
@@ -96,8 +95,7 @@ const NotionPage = ({ recordMap, type }: NotionPageProps) => {
 // This component needs to be updated once the Table API is available in HeroUI 3.0.
 // Requirements: 6.3, 6.4
 // Temporarily disabled - HeroUI 3.0 Table component not available
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const NotionTableReplacer = () => {
+// const NotionTableReplacer = () => {
     // React.useEffect(() => {
     //     if (typeof document === 'undefined') return;
     //     const notionTables = document.querySelectorAll('.notion-simple-table');
@@ -160,7 +158,7 @@ const NotionTableReplacer = () => {
     //         });
     //     });
     // }, []);
-    return null;
-};
+    // return null;
+// };
 
 export default NotionPage;

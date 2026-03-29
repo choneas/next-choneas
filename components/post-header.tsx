@@ -60,14 +60,14 @@ export function PostHeader({ post, isTweet }: PostHeaderProps) {
                                 <span className="text-5xl font-bold my-2">
                                     {post.icon}
                                 </span>
-                                <h1 role="heading" className="text-4xl font-bold">
+                                <h1 role="heading" className="light text-4xl font-bold text-background">
                                     {post.title.length !== 0 ?
                                         post.title
                                         :
                                         t('tweet-details')
                                     }
                                 </h1>
-                                <p className="backdrop-opacity-50 bg-blend-overlay text-sm mt-4">
+                                <p className="light backdrop-opacity-50 bg-blend-overlay text-sm mt-4 text-background">
                                     {t('created_at') + (post.created_time ? formatDate(post.created_time, locale) : '') + (!isTweet ? ' · ' + t('updated_at') + (post.last_edited_time ? formatDate(post.last_edited_time, locale) : '') : '')}
                                 </p>
                             </div>

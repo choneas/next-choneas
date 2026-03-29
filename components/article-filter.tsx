@@ -213,14 +213,14 @@ export function ArticleFilter({
                 onChange={setSearchValue}
             >
                 <SearchField.Group className="rounded-full pl-1 py-3 md:pl-3 md:py-6">
-                    <SearchField.SearchIcon>
-                        <IoSearch size={24} />
+                    <SearchField.SearchIcon fontSize={32}>
+                        <IoSearch/>
                     </SearchField.SearchIcon>
                     <SearchField.Input
                         className="w-full md:text-[18px] backdrop-opacity-0"
                         placeholder={t("placeholder-search")}
                     />
-                    <SearchField.ClearButton className="mr-2" />
+                    <SearchField.ClearButton className="mr-3" />
                 </SearchField.Group>
             </SearchField>
 

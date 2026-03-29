@@ -1,5 +1,5 @@
 import { estimatePageReadTime } from "notion-utils"
-import type { ExtendedRecordMap } from "notion-types"
+import type { Block, ExtendedRecordMap, NotionMapBox } from "notion-types"
 import { formatReadingTime } from "@/lib/format"
 
 /**
@@ -37,9 +37,9 @@ export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
     const blockBox = recordMap.block[pageId]
     if (!blockBox) return 1
 
-    let block = blockBox.value
-    if (block && 'value' in block && typeof (block as any).value === 'object') {
-        block = (block as any).value
+    let block = blockBox.value as Block | NotionMapBox<Block>;
+    if (block && 'value' in block && typeof (block as NotionMapBox<Block>).value === 'object') {
+        block = (block as NotionMapBox<Block>).value as Block;
     }
 
     if (!block) {
@@ -49,9 +49,7 @@ export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
 
     // console.log('[getReadingTimeMinutes] Block type:', block.type, 'Block ID:', block.id)
 
-    const estimate = estimatePageReadTime(block as any, recordMap)
-    const minutes = Math.ceil(estimate.totalReadTimeInMinutes)
-
+    const estimate = estimatePageReadTime(block as Block, recordMap)
     // console.log('[getReadingTimeMinutes] Estimate:', {
     //     totalReadTimeInMinutes: estimate.totalReadTimeInMinutes,
     //     totalWordsReadTimeInMinutes: estimate.totalWordsReadTimeInMinutes,
@@ -60,5 +58,5 @@ export function getReadingTimeMinutes(recordMap: ExtendedRecordMap): number {
     //     roundedMinutes: minutes
     // })
 
-    return minutes
+    return Math.ceil(estimate.totalReadTimeInMinutes)
 }

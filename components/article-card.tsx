@@ -81,12 +81,17 @@ export function ArticleCard({
                         </div>
                     </div>
 
-                    {/* Mobile: grid, photos on right */}
-                    <div className="hidden lg:grid lg:grid-cols-[1fr_380px] gap-4 p-4">
-                        <div className="flex flex-col gap-3">
+                    {/* Desktop: grid, photos on right */}
+                    <div className="hidden lg:grid lg:grid-cols-[1fr_380px] gap-4 p-4 h-[232px]">
+                        <div className="flex flex-col gap-3 overflow-hidden">
                             <AuthorAndDate />
-                            <span className="text-2xl font-semibold">{article.title}</span>
-                            {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
+                            <span className="text-2xl font-semibold line-clamp-1 shrink-0">{article.title}</span>
+                            {article.tags && article.tags.length > 0 && <div className="shrink-0"><Tags tags={article.tags} /></div>}
+                            {article.description && (
+                                <span className="text-sm text-foreground/60 line-clamp-3 max-w-2xl">
+                                    {article.description}
+                                </span>
+                            )}
                         </div>
 
                         <div className="relative w-full h-[200px] overflow-hidden rounded-[calc(var(--radius-md)*2)]">
@@ -100,8 +105,8 @@ export function ArticleCard({
                             <AuthorAndDate />
                             <span className="text-2xl font-semibold">{article.title}</span>
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
-                            {article.description && article.description.length <= 200 && (
-                                <span className="text-sm text-foreground/60">{article.description}</span>
+                            {article.description && (
+                                <span className="text-sm text-foreground/60 line-clamp-3">{article.description}</span>
                             )}
                         </div>
                     </Card.Content>
@@ -123,8 +128,13 @@ export function ArticleCard({
                     <Card.Content className="p-3">
                         <div className="flex flex-col gap-3">
                             <AuthorAndDate />
-                            <span className="text-2xl font-semibold">{article.title}</span>
+                            <span className="text-2xl font-semibold line-clamp-2">{article.title}</span>
                             {article.tags && article.tags.length > 0 && <Tags tags={article.tags} />}
+                            {article.description && (
+                                <span className="text-sm text-foreground/60 line-clamp-3">
+                                    {article.description}
+                                </span>
+                            )}
                         </div>
                     </Card.Content>
                 </Card>

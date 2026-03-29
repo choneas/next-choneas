@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { Analytics } from "@vercel/analytics/next";
@@ -12,6 +13,10 @@ import { CopyrightToast } from "@/components/copyright-toast";
 import { Suspense } from "react";
 import "overlayscrollbars/overlayscrollbars.css";
 import "./globals.css";
+
+export const metadata: Metadata = {
+    metadataBase: new URL('https://choneas.com'),
+};
 
 const notoSerif = Noto_Serif_SC({
     variable: "--font-serif",

@@ -150,7 +150,7 @@ export function MomentCard({ moment }: MomentCardProps) {
         transition={{
           duration: 0.4,
           ease: [0.4, 0, 0.2, 1],
-          layout: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+          layout: { type: "spring", stiffness: 300, damping: 30 }
         }}
       >
         <Card
@@ -207,7 +207,7 @@ export function MomentCard({ moment }: MomentCardProps) {
           <motion.div
             className={`space-y-3 moment-card-content ${isLoading ? 'loading' : 'loaded'}`}
             layout
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ layout: { type: "spring", stiffness: 300, damping: 30 } }}
           >
             {/* Title */}
             {(isNotionPost || moment.title) && (
@@ -222,20 +222,21 @@ export function MomentCard({ moment }: MomentCardProps) {
               <Tags className="pt-1" tags={moment.tags} />
             )}
 
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {isTweet ? (
                 !isNotionPost ? (
                   <motion.div
                     key="social"
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                    exit={{ opacity: 0, y: -15, position: "absolute", top: 0, left: 0, right: 0 }}
+                    transition={{ opacity: { duration: 0.3 }, y: { type: "spring", stiffness: 300, damping: 30 }, layout: { type: "spring", stiffness: 300, damping: 30 } }}
                   >
                     <div className="relative min-h-16">
                       <motion.div
                         className="tweet-preview relative pointer-events-none"
                         layout
-                        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                        transition={{ layout: { type: "spring", stiffness: 300, damping: 30 } }}
                       >
                         <p className="text-foreground/90 text-base! whitespace-pre-wrap">{moment.description}</p>
                       </motion.div>
@@ -247,7 +248,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                     key="loading"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                    exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
                     transition={{ duration: 0.3 }}
                   >
                     <TweetContentSkeleton
@@ -258,9 +259,10 @@ export function MomentCard({ moment }: MomentCardProps) {
                 ) : recordMap ? (
                   <motion.div
                     key="loaded"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
+                    transition={{ opacity: { duration: 0.3 }, y: { type: "spring", stiffness: 300, damping: 30 }, layout: { type: "spring", stiffness: 300, damping: 30 } }}
                   >
                     <div className="relative">
                       {moment.description ? (
@@ -277,7 +279,7 @@ export function MomentCard({ moment }: MomentCardProps) {
                               : ''
                               } pointer-events-none`}
                             layout
-                            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                            transition={{ layout: { type: "spring", stiffness: 300, damping: 30 } }}
                             inert={!isExpanded}
                             aria-hidden={!isExpanded}
                             tabIndex={-1}
@@ -317,8 +319,10 @@ export function MomentCard({ moment }: MomentCardProps) {
               ) : (
                 <motion.p
                   key="article"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, position: "absolute", top: 0, left: 0, right: 0 }}
+                  transition={{ opacity: { duration: 0.3 }, y: { type: "spring", stiffness: 300, damping: 30 }, layout: { type: "spring", stiffness: 300, damping: 30 } }}
                   className="text-foreground/80"
                 >
                   {moment.description}
@@ -330,9 +334,9 @@ export function MomentCard({ moment }: MomentCardProps) {
           {/* Footer */}
           {isTweet && (isNotionPost ? !isLoading : true) && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
+              transition={{ opacity: { duration: 0.3, delay: 0.1 }, y: { type: "spring", stiffness: 300, damping: 30 } }}
             >
               <Button
                 onPress={() => {

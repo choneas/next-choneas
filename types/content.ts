@@ -24,6 +24,7 @@ export interface PostMetadata {
     platform?: Platform
     social?: SocialPostInfo
     slug?: string
+    language?: string
     author?: Author[]
     tags?: string[]
     description?: string

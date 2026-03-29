@@ -28,8 +28,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: metadata.description,
         keywords: metadata.tags,
         openGraph: {
-            images: metadata.cover
-        }
+            title: metadata.title,
+            description: metadata.description,
+            type: 'article',
+            url: `/article/${slug}`,
+            publishedTime: metadata.created_time?.toISOString(),
+            modifiedTime: metadata.last_edited_time?.toISOString(),
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: metadata.title,
+            description: metadata.description,
+        },
     };
 }
 

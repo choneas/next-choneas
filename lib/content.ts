@@ -1,6 +1,6 @@
 "use server"
 
-import type { ExtendedRecordMap, PageBlock } from "notion-types";
+import type { ExtendedRecordMap, PageBlock, Block, NotionMapBox } from "notion-types";
 import { idToUuid, defaultMapImageUrl, getPageTableOfContents, getPageProperty } from "notion-utils";
 import { unstable_cache } from "next/cache";
 import { NotionAPI } from "notion-client";
@@ -23,14 +23,14 @@ async function withRetry<T>(
     delay: number = 1000
 ): Promise<T> {
     let lastError: Error | undefined;
-    
+
     for (let i = 0; i < retries; i++) {
         try {
             return await fn();
         } catch (error) {
             lastError = error as Error;
             console.warn(`Retry ${i + 1}/${retries} failed:`, (error as Error).message);
-            
+
             if (i < retries - 1) {
                 // Exponential backoff with jitter
                 const waitTime = delay * Math.pow(2, i) + Math.random() * 500;
@@ -38,7 +38,7 @@ async function withRetry<T>(
             }
         }
     }
-    
+
     throw lastError;
 }
 
@@ -79,15 +79,15 @@ const getCachedPost = unstable_cache(
 // Helper functions
 // ============================================================================
 
-function getBlockValue(recordMap: ExtendedRecordMap, id: string): any {
+function getBlockValue(recordMap: ExtendedRecordMap, id: string): Block | null {
     const box = recordMap.block[id];
     if (!box) return null;
-    let value = box.value;
+    let value = box.value as Block | NotionMapBox<Block>;
     // Handle double-nested blocks: { role, value: { role, value: T } }
-    if (value && 'value' in value && typeof (value as any).value === 'object') {
-        value = (value as any).value;
+    if (value && 'value' in value && typeof (value as NotionMapBox<Block>).value === 'object') {
+        value = (value as NotionMapBox<Block>).value as Block;
     }
-    return value;
+    return value as Block;
 }
 
 function getTweetImageUrls(recordMap: ExtendedRecordMap, blockId: string): string[] {
@@ -146,6 +146,10 @@ function generateRawPostMetadata(
     metadata.slug = getPageProperty('Slug', block, recordMap);
     metadata.description = getPageProperty('Description', block, recordMap);
     metadata.type = getPageProperty('Type', block, recordMap) as "Article" | "Tweet";
+
+    // Language
+    const languageProp = getPageProperty<string | string[]>('Language', block, recordMap);
+    metadata.language = Array.isArray(languageProp) ? languageProp[0] : languageProp;
 
     // Raw tags (untranslated)
     const tags = getPageProperty<string[]>('Tags', block, recordMap) || [];
@@ -245,7 +249,8 @@ const getCachedAllPostsData = unstable_cache(
     async (locale: string): Promise<CachedPostsData> => {
         const pageIds = await getCollectionPageIds();
         const processedIds = new Set<string>();
-        const articles: RawPostMetadata[] = [];
+        const articlesMap = new Map<string, RawPostMetadata[]>();
+        const articlesWithoutSlug: RawPostMetadata[] = [];
         const tweets: RawPostMetadata[] = [];
 
         for (const id of pageIds) {
@@ -254,6 +259,9 @@ const getCachedAllPostsData = unstable_cache(
             try {
                 const postRecordMap = await getCachedPost(id);
                 const metadata = generateRawPostMetadata(postRecordMap, id, locale);
+
+                // Skip if language is missing
+                if (!metadata.language) continue;
 
                 if (metadata.description === '无内容' || metadata.description === 'No content') {
                     metadata.description = undefined;
@@ -264,11 +272,51 @@ const getCachedAllPostsData = unstable_cache(
                     tweets.push(metadata);
                 } else if (metadata.type === 'Article' && Boolean(metadata.id)) {
                     processedIds.add(id);
-                    articles.push(metadata);
+                    if (metadata.slug) {
+                        if (!articlesMap.has(metadata.slug)) {
+                            articlesMap.set(metadata.slug, []);
+                        }
+                        articlesMap.get(metadata.slug)!.push(metadata);
+                    } else {
+                        articlesWithoutSlug.push(metadata);
+                    }
                 }
             } catch (error) {
                 console.error(`Failed to process post ${id}:`, error);
             }
+        }
+
+        const articles: RawPostMetadata[] = [...articlesWithoutSlug];
+
+        // Filter articles by locale
+        for (const group of articlesMap.values()) {
+            // Find earliest dates across all languages in the group
+            const earliestCreated = new Date(Math.min(...group.map(m => new Date(m.created_time).getTime())));
+            const earliestEdited = new Date(Math.min(...group.map(m => new Date(m.last_edited_time).getTime())));
+
+            let bestMatch: RawPostMetadata;
+
+            if (group.length === 1) {
+                bestMatch = group[0];
+            } else {
+                // Exact match
+                let found = group.find(m => m.language === locale);
+
+                // Prefix match (first 2 chars)
+                if (!found) {
+                    found = group.find(m => m.language?.substring(0, 2) === locale.substring(0, 2));
+                }
+
+                // Fallback to first available
+                bestMatch = found || group[0];
+            }
+
+            // Apply unified dates
+            articles.push({
+                ...bestMatch,
+                created_time: earliestCreated,
+                last_edited_time: earliestEdited
+            });
         }
 
         return { articles, tweets };
@@ -341,7 +389,7 @@ class ArticleNotFoundError extends Error {
 /**
  * Find target page ID from slug or ID
  */
-async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
+async function findTargetPageId(slugOrId: string, locale?: string): Promise<string | undefined> {
     // UUID format - try to fetch directly
     if (slugOrId.length === 32) {
         try {
@@ -354,6 +402,7 @@ async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
 
     // Get all pages from collection
     const pageIds = await getCollectionPageIds();
+    const matchingPages: { id: string; language: string }[] = [];
 
     // Numeric ID or Slug - need to check each page
     for (const id of pageIds) {
@@ -375,7 +424,11 @@ async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
                 // Slug lookup
                 const pageSlug = getPageProperty('Slug', block, recordMap);
                 if (pageSlug === slugOrId) {
-                    return id;
+                    const languageProp = getPageProperty<string | string[]>('Language', block, recordMap);
+                    const language = Array.isArray(languageProp) ? languageProp[0] : languageProp;
+                    if (language) {
+                        matchingPages.push({ id, language });
+                    }
                 }
             }
         } catch (error) {
@@ -383,7 +436,14 @@ async function findTargetPageId(slugOrId: string): Promise<string | undefined> {
         }
     }
 
-    return undefined;
+    if (matchingPages.length === 0) return undefined;
+    if (matchingPages.length === 1 || !locale) return matchingPages[0].id;
+
+    let bestMatch = matchingPages.find(m => m.language === locale);
+    if (!bestMatch) {
+        bestMatch = matchingPages.find(m => m.language.substring(0, 2) === locale.substring(0, 2));
+    }
+    return bestMatch ? bestMatch.id : matchingPages[0].id;
 }
 
 /**
@@ -395,7 +455,7 @@ async function getPost(
     locale: string,
     allowTweet?: boolean
 ) {
-    const targetId = await findTargetPageId(slugOrId);
+    const targetId = await findTargetPageId(slugOrId, locale);
 
     if (!targetId) {
         throw new ArticleNotFoundError('Article not found: ' + slugOrId);
@@ -416,8 +476,8 @@ async function getPost(
  * Get post record map only (for client components that only need content)
  * No translation needed - just returns the Notion data
  */
-async function getPostRecordMap(slugOrId: string, allowTweet?: boolean) {
-    const targetId = await findTargetPageId(slugOrId);
+async function getPostRecordMap(slugOrId: string, allowTweet?: boolean, locale?: string) {
+    const targetId = await findTargetPageId(slugOrId, locale);
 
     if (!targetId) {
         throw new ArticleNotFoundError('Article not found: ' + slugOrId);

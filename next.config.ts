@@ -7,6 +7,19 @@ const withNextIntl = createNextIntlPlugin(
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'autoplay=()'
+          }
+        ]
+      }
+    ]
+  },
   images: {
     remotePatterns: [
       {
