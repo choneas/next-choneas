@@ -274,7 +274,6 @@ export function Navbar({ translations }: NavbarProps) {
                         className="absolute left-1/2 -translate-x-1/2 flex items-center p-1 h-14 rounded-full overflow-hidden focus-within:shadow-[0_0_0_3px_var(--color-accent)]"
                         style={islandStyle}
                         initial={false}
-                        layout
                         whileTap={{ scale: TAP_CONFIG.scale }}
                         transition={TRANSITIONS.island}
                     >

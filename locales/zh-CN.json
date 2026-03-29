@@ -50,8 +50,8 @@
   },
   "Navbar-Dropdown": {
     "preferences": "偏好设置",
-    "prefer-language": "语言偏好",
-    "prefer-color-scheme": "主题偏好",
+    "prefer-language": "语言",
+    "prefer-color-scheme": "主题",
     "light": "浅色",
     "dark": "深色",
     "system": "跟随系统",
